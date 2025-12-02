@@ -1,0 +1,30 @@
+//
+//  EventTimeView.swift
+//  Services
+//
+//  Created by Tigran Danielian on 09.06.2025.
+//
+
+import SwiftUI
+import Core
+
+struct EventTimeView: View {
+    @State private var time: String
+    
+    init(time: String) {
+        self.time = time
+    }
+
+    var body: some View {
+        Text(time)
+            .padding(2)
+            .font(.caption)
+            .foregroundStyle(Color(uiColor: Colors.text))
+            .background(Color(uiColor: Colors.mainBackground))
+            .cornerRadius(4)
+    }
+}
+
+#Preview {
+    EventTimeView(time: "123")
+}

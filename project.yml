@@ -1,0 +1,166 @@
+name: EsseJazzClub
+
+options:
+  bundleIdPrefix: com.unity.essejazz
+  deploymentTarget:
+    iOS: "15.0"
+  developmentRegion: en
+  generateEmptyDirectories: true
+
+fileGroups:
+  - Supporting Files
+
+settingGroups:
+  application_debug:
+    FRAMEWORK_SEARCH_PATHS: $(inherited)
+    MARKETING_VERSION: 1.0.0
+    CURRENT_PROJECT_VERSION: 1
+    ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES: $(inherited)
+    INFOPLIST_FILE: Supporting Files/Info.plist
+    SWIFT_VERSION: "5.3"
+    TARGETED_DEVICE_FAMILY: "1"
+    DEVELOPMENT_TEAM: UBJG79G298
+    PRODUCT_BUNDLE_IDENTIFIER: com.unity.essejazz
+    OTHER_LDFLAGS: $(inherited) "-ObjC"
+  application_prod:
+    FRAMEWORK_SEARCH_PATHS: $(inherited)
+    MARKETING_VERSION: 1.0.0
+    CURRENT_PROJECT_VERSION: 1
+    ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES: $(inherited)
+    INFOPLIST_FILE: Supporting Files/Info.plist
+    SWIFT_VERSION: "5.3"
+    TARGETED_DEVICE_FAMILY: "1"
+    DEVELOPMENT_TEAM: UBJG79G298
+    PRODUCT_BUNDLE_IDENTIFIER: com.unity.essejazz
+    OTHER_LDFLAGS: $(inherited) "-ObjC"
+
+  common:
+    SWIFT_VERSION: "5.3"
+    OTHER_SWIFT_FLAGS: $(inherited) -Xfrontend -warn-long-expression-type-checking=300 -Xfrontend -warn-long-function-bodies=200 -Xfrontend -debug-time-function-bodies
+
+targetTemplates:
+  test:
+    type: bundle.unit-test
+    deploymentTarget: 15.0
+    platform: iOS
+    info:
+      path: Supporting Files/${target_name}_Info.plist
+    sources: [Tests]
+    
+  framework:
+    type: framework
+    platform: iOS
+    deploymentTarget: 15.0
+    sources: ${target_name}
+    info:
+      path: Supporting Files/${target_name}_Info.plist
+    settings:
+      groups:
+        - common
+    
+  main_application:
+    platform: iOS
+    type: application
+    deploymentTarget: 15.0
+    sources:
+      - App
+    resources:
+      - App/LaunchScreen.storyboard
+    dependencies:
+      - target: Core
+      - target: API
+      - target: Services
+      - target: SharedInfrastructure
+      
+      - target: HomeFeature
+      - target: ScheduleFeature
+      - target: ClubFeature
+
+targets:
+  Core:
+    templates:
+      - framework
+    buildConfigurations:
+      Debug:
+        swiftFlags: [-DDEBUG]
+      Release:
+        swiftFlags: [-DRELEASE]
+    
+  API:
+    templates:
+      - framework
+    dependencies:
+      - target: Core
+    
+  Services:
+    templates:
+      - framework
+    dependencies:
+      - target: Core
+      - target: API
+      
+  SharedInfrastructure:
+    templates:
+      - framework
+    dependencies:
+      - target: Core
+      - target: Services
+      
+  ScheduleFeature:
+    templates:
+      - framework
+    sources: Features/ScheduleFeature
+    dependencies:
+      - target: Core
+      - target: Services
+      - target: SharedInfrastructure
+      
+  ClubFeature:
+    templates:
+      - framework
+    sources: Features/ClubFeature
+    dependencies:
+      - target: Core
+      - target: Services
+      - target: SharedInfrastructure
+    
+  HomeFeature:
+    templates:
+      - framework
+    sources: Features/HomeFeature
+    dependencies:
+      - target: Core
+      - target: Services
+      - target: SharedInfrastructure
+      
+  Tests:
+    templates:
+      - test
+    dependencies:
+      - target: Develop
+      - target: Core
+      - target: API
+      - target: Services
+      
+      
+# APP TARGETS
+
+  Develop:
+    templates:
+      - main_application
+    settings:
+      base:
+        SWIFT_ACTIVE_COMPILATION_CONDITIONS: $(inherited) DEVELOP
+      groups:
+        - application_debug
+    
+  Appstore:
+    templates:
+      - main_application
+    settings:
+      base:
+        SWIFT_ACTIVE_COMPILATION_CONDITIONS: $(inherited) APPSTORE
+      groups:
+        - application_prod
+#      - target: FavoritesFeature
+

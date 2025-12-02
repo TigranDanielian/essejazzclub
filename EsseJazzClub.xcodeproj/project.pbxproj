@@ -3,280 +3,1456 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 77;
+	objectVersion = 63;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		026205E5BD61CC375CCD475F /* EventModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 323742A410BE0F463AE94F77 /* EventModel.swift */; };
+		0454D100E3611C79E8C3A452 /* API.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 48BA7EEC6C75DEF58EE0D4B8 /* API.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		063C4C5055C693772825529F /* HomeFeature.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 269F751622560AE3FD937B96 /* HomeFeature.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		0BC77F2F82EA486D4D3FE1D1 /* HomeFeature.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 269F751622560AE3FD937B96 /* HomeFeature.framework */; };
+		12541AD6688D87537BB70A53 /* ClubFeature.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 099848F1843F299280385ED3 /* ClubFeature.framework */; };
+		13A6CE0AEC938FDFFA59E26B /* FavoritesStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0C00A6404CAEFDF4871C2B5 /* FavoritesStorage.swift */; };
+		142859A82B7FB79BFDE510D7 /* API.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 48BA7EEC6C75DEF58EE0D4B8 /* API.framework */; };
+		15C0C5C59BBD9D0CABD821A4 /* SharedInfrastructure.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 309260A176D68C1D5FACFB49 /* SharedInfrastructure.framework */; };
+		1C6A25AE79532F52167C297B /* ClubFeature.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 099848F1843F299280385ED3 /* ClubFeature.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		1EBCE1C7988A1C8A236D9A44 /* API.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 48BA7EEC6C75DEF58EE0D4B8 /* API.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		1F49B96F2B71566ED10880C9 /* MockApiClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98AE4694EEDF9410BEF8DA11 /* MockApiClient.swift */; };
+		2016CC87BD9932EE8A431368 /* EventDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94150C203703204FD7FDB15A /* EventDetailView.swift */; };
+		219359C0FEDF75172489488F /* ScheduleScreenViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08AEDC67CE0FACFF19C9E851 /* ScheduleScreenViewModel.swift */; };
+		25D0EF457A5E77E342E61DB3 /* SharedInfrastructure.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 309260A176D68C1D5FACFB49 /* SharedInfrastructure.framework */; };
+		25E1F733A763AC704ABD3F99 /* Services.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 7AC7774ED32ECC57C344CE2C /* Services.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		26C712BCD68202DD7578FA0B /* Services.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 7AC7774ED32ECC57C344CE2C /* Services.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		26E7EAE92227C8FD190BBFAD /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CDF1605888301165977862B5 /* Preview Assets.xcassets */; };
+		282CE10E8824CF7F4B749573 /* SharedInfrastructure.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 309260A176D68C1D5FACFB49 /* SharedInfrastructure.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		2E013BE4E25642A660288620 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0697B7CD4CD2E65342FBCB25 /* LaunchScreen.storyboard */; };
+		2FCC2B1D6C14D512F938F980 /* Services.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7AC7774ED32ECC57C344CE2C /* Services.framework */; };
+		322CA1C8B1F7B9C04E8CDDF0 /* AppConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB0B66F9D89989434A972255 /* AppConfiguration.swift */; };
+		3BA0DA788C9CAD53DEF1F53D /* ClubFeature.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 099848F1843F299280385ED3 /* ClubFeature.framework */; };
+		3BD070A3FF2A85CEC9FA352C /* DefaultApiClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 359495A8DB0881767FE49207 /* DefaultApiClient.swift */; };
+		3C29CE43BD01E30F61DB2DEC /* ScheduleFeature.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C15233379F19110A4AD2A4D6 /* ScheduleFeature.framework */; };
+		3E1E3E8FBBA467C1CDE0B07E /* EventContextButtons.swift in Sources */ = {isa = PBXBuildFile; fileRef = B99367CBD23BC4F2B3700CB1 /* EventContextButtons.swift */; };
+		3E9A3AF5AD7A7E7DBD447832 /* Services.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7AC7774ED32ECC57C344CE2C /* Services.framework */; };
+		478C998A1FA597BBFA9A8EF3 /* MusicianModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADC8E532A4F9940D11B4E42 /* MusicianModel.swift */; };
+		4795BB2EFA46EAC5CC94D273 /* Core.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A1059EAB8C03AF412D52227E /* Core.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		4C29A5014371431667C7DE25 /* HomeFeature.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 269F751622560AE3FD937B96 /* HomeFeature.framework */; };
+		50425AD73DAD8715A2B9286D /* Core.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A1059EAB8C03AF412D52227E /* Core.framework */; };
+		58FF8EE9A7925CFD91369837 /* Services.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 7AC7774ED32ECC57C344CE2C /* Services.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		5A4B62E2BD68E9A2DA44BC6B /* Services.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7AC7774ED32ECC57C344CE2C /* Services.framework */; };
+		5B72B33802A0086D4725A8F6 /* CalendarEventsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA27D04164F7439F8AA3BB86 /* CalendarEventsManager.swift */; };
+		5D6294EA9F2F5A8D88838045 /* Services.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7AC7774ED32ECC57C344CE2C /* Services.framework */; };
+		5EC8DB2BC64ABED4D78A472F /* SharedInfrastructure.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 309260A176D68C1D5FACFB49 /* SharedInfrastructure.framework */; };
+		670908CE8542D7F0B45E0040 /* EsseJazzClubApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1CB1DC577ECAD66C341017F /* EsseJazzClubApp.swift */; };
+		6766412E89DC78B76CA389CC /* ScheduleEventView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DA8DB9C521302E43CFED646 /* ScheduleEventView.swift */; };
+		6A26F9BE2E1580D1000E5B8C /* SearchTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 583905175D9DAC0F56809179 /* SearchTextField.swift */; };
+		6A26F9C02E168147000E5B8C /* UIScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A26F9BF2E168147000E5B8C /* UIScreen.swift */; };
+		6A6462E22E169F7C0094BDCC /* EventsGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A6462E12E169F7C0094BDCC /* EventsGroup.swift */; };
+		6A6462E62E16BDE90094BDCC /* DayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A6462E52E16BDE90094BDCC /* DayView.swift */; };
+		6A6462E82E1D31370094BDCC /* EventAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A6462E72E1D31370094BDCC /* EventAction.swift */; };
+		6A6462EC2E1D46800094BDCC /* EventCalendarCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A6462E92E1D45060094BDCC /* EventCalendarCoordinator.swift */; };
+		6A6462EE2E1D74390094BDCC /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A6462ED2E1D74390094BDCC /* String.swift */; };
+		6A6462F02E1D80770094BDCC /* MusiciansService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A6462EF2E1D80770094BDCC /* MusiciansService.swift */; };
+		6A6462F22E1DAB420094BDCC /* ExpandableText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A6462F12E1DAB420094BDCC /* ExpandableText.swift */; };
+		6A7605402ED5888A0019BB9A /* ClubFeaturesSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A76053F2ED5888A0019BB9A /* ClubFeaturesSlider.swift */; };
+		6A8E5A1F92752EF84CE6264D /* ApiError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5397B1B5EAC0109E659E2C92 /* ApiError.swift */; };
+		74F5F3C5783F665D97816B8D /* Core.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A1059EAB8C03AF412D52227E /* Core.framework */; };
+		7B16C1D5F72A3BB575E3B6FA /* EventPriceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 158C925F48490DCB453FB7DD /* EventPriceView.swift */; };
+		7C71B4B395CD7EAAE4C26DBB /* Services.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7AC7774ED32ECC57C344CE2C /* Services.framework */; };
+		7E01625D34E0EF8932874CD8 /* HomeScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16B5E47B3D7E305A6E4B2D8B /* HomeScreen.swift */; };
+		8195B0610595FFE498ADB4E0 /* ClubFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 091973C78A7509A80F5DE1B1 /* ClubFeature.swift */; };
+		87EF2DB0D070101A33FC8274 /* AppContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A1F4CB2F4F44C2A60A0FB35 /* AppContainer.swift */; };
+		892A7C504C99F208D6EF9855 /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 35176A7F0AEE16D3116D5F53 /* Media.xcassets */; };
+		895EB4D2FC308A666F0CF8AC /* Core.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A1059EAB8C03AF412D52227E /* Core.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		8D2C7C6DE7911E4A4B4B49FB /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB15ABC33A202502D0CC0570 /* Colors.swift */; };
+		90778EE75222E548DC5FEC51 /* ImageLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F3D9EFA19BBA4754BA40D44 /* ImageLoader.swift */; };
+		90A9CB40EE3E79AE61541F76 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 26F5315A47E44DA78FEF345D /* Assets.xcassets */; };
+		91A6C44DB01CA96969ED61CA /* Core.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A1059EAB8C03AF412D52227E /* Core.framework */; };
+		9272922A9410AAFFA564438B /* AppContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A1F4CB2F4F44C2A60A0FB35 /* AppContainer.swift */; };
+		94CB6B651557E718BD51601E /* EsseJazzClubApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1CB1DC577ECAD66C341017F /* EsseJazzClubApp.swift */; };
+		9770879617DE7C6C82E604C5 /* ScheduleScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0198F8CCC2242FF904A6BDE2 /* ScheduleScreen.swift */; };
+		9C15EC3EB84F20CEBF9BFDEC /* ScheduleFeature.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C15233379F19110A4AD2A4D6 /* ScheduleFeature.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		9EF459DCB29CF55344D0ED99 /* ScheduleDayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B8EA6FDBA8BA2E2B0928384 /* ScheduleDayView.swift */; };
+		9F5E84BB9B800DEA1E7605D9 /* ScheduleFeature.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C15233379F19110A4AD2A4D6 /* ScheduleFeature.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		9FF03738A10474EBEBC6D7BD /* SharedUIFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48EE0305DCA70A8826CA0B87 /* SharedUIFactory.swift */; };
+		A022C25B66C3A6571B96F26F /* ClubFeature.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 099848F1843F299280385ED3 /* ClubFeature.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		A33A506F0F020CD611B1B403 /* Services.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7AC7774ED32ECC57C344CE2C /* Services.framework */; };
+		A478133807474959DA0C36F6 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0697B7CD4CD2E65342FBCB25 /* LaunchScreen.storyboard */; };
+		A5EF587B8AB14643FEE06C2C /* API.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 48BA7EEC6C75DEF58EE0D4B8 /* API.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		A70441D59249DE06CBFD1444 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A0DE1D0C46E1B775B428F8EF /* Assets.xcassets */; };
+		AD2FD1A2E6F2AEE5F4FAF1B2 /* Services.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7AC7774ED32ECC57C344CE2C /* Services.framework */; };
+		AD42AEC8EC79E48E2D3263EB /* HomeFeature.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 269F751622560AE3FD937B96 /* HomeFeature.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		AD8E45EBE5128BD6135F81E3 /* ApiTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A273A42A071818D61668B7E4 /* ApiTests.swift */; };
+		ADF677DE3A0E86DE056A96F2 /* EventsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 585EE12BDB226435E286648E /* EventsService.swift */; };
+		AFA66B82C4DC733B70CAA7E9 /* EventView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3D459D83816E62266034C20 /* EventView.swift */; };
+		B21670614D2F37673E29F3AD /* SharedInfrastructure.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 309260A176D68C1D5FACFB49 /* SharedInfrastructure.framework */; };
+		B2984B6C24B8421EDBEA0ADA /* EventInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D16BACADA8EEAF272078B20 /* EventInfoView.swift */; };
+		B43BC67D5E561F81C86410E9 /* EventViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAFF31908A3165ABF76313CD /* EventViewModel.swift */; };
+		BD479C60C85B6E4BD8F0FF75 /* Core.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A1059EAB8C03AF412D52227E /* Core.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C0658E31248B419E4CD88288 /* ApiEndpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D9EFFB6AA0B0D1D9DF73F5D /* ApiEndpoint.swift */; };
+		C0CC974DF7617C7A1FDE798B /* SharedInfrastructure.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 309260A176D68C1D5FACFB49 /* SharedInfrastructure.framework */; };
+		C36BB8293F99D6D75B88845D /* API.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 48BA7EEC6C75DEF58EE0D4B8 /* API.framework */; };
+		C48D3EF045C835625BD31545 /* ApiLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52E76143E99C0878A300BB60 /* ApiLogger.swift */; };
+		C6AFD3F6CE67D194FBCF6D52 /* API.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 48BA7EEC6C75DEF58EE0D4B8 /* API.framework */; };
+		C76046E16C687A320888C537 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 26F5315A47E44DA78FEF345D /* Assets.xcassets */; };
+		CED6FAE3A109A6D00FAF0F58 /* Core.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A1059EAB8C03AF412D52227E /* Core.framework */; };
+		D987A5A9FAA81B99D78ADBB8 /* Core.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A1059EAB8C03AF412D52227E /* Core.framework */; };
+		DBD38181F6C0845C44B2F513 /* SharedInfrastructure.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 309260A176D68C1D5FACFB49 /* SharedInfrastructure.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		DCD659E00007B62C766D6DD3 /* Core.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A1059EAB8C03AF412D52227E /* Core.framework */; };
+		E0538588A78B819E3031FC27 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CDF1605888301165977862B5 /* Preview Assets.xcassets */; };
+		E157468CDA804C8772936C45 /* API.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 48BA7EEC6C75DEF58EE0D4B8 /* API.framework */; };
+		E390DBFEE691486744F9F115 /* ScheduleFeature.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C15233379F19110A4AD2A4D6 /* ScheduleFeature.framework */; };
+		ED612F886BF6AAF17A2A97E4 /* ApiClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70CBE7DEED37FDD08A9AE139 /* ApiClient.swift */; };
+		F0611EAD4C665B958C12238B /* Core.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A1059EAB8C03AF412D52227E /* Core.framework */; };
+		F0FAB8CEA3E018A4C57E59D9 /* Core.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A1059EAB8C03AF412D52227E /* Core.framework */; };
+		F403A39F4A617629DD8AF7DA /* Endpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = C597C5D176F36E4A579BD016 /* Endpoints.swift */; };
+		F4625DD773D1DAFDF7CAA869 /* EventTimeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29D213127D87AF4D0800C5D5 /* EventTimeView.swift */; };
+		F6B099637D0457E61FE8C0EF /* Core.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A1059EAB8C03AF412D52227E /* Core.framework */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
-		6AE9E8DA2DD500E8000F9AE8 /* PBXContainerItemProxy */ = {
+		105840B9B0353231A8094847 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 6AE9E8C12DD500E7000F9AE8 /* Project object */;
+			containerPortal = E93BDE2F47C94A7B5E5573BD /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 6AE9E8C82DD500E7000F9AE8;
-			remoteInfo = EsseJazzClub;
+			remoteGlobalIDString = 628FCDAD536D9995E7102934;
+			remoteInfo = API;
 		};
-		6AE9E8E42DD500E8000F9AE8 /* PBXContainerItemProxy */ = {
+		12DA8AB66E33E0E5A5BCA4AD /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 6AE9E8C12DD500E7000F9AE8 /* Project object */;
+			containerPortal = E93BDE2F47C94A7B5E5573BD /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 6AE9E8C82DD500E7000F9AE8;
-			remoteInfo = EsseJazzClub;
+			remoteGlobalIDString = DE8B67A2200B2036F1096A79;
+			remoteInfo = Services;
+		};
+		1D739348F15EA848E44D5C52 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E93BDE2F47C94A7B5E5573BD /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1FF8D0816DFEDBEFD69F6025;
+			remoteInfo = HomeFeature;
+		};
+		25BE9123CBF0ADD0170A6985 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E93BDE2F47C94A7B5E5573BD /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 0604550E7B8EFCB5911B7A99;
+			remoteInfo = Core;
+		};
+		2B44BAFEED6ED3CC24429391 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E93BDE2F47C94A7B5E5573BD /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1E04693D828F3D1E46D03B80;
+			remoteInfo = SharedInfrastructure;
+		};
+		2C1C26AC0A1B8D4BD260F40B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E93BDE2F47C94A7B5E5573BD /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 628FCDAD536D9995E7102934;
+			remoteInfo = API;
+		};
+		3094B24180E69CA0504FDC4E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E93BDE2F47C94A7B5E5573BD /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F95CA5F4B695804271E6C8AE;
+			remoteInfo = ClubFeature;
+		};
+		357C8659E3CA33CDA24E6AB5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E93BDE2F47C94A7B5E5573BD /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DE8B67A2200B2036F1096A79;
+			remoteInfo = Services;
+		};
+		3F88EC64167EB20384F83BC3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E93BDE2F47C94A7B5E5573BD /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F95CA5F4B695804271E6C8AE;
+			remoteInfo = ClubFeature;
+		};
+		4B3C7D9299C76F4F08151B41 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E93BDE2F47C94A7B5E5573BD /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DE8B67A2200B2036F1096A79;
+			remoteInfo = Services;
+		};
+		531D7C192C9AD383D40AD20F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E93BDE2F47C94A7B5E5573BD /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DE8B67A2200B2036F1096A79;
+			remoteInfo = Services;
+		};
+		539E054F11390F21D2A2BA3A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E93BDE2F47C94A7B5E5573BD /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1E04693D828F3D1E46D03B80;
+			remoteInfo = SharedInfrastructure;
+		};
+		62F01C34585A9F150E9DACD5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E93BDE2F47C94A7B5E5573BD /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 0604550E7B8EFCB5911B7A99;
+			remoteInfo = Core;
+		};
+		6B27DB39B4AFDAEA2E25DE22 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E93BDE2F47C94A7B5E5573BD /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 628FCDAD536D9995E7102934;
+			remoteInfo = API;
+		};
+		7291B6131CB034C60BADC428 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E93BDE2F47C94A7B5E5573BD /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 5329541C90CE202BE3402912;
+			remoteInfo = Develop;
+		};
+		7B27AB8C77D9BF1FE7017EAB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E93BDE2F47C94A7B5E5573BD /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 0604550E7B8EFCB5911B7A99;
+			remoteInfo = Core;
+		};
+		7BE2FE302C33B1AF8DA1567C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E93BDE2F47C94A7B5E5573BD /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DE8B67A2200B2036F1096A79;
+			remoteInfo = Services;
+		};
+		9D89BA0CFFF40D45C08887AC /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E93BDE2F47C94A7B5E5573BD /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 153D8DEA7DF20A4B74C2F17A;
+			remoteInfo = ScheduleFeature;
+		};
+		A0F5B7A7026EFEDC2D55AFD7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E93BDE2F47C94A7B5E5573BD /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 0604550E7B8EFCB5911B7A99;
+			remoteInfo = Core;
+		};
+		A8EBF20E134A8D17E2396C1F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E93BDE2F47C94A7B5E5573BD /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DE8B67A2200B2036F1096A79;
+			remoteInfo = Services;
+		};
+		B4132ECB2BD8B9E0F3DD55D9 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E93BDE2F47C94A7B5E5573BD /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 0604550E7B8EFCB5911B7A99;
+			remoteInfo = Core;
+		};
+		BF0B5C96FEA1485382184E56 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E93BDE2F47C94A7B5E5573BD /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 0604550E7B8EFCB5911B7A99;
+			remoteInfo = Core;
+		};
+		C5C2FF573276CBD390A4A88F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E93BDE2F47C94A7B5E5573BD /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1FF8D0816DFEDBEFD69F6025;
+			remoteInfo = HomeFeature;
+		};
+		C9A8E72CFA33DC8210109FED /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E93BDE2F47C94A7B5E5573BD /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 628FCDAD536D9995E7102934;
+			remoteInfo = API;
+		};
+		D314A97CEDCD551269BE4BFE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E93BDE2F47C94A7B5E5573BD /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 153D8DEA7DF20A4B74C2F17A;
+			remoteInfo = ScheduleFeature;
+		};
+		D8060B6783A2EC3946EF03F5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E93BDE2F47C94A7B5E5573BD /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1E04693D828F3D1E46D03B80;
+			remoteInfo = SharedInfrastructure;
+		};
+		D9FA855B405AF26A82E52672 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E93BDE2F47C94A7B5E5573BD /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1E04693D828F3D1E46D03B80;
+			remoteInfo = SharedInfrastructure;
+		};
+		E0B0EC7CF007F4D656E85944 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E93BDE2F47C94A7B5E5573BD /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 0604550E7B8EFCB5911B7A99;
+			remoteInfo = Core;
+		};
+		E33C695CFF732FEA8C987868 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E93BDE2F47C94A7B5E5573BD /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DE8B67A2200B2036F1096A79;
+			remoteInfo = Services;
+		};
+		E517194D506E9674C41CCF94 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E93BDE2F47C94A7B5E5573BD /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1E04693D828F3D1E46D03B80;
+			remoteInfo = SharedInfrastructure;
+		};
+		EA045CB4EEB16E09337CA9BC /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E93BDE2F47C94A7B5E5573BD /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 0604550E7B8EFCB5911B7A99;
+			remoteInfo = Core;
+		};
+		F1311869B3F544278838E7C9 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E93BDE2F47C94A7B5E5573BD /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 0604550E7B8EFCB5911B7A99;
+			remoteInfo = Core;
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		467ED130FD86DE930ECB588E /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				4795BB2EFA46EAC5CC94D273 /* Core.framework in Embed Frameworks */,
+				1EBCE1C7988A1C8A236D9A44 /* API.framework in Embed Frameworks */,
+				58FF8EE9A7925CFD91369837 /* Services.framework in Embed Frameworks */,
+				282CE10E8824CF7F4B749573 /* SharedInfrastructure.framework in Embed Frameworks */,
+				063C4C5055C693772825529F /* HomeFeature.framework in Embed Frameworks */,
+				9F5E84BB9B800DEA1E7605D9 /* ScheduleFeature.framework in Embed Frameworks */,
+				1C6A25AE79532F52167C297B /* ClubFeature.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7BA104562F52F7C1DEEBDD11 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				895EB4D2FC308A666F0CF8AC /* Core.framework in Embed Frameworks */,
+				A5EF587B8AB14643FEE06C2C /* API.framework in Embed Frameworks */,
+				25E1F733A763AC704ABD3F99 /* Services.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		984F638B04C4359207719107 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				BD479C60C85B6E4BD8F0FF75 /* Core.framework in Embed Frameworks */,
+				0454D100E3611C79E8C3A452 /* API.framework in Embed Frameworks */,
+				26C712BCD68202DD7578FA0B /* Services.framework in Embed Frameworks */,
+				DBD38181F6C0845C44B2F513 /* SharedInfrastructure.framework in Embed Frameworks */,
+				AD42AEC8EC79E48E2D3263EB /* HomeFeature.framework in Embed Frameworks */,
+				9C15EC3EB84F20CEBF9BFDEC /* ScheduleFeature.framework in Embed Frameworks */,
+				A022C25B66C3A6571B96F26F /* ClubFeature.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
-		6AE9E8C92DD500E7000F9AE8 /* EsseJazzClub.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EsseJazzClub.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		6AE9E8D92DD500E8000F9AE8 /* EsseJazzClubTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EsseJazzClubTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		6AE9E8E32DD500E8000F9AE8 /* EsseJazzClubUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EsseJazzClubUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		0198F8CCC2242FF904A6BDE2 /* ScheduleScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleScreen.swift; sourceTree = "<group>"; };
+		0697B7CD4CD2E65342FBCB25 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
+		08AEDC67CE0FACFF19C9E851 /* ScheduleScreenViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleScreenViewModel.swift; sourceTree = "<group>"; };
+		091973C78A7509A80F5DE1B1 /* ClubFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClubFeature.swift; sourceTree = "<group>"; };
+		099848F1843F299280385ED3 /* ClubFeature.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ClubFeature.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		0D702ADB7F2A118F8AD9A0D8 /* Core_Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Core_Info.plist; sourceTree = "<group>"; };
+		0D9EFFB6AA0B0D1D9DF73F5D /* ApiEndpoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiEndpoint.swift; sourceTree = "<group>"; };
+		0DA8DB9C521302E43CFED646 /* ScheduleEventView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleEventView.swift; sourceTree = "<group>"; };
+		158C925F48490DCB453FB7DD /* EventPriceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventPriceView.swift; sourceTree = "<group>"; };
+		16B5E47B3D7E305A6E4B2D8B /* HomeScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeScreen.swift; sourceTree = "<group>"; };
+		269F751622560AE3FD937B96 /* HomeFeature.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = HomeFeature.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		26F5315A47E44DA78FEF345D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		29D213127D87AF4D0800C5D5 /* EventTimeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventTimeView.swift; sourceTree = "<group>"; };
+		2ADC8E532A4F9940D11B4E42 /* MusicianModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicianModel.swift; sourceTree = "<group>"; };
+		2D16BACADA8EEAF272078B20 /* EventInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventInfoView.swift; sourceTree = "<group>"; };
+		309260A176D68C1D5FACFB49 /* SharedInfrastructure.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SharedInfrastructure.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		323742A410BE0F463AE94F77 /* EventModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventModel.swift; sourceTree = "<group>"; };
+		327DCF1B4391ABEF8DC67B6D /* SharedInfrastructure_Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = SharedInfrastructure_Info.plist; sourceTree = "<group>"; };
+		35176A7F0AEE16D3116D5F53 /* Media.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Media.xcassets; sourceTree = "<group>"; };
+		359495A8DB0881767FE49207 /* DefaultApiClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultApiClient.swift; sourceTree = "<group>"; };
+		42A6180D1EB7A82B3B1853DB /* API_Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = API_Info.plist; sourceTree = "<group>"; };
+		48BA7EEC6C75DEF58EE0D4B8 /* API.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = API.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		48EE0305DCA70A8826CA0B87 /* SharedUIFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedUIFactory.swift; sourceTree = "<group>"; };
+		4B8EA6FDBA8BA2E2B0928384 /* ScheduleDayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleDayView.swift; sourceTree = "<group>"; };
+		4E853C928D7E304D046C6D94 /* Services_Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Services_Info.plist; sourceTree = "<group>"; };
+		50E3808E844F3658238D3CBB /* Develop.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Develop.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		52E76143E99C0878A300BB60 /* ApiLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiLogger.swift; sourceTree = "<group>"; };
+		5397B1B5EAC0109E659E2C92 /* ApiError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiError.swift; sourceTree = "<group>"; };
+		583905175D9DAC0F56809179 /* SearchTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchTextField.swift; sourceTree = "<group>"; };
+		585EE12BDB226435E286648E /* EventsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventsService.swift; sourceTree = "<group>"; };
+		657EC9D78E618CE1166F0244 /* ScheduleFeature_Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = ScheduleFeature_Info.plist; sourceTree = "<group>"; };
+		6A26F9BF2E168147000E5B8C /* UIScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIScreen.swift; sourceTree = "<group>"; };
+		6A6462E12E169F7C0094BDCC /* EventsGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventsGroup.swift; sourceTree = "<group>"; };
+		6A6462E52E16BDE90094BDCC /* DayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayView.swift; sourceTree = "<group>"; };
+		6A6462E72E1D31370094BDCC /* EventAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventAction.swift; sourceTree = "<group>"; };
+		6A6462E92E1D45060094BDCC /* EventCalendarCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventCalendarCoordinator.swift; sourceTree = "<group>"; };
+		6A6462ED2E1D74390094BDCC /* String.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
+		6A6462EF2E1D80770094BDCC /* MusiciansService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusiciansService.swift; sourceTree = "<group>"; };
+		6A6462F12E1DAB420094BDCC /* ExpandableText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpandableText.swift; sourceTree = "<group>"; };
+		6A76053F2ED5888A0019BB9A /* ClubFeaturesSlider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClubFeaturesSlider.swift; sourceTree = "<group>"; };
+		70CBE7DEED37FDD08A9AE139 /* ApiClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiClient.swift; sourceTree = "<group>"; };
+		71FC149340012E03D49B5629 /* Tests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		727F09476B051A0A9962AEC1 /* HomeFeature_Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = HomeFeature_Info.plist; sourceTree = "<group>"; };
+		7A1F4CB2F4F44C2A60A0FB35 /* AppContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppContainer.swift; sourceTree = "<group>"; };
+		7AC7774ED32ECC57C344CE2C /* Services.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Services.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		8F3D9EFA19BBA4754BA40D44 /* ImageLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageLoader.swift; sourceTree = "<group>"; };
+		94150C203703204FD7FDB15A /* EventDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventDetailView.swift; sourceTree = "<group>"; };
+		98AE4694EEDF9410BEF8DA11 /* MockApiClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockApiClient.swift; sourceTree = "<group>"; };
+		A0DE1D0C46E1B775B428F8EF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		A1059EAB8C03AF412D52227E /* Core.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Core.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		A1CB1DC577ECAD66C341017F /* EsseJazzClubApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EsseJazzClubApp.swift; sourceTree = "<group>"; };
+		A273A42A071818D61668B7E4 /* ApiTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiTests.swift; sourceTree = "<group>"; };
+		AA27D04164F7439F8AA3BB86 /* CalendarEventsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarEventsManager.swift; sourceTree = "<group>"; };
+		B0C00A6404CAEFDF4871C2B5 /* FavoritesStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesStorage.swift; sourceTree = "<group>"; };
+		B99367CBD23BC4F2B3700CB1 /* EventContextButtons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventContextButtons.swift; sourceTree = "<group>"; };
+		BAFF31908A3165ABF76313CD /* EventViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventViewModel.swift; sourceTree = "<group>"; };
+		C15233379F19110A4AD2A4D6 /* ScheduleFeature.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ScheduleFeature.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		C597C5D176F36E4A579BD016 /* Endpoints.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Endpoints.swift; sourceTree = "<group>"; };
+		CBBF91BF10D874B1AA7F36FB /* ClubFeature_Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = ClubFeature_Info.plist; sourceTree = "<group>"; };
+		CBF8EFDCD1779D4F5B700785 /* Appstore.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Appstore.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		CDF1605888301165977862B5 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		DB0B66F9D89989434A972255 /* AppConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppConfiguration.swift; sourceTree = "<group>"; };
+		EF1EB45E39312CEEE4C08BE5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		F2445E27F732D648536E39CD /* Tests_Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Tests_Info.plist; sourceTree = "<group>"; };
+		F3D459D83816E62266034C20 /* EventView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventView.swift; sourceTree = "<group>"; };
+		FB15ABC33A202502D0CC0570 /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
-/* Begin PBXFileSystemSynchronizedRootGroup section */
-		6AE9E8CB2DD500E7000F9AE8 /* EsseJazzClub */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = EsseJazzClub;
-			sourceTree = "<group>";
-		};
-		6AE9E8DC2DD500E8000F9AE8 /* EsseJazzClubTests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = EsseJazzClubTests;
-			sourceTree = "<group>";
-		};
-		6AE9E8E62DD500E8000F9AE8 /* EsseJazzClubUITests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = EsseJazzClubUITests;
-			sourceTree = "<group>";
-		};
-/* End PBXFileSystemSynchronizedRootGroup section */
-
 /* Begin PBXFrameworksBuildPhase section */
-		6AE9E8C62DD500E7000F9AE8 /* Frameworks */ = {
+		0AE69DB37576EE2629701D61 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DCD659E00007B62C766D6DD3 /* Core.framework in Frameworks */,
+				E157468CDA804C8772936C45 /* API.framework in Frameworks */,
+				5A4B62E2BD68E9A2DA44BC6B /* Services.framework in Frameworks */,
+				C0CC974DF7617C7A1FDE798B /* SharedInfrastructure.framework in Frameworks */,
+				0BC77F2F82EA486D4D3FE1D1 /* HomeFeature.framework in Frameworks */,
+				3C29CE43BD01E30F61DB2DEC /* ScheduleFeature.framework in Frameworks */,
+				12541AD6688D87537BB70A53 /* ClubFeature.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		6AE9E8D62DD500E8000F9AE8 /* Frameworks */ = {
+		1E18C56C24E5622792EFC986 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D987A5A9FAA81B99D78ADBB8 /* Core.framework in Frameworks */,
+				3E9A3AF5AD7A7E7DBD447832 /* Services.framework in Frameworks */,
+				25D0EF457A5E77E342E61DB3 /* SharedInfrastructure.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		6AE9E8E02DD500E8000F9AE8 /* Frameworks */ = {
+		37BA6D6EC83398FCBB074F18 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				91A6C44DB01CA96969ED61CA /* Core.framework in Frameworks */,
+				C6AFD3F6CE67D194FBCF6D52 /* API.framework in Frameworks */,
+				AD2FD1A2E6F2AEE5F4FAF1B2 /* Services.framework in Frameworks */,
+				B21670614D2F37673E29F3AD /* SharedInfrastructure.framework in Frameworks */,
+				4C29A5014371431667C7DE25 /* HomeFeature.framework in Frameworks */,
+				E390DBFEE691486744F9F115 /* ScheduleFeature.framework in Frameworks */,
+				3BA0DA788C9CAD53DEF1F53D /* ClubFeature.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		907F41AA72B45780664C9927 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F0FAB8CEA3E018A4C57E59D9 /* Core.framework in Frameworks */,
+				C36BB8293F99D6D75B88845D /* API.framework in Frameworks */,
+				A33A506F0F020CD611B1B403 /* Services.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		941D41A7BDCBA35EFC41B45C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				50425AD73DAD8715A2B9286D /* Core.framework in Frameworks */,
+				2FCC2B1D6C14D512F938F980 /* Services.framework in Frameworks */,
+				15C0C5C59BBD9D0CABD821A4 /* SharedInfrastructure.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		ACB89A9DD73C0FAD0976B0FC /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				74F5F3C5783F665D97816B8D /* Core.framework in Frameworks */,
+				7C71B4B395CD7EAAE4C26DBB /* Services.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AD382A8F13FA6245D66BDED4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CED6FAE3A109A6D00FAF0F58 /* Core.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BDCB669E24488528B33CE352 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F6B099637D0457E61FE8C0EF /* Core.framework in Frameworks */,
+				142859A82B7FB79BFDE510D7 /* API.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C8C0FE050E5674293ADB2129 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F0611EAD4C665B958C12238B /* Core.framework in Frameworks */,
+				5D6294EA9F2F5A8D88838045 /* Services.framework in Frameworks */,
+				5EC8DB2BC64ABED4D78A472F /* SharedInfrastructure.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		6AE9E8C02DD500E7000F9AE8 = {
+		15F2BEF40B5948FA73E524B6 /* App */ = {
 			isa = PBXGroup;
 			children = (
-				6AE9E8CB2DD500E7000F9AE8 /* EsseJazzClub */,
-				6AE9E8DC2DD500E8000F9AE8 /* EsseJazzClubTests */,
-				6AE9E8E62DD500E8000F9AE8 /* EsseJazzClubUITests */,
-				6AE9E8CA2DD500E7000F9AE8 /* Products */,
+				7A1F4CB2F4F44C2A60A0FB35 /* AppContainer.swift */,
+				26F5315A47E44DA78FEF345D /* Assets.xcassets */,
+				A1CB1DC577ECAD66C341017F /* EsseJazzClubApp.swift */,
+				0697B7CD4CD2E65342FBCB25 /* LaunchScreen.storyboard */,
+				325DF9B884FA6CD5E0329B8F /* Preview Content */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		16BED53BB623891F1814E3A6 /* ScheduleFeature */ = {
+			isa = PBXGroup;
+			children = (
+				35176A7F0AEE16D3116D5F53 /* Media.xcassets */,
+				0198F8CCC2242FF904A6BDE2 /* ScheduleScreen.swift */,
+				08AEDC67CE0FACFF19C9E851 /* ScheduleScreenViewModel.swift */,
+				FCC95A7458D06D6C63D8529B /* Views */,
+			);
+			name = ScheduleFeature;
+			path = Features/ScheduleFeature;
+			sourceTree = "<group>";
+		};
+		2C0127631B32DB07BDDF61C3 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				8F3D9EFA19BBA4754BA40D44 /* ImageLoader.swift */,
+				AAF57DC447E82243469F3AD0 /* ApiClient */,
+				ADD79E6328A4BE837D83B06F /* AuthService */,
+				687E2FA89D35C822412ECE89 /* EventsService */,
+				6A6462EF2E1D80770094BDCC /* MusiciansService.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		325DF9B884FA6CD5E0329B8F /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				CDF1605888301165977862B5 /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		44846FD582D6443606C2D552 /* HomeFeature */ = {
+			isa = PBXGroup;
+			children = (
+				16B5E47B3D7E305A6E4B2D8B /* HomeScreen.swift */,
+			);
+			name = HomeFeature;
+			path = Features/HomeFeature;
+			sourceTree = "<group>";
+		};
+		5E54BAE694E7480870A79B97 /* ClubFeature */ = {
+			isa = PBXGroup;
+			children = (
+				091973C78A7509A80F5DE1B1 /* ClubFeature.swift */,
+				6A76053F2ED5888A0019BB9A /* ClubFeaturesSlider.swift */,
+			);
+			name = ClubFeature;
+			path = Features/ClubFeature;
+			sourceTree = "<group>";
+		};
+		642DBC5AA852CA3420B860A6 /* API */ = {
+			isa = PBXGroup;
+			children = (
+				A273A42A071818D61668B7E4 /* ApiTests.swift */,
+				98AE4694EEDF9410BEF8DA11 /* MockApiClient.swift */,
+			);
+			path = API;
+			sourceTree = "<group>";
+		};
+		6570735AEE51D0E2F33446B8 /* API */ = {
+			isa = PBXGroup;
+			children = (
+				70CBE7DEED37FDD08A9AE139 /* ApiClient.swift */,
+				0D9EFFB6AA0B0D1D9DF73F5D /* ApiEndpoint.swift */,
+				5397B1B5EAC0109E659E2C92 /* ApiError.swift */,
+				52E76143E99C0878A300BB60 /* ApiLogger.swift */,
+				C597C5D176F36E4A579BD016 /* Endpoints.swift */,
+			);
+			path = API;
+			sourceTree = "<group>";
+		};
+		687E2FA89D35C822412ECE89 /* EventsService */ = {
+			isa = PBXGroup;
+			children = (
+				323742A410BE0F463AE94F77 /* EventModel.swift */,
+				585EE12BDB226435E286648E /* EventsService.swift */,
+				2ADC8E532A4F9940D11B4E42 /* MusicianModel.swift */,
+			);
+			path = EventsService;
+			sourceTree = "<group>";
+		};
+		68BDB1175D9F3FD107B5EDC2 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		6A26F9BD2E157532000E5B8C /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				B99367CBD23BC4F2B3700CB1 /* EventContextButtons.swift */,
+				94150C203703204FD7FDB15A /* EventDetailView.swift */,
+				2D16BACADA8EEAF272078B20 /* EventInfoView.swift */,
+				158C925F48490DCB453FB7DD /* EventPriceView.swift */,
+				29D213127D87AF4D0800C5D5 /* EventTimeView.swift */,
+				F3D459D83816E62266034C20 /* EventView.swift */,
+				583905175D9DAC0F56809179 /* SearchTextField.swift */,
+				6A6462E52E16BDE90094BDCC /* DayView.swift */,
+				6A6462E72E1D31370094BDCC /* EventAction.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		814AC4896F51D7434DE335AE /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				DB0B66F9D89989434A972255 /* AppConfiguration.swift */,
+				AA27D04164F7439F8AA3BB86 /* CalendarEventsManager.swift */,
+				FB15ABC33A202502D0CC0570 /* Colors.swift */,
+				B0C00A6404CAEFDF4871C2B5 /* FavoritesStorage.swift */,
+				6A26F9BF2E168147000E5B8C /* UIScreen.swift */,
+				6A6462ED2E1D74390094BDCC /* String.swift */,
+				6A6462F12E1DAB420094BDCC /* ExpandableText.swift */,
+			);
+			path = Core;
+			sourceTree = "<group>";
+		};
+		86A101E00ED70AFE26E195FB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				48BA7EEC6C75DEF58EE0D4B8 /* API.framework */,
+				CBF8EFDCD1779D4F5B700785 /* Appstore.app */,
+				099848F1843F299280385ED3 /* ClubFeature.framework */,
+				A1059EAB8C03AF412D52227E /* Core.framework */,
+				50E3808E844F3658238D3CBB /* Develop.app */,
+				269F751622560AE3FD937B96 /* HomeFeature.framework */,
+				C15233379F19110A4AD2A4D6 /* ScheduleFeature.framework */,
+				7AC7774ED32ECC57C344CE2C /* Services.framework */,
+				309260A176D68C1D5FACFB49 /* SharedInfrastructure.framework */,
+				71FC149340012E03D49B5629 /* Tests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		AAF57DC447E82243469F3AD0 /* ApiClient */ = {
+			isa = PBXGroup;
+			children = (
+				359495A8DB0881767FE49207 /* DefaultApiClient.swift */,
+			);
+			path = ApiClient;
+			sourceTree = "<group>";
+		};
+		AC24CFE08A096FA1BE06D8B4 /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				642DBC5AA852CA3420B860A6 /* API */,
+				68BDB1175D9F3FD107B5EDC2 /* Services */,
+			);
+			path = Tests;
+			sourceTree = "<group>";
+		};
+		ADD79E6328A4BE837D83B06F /* AuthService */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = AuthService;
+			sourceTree = "<group>";
+		};
+		BE7B1466CFBBAA6599AD1223 /* SharedInfrastructure */ = {
+			isa = PBXGroup;
+			children = (
+				6A6462E92E1D45060094BDCC /* EventCalendarCoordinator.swift */,
+				A0DE1D0C46E1B775B428F8EF /* Assets.xcassets */,
+				6A26F9BD2E157532000E5B8C /* Views */,
+				BAFF31908A3165ABF76313CD /* EventViewModel.swift */,
+				48EE0305DCA70A8826CA0B87 /* SharedUIFactory.swift */,
+				6A6462E12E169F7C0094BDCC /* EventsGroup.swift */,
+			);
+			path = SharedInfrastructure;
+			sourceTree = "<group>";
+		};
+		C2BFA200395F1D4417660D73 = {
+			isa = PBXGroup;
+			children = (
+				6570735AEE51D0E2F33446B8 /* API */,
+				15F2BEF40B5948FA73E524B6 /* App */,
+				5E54BAE694E7480870A79B97 /* ClubFeature */,
+				814AC4896F51D7434DE335AE /* Core */,
+				44846FD582D6443606C2D552 /* HomeFeature */,
+				16BED53BB623891F1814E3A6 /* ScheduleFeature */,
+				2C0127631B32DB07BDDF61C3 /* Services */,
+				BE7B1466CFBBAA6599AD1223 /* SharedInfrastructure */,
+				CCB8A61D08D5452BB54934B0 /* Supporting Files */,
+				AC24CFE08A096FA1BE06D8B4 /* Tests */,
+				86A101E00ED70AFE26E195FB /* Products */,
 			);
 			sourceTree = "<group>";
 		};
-		6AE9E8CA2DD500E7000F9AE8 /* Products */ = {
+		CCB8A61D08D5452BB54934B0 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				6AE9E8C92DD500E7000F9AE8 /* EsseJazzClub.app */,
-				6AE9E8D92DD500E8000F9AE8 /* EsseJazzClubTests.xctest */,
-				6AE9E8E32DD500E8000F9AE8 /* EsseJazzClubUITests.xctest */,
+				42A6180D1EB7A82B3B1853DB /* API_Info.plist */,
+				CBBF91BF10D874B1AA7F36FB /* ClubFeature_Info.plist */,
+				0D702ADB7F2A118F8AD9A0D8 /* Core_Info.plist */,
+				727F09476B051A0A9962AEC1 /* HomeFeature_Info.plist */,
+				EF1EB45E39312CEEE4C08BE5 /* Info.plist */,
+				657EC9D78E618CE1166F0244 /* ScheduleFeature_Info.plist */,
+				4E853C928D7E304D046C6D94 /* Services_Info.plist */,
+				327DCF1B4391ABEF8DC67B6D /* SharedInfrastructure_Info.plist */,
+				F2445E27F732D648536E39CD /* Tests_Info.plist */,
 			);
-			name = Products;
+			path = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		FCC95A7458D06D6C63D8529B /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				4B8EA6FDBA8BA2E2B0928384 /* ScheduleDayView.swift */,
+				0DA8DB9C521302E43CFED646 /* ScheduleEventView.swift */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		6AE9E8C82DD500E7000F9AE8 /* EsseJazzClub */ = {
+		0604550E7B8EFCB5911B7A99 /* Core */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 6AE9E8ED2DD500E8000F9AE8 /* Build configuration list for PBXNativeTarget "EsseJazzClub" */;
+			buildConfigurationList = E382715FFD20320C74D3E747 /* Build configuration list for PBXNativeTarget "Core" */;
 			buildPhases = (
-				6AE9E8C52DD500E7000F9AE8 /* Sources */,
-				6AE9E8C62DD500E7000F9AE8 /* Frameworks */,
-				6AE9E8C72DD500E7000F9AE8 /* Resources */,
+				EA85B3628CCBFD31B58EBA15 /* Sources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
-			fileSystemSynchronizedGroups = (
-				6AE9E8CB2DD500E7000F9AE8 /* EsseJazzClub */,
-			);
-			name = EsseJazzClub;
+			name = Core;
 			packageProductDependencies = (
 			);
-			productName = EsseJazzClub;
-			productReference = 6AE9E8C92DD500E7000F9AE8 /* EsseJazzClub.app */;
+			productName = Core;
+			productReference = A1059EAB8C03AF412D52227E /* Core.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		153D8DEA7DF20A4B74C2F17A /* ScheduleFeature */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D47AB1DEF7FBDB09C4906B7F /* Build configuration list for PBXNativeTarget "ScheduleFeature" */;
+			buildPhases = (
+				BECED9976123A496B6C30EC6 /* Sources */,
+				EEDF3500FF8FD41C6259D996 /* Resources */,
+				C8C0FE050E5674293ADB2129 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				F569A7779889F6717FF77FD5 /* PBXTargetDependency */,
+				28844A9616642648BD660191 /* PBXTargetDependency */,
+				3C63763A53CF22EDEBEDBDB0 /* PBXTargetDependency */,
+			);
+			name = ScheduleFeature;
+			packageProductDependencies = (
+			);
+			productName = ScheduleFeature;
+			productReference = C15233379F19110A4AD2A4D6 /* ScheduleFeature.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		1E04693D828F3D1E46D03B80 /* SharedInfrastructure */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 167D6FDC2D9DB22E496366BB /* Build configuration list for PBXNativeTarget "SharedInfrastructure" */;
+			buildPhases = (
+				3C46B8A725FF038FC7128827 /* Sources */,
+				5E851EE5AC4D0DE61DAAB8B8 /* Resources */,
+				ACB89A9DD73C0FAD0976B0FC /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				6A7A168E89B4A59CBB3AFE53 /* PBXTargetDependency */,
+				26968592BEFB2E279C5AC10A /* PBXTargetDependency */,
+			);
+			name = SharedInfrastructure;
+			packageProductDependencies = (
+			);
+			productName = SharedInfrastructure;
+			productReference = 309260A176D68C1D5FACFB49 /* SharedInfrastructure.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		1FF8D0816DFEDBEFD69F6025 /* HomeFeature */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B4A317C45A1624D7E81FD690 /* Build configuration list for PBXNativeTarget "HomeFeature" */;
+			buildPhases = (
+				F9FCCB5CB498D1E9B60E1999 /* Sources */,
+				941D41A7BDCBA35EFC41B45C /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				90C67377B894B0C08E58CFD4 /* PBXTargetDependency */,
+				0E600109DEB0F1C48A05011D /* PBXTargetDependency */,
+				217756F3E574BD168EF2F461 /* PBXTargetDependency */,
+			);
+			name = HomeFeature;
+			packageProductDependencies = (
+			);
+			productName = HomeFeature;
+			productReference = 269F751622560AE3FD937B96 /* HomeFeature.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		5329541C90CE202BE3402912 /* Develop */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1586E7AEE0926C6B97C77E19 /* Build configuration list for PBXNativeTarget "Develop" */;
+			buildPhases = (
+				B426E2415ACB269D290DF7E9 /* Sources */,
+				48CC9977705FB37138813167 /* Resources */,
+				0AE69DB37576EE2629701D61 /* Frameworks */,
+				467ED130FD86DE930ECB588E /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				0A09A52FD93D6D6BBDE76097 /* PBXTargetDependency */,
+				C2A0646353844466A255E3A4 /* PBXTargetDependency */,
+				175230DB48987B5035C7D457 /* PBXTargetDependency */,
+				E91F7DD9C783F761984716A4 /* PBXTargetDependency */,
+				D0203D56C9B804AB28F46C4E /* PBXTargetDependency */,
+				84A7B9B0A39D3738AC0C8E0A /* PBXTargetDependency */,
+				2D1090113BE1C15B09B8C9C4 /* PBXTargetDependency */,
+			);
+			name = Develop;
+			packageProductDependencies = (
+			);
+			productName = Develop;
+			productReference = 50E3808E844F3658238D3CBB /* Develop.app */;
 			productType = "com.apple.product-type.application";
 		};
-		6AE9E8D82DD500E8000F9AE8 /* EsseJazzClubTests */ = {
+		628FCDAD536D9995E7102934 /* API */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 6AE9E8F02DD500E8000F9AE8 /* Build configuration list for PBXNativeTarget "EsseJazzClubTests" */;
+			buildConfigurationList = 7482B682E40E0AF1EFB7EF09 /* Build configuration list for PBXNativeTarget "API" */;
 			buildPhases = (
-				6AE9E8D52DD500E8000F9AE8 /* Sources */,
-				6AE9E8D62DD500E8000F9AE8 /* Frameworks */,
-				6AE9E8D72DD500E8000F9AE8 /* Resources */,
+				3AD74DBE9FC9A025423FB4F7 /* Sources */,
+				AD382A8F13FA6245D66BDED4 /* Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				6AE9E8DB2DD500E8000F9AE8 /* PBXTargetDependency */,
+				FB7D83D0D213EF8A9E1499C4 /* PBXTargetDependency */,
 			);
-			fileSystemSynchronizedGroups = (
-				6AE9E8DC2DD500E8000F9AE8 /* EsseJazzClubTests */,
-			);
-			name = EsseJazzClubTests;
+			name = API;
 			packageProductDependencies = (
 			);
-			productName = EsseJazzClubTests;
-			productReference = 6AE9E8D92DD500E8000F9AE8 /* EsseJazzClubTests.xctest */;
+			productName = API;
+			productReference = 48BA7EEC6C75DEF58EE0D4B8 /* API.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		718CC083E2794E1852737AAA /* Tests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0C4A1BC4CA7673080C6E42AE /* Build configuration list for PBXNativeTarget "Tests" */;
+			buildPhases = (
+				B8085A56F0B636370C2B1A7E /* Sources */,
+				907F41AA72B45780664C9927 /* Frameworks */,
+				7BA104562F52F7C1DEEBDD11 /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				7F25CB301B8852F96406894C /* PBXTargetDependency */,
+				7AA3EF117533791A08132BAF /* PBXTargetDependency */,
+				ABB659785BB6856B5EED8FD1 /* PBXTargetDependency */,
+				63FB81C2133EFA618488E04C /* PBXTargetDependency */,
+			);
+			name = Tests;
+			packageProductDependencies = (
+			);
+			productName = Tests;
+			productReference = 71FC149340012E03D49B5629 /* Tests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		6AE9E8E22DD500E8000F9AE8 /* EsseJazzClubUITests */ = {
+		9A8AA340B046EF13AB15AB9D /* Appstore */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 6AE9E8F32DD500E8000F9AE8 /* Build configuration list for PBXNativeTarget "EsseJazzClubUITests" */;
+			buildConfigurationList = 00879DCC31D3ED4E9324403F /* Build configuration list for PBXNativeTarget "Appstore" */;
 			buildPhases = (
-				6AE9E8DF2DD500E8000F9AE8 /* Sources */,
-				6AE9E8E02DD500E8000F9AE8 /* Frameworks */,
-				6AE9E8E12DD500E8000F9AE8 /* Resources */,
+				A5A2A3A081987836A3391BCF /* Sources */,
+				E19C9AA200F6F5050A1B81C6 /* Resources */,
+				37BA6D6EC83398FCBB074F18 /* Frameworks */,
+				984F638B04C4359207719107 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				6AE9E8E52DD500E8000F9AE8 /* PBXTargetDependency */,
+				511515130584B67855DEC8B9 /* PBXTargetDependency */,
+				6F6AAA1003C8D74131808BCE /* PBXTargetDependency */,
+				FD7D459E3CA905E117DA5F70 /* PBXTargetDependency */,
+				E7E1BDB6B697FE88D6CB06A7 /* PBXTargetDependency */,
+				9DEF1E32BB69566FF0181BD7 /* PBXTargetDependency */,
+				253E8F4350D13F865FE25D9E /* PBXTargetDependency */,
+				1D521B3440D7CAA99E8C3328 /* PBXTargetDependency */,
 			);
-			fileSystemSynchronizedGroups = (
-				6AE9E8E62DD500E8000F9AE8 /* EsseJazzClubUITests */,
-			);
-			name = EsseJazzClubUITests;
+			name = Appstore;
 			packageProductDependencies = (
 			);
-			productName = EsseJazzClubUITests;
-			productReference = 6AE9E8E32DD500E8000F9AE8 /* EsseJazzClubUITests.xctest */;
-			productType = "com.apple.product-type.bundle.ui-testing";
+			productName = Appstore;
+			productReference = CBF8EFDCD1779D4F5B700785 /* Appstore.app */;
+			productType = "com.apple.product-type.application";
+		};
+		DE8B67A2200B2036F1096A79 /* Services */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F7D1771E06A1BA2C4C10D279 /* Build configuration list for PBXNativeTarget "Services" */;
+			buildPhases = (
+				361205BB15F3AE35DB6B3C70 /* Sources */,
+				BDCB669E24488528B33CE352 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				5B3FDDE4ED12F39F93EDD85C /* PBXTargetDependency */,
+				6FC76E20F148741D5652111F /* PBXTargetDependency */,
+			);
+			name = Services;
+			packageProductDependencies = (
+			);
+			productName = Services;
+			productReference = 7AC7774ED32ECC57C344CE2C /* Services.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		F95CA5F4B695804271E6C8AE /* ClubFeature */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 197B49935AEA0FDCF538471F /* Build configuration list for PBXNativeTarget "ClubFeature" */;
+			buildPhases = (
+				6BD0B16941586BD4C47B7C03 /* Sources */,
+				1E18C56C24E5622792EFC986 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				9190D4081206B5292A1F6E40 /* PBXTargetDependency */,
+				40DFF815FB200341F657E735 /* PBXTargetDependency */,
+				02590E759CB4845F52EEF391 /* PBXTargetDependency */,
+			);
+			name = ClubFeature;
+			packageProductDependencies = (
+			);
+			productName = ClubFeature;
+			productReference = 099848F1843F299280385ED3 /* ClubFeature.framework */;
+			productType = "com.apple.product-type.framework";
 		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		6AE9E8C12DD500E7000F9AE8 /* Project object */ = {
+		E93BDE2F47C94A7B5E5573BD /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 1620;
-				LastUpgradeCheck = 1620;
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
 				TargetAttributes = {
-					6AE9E8C82DD500E7000F9AE8 = {
-						CreatedOnToolsVersion = 16.2;
+					5329541C90CE202BE3402912 = {
+						DevelopmentTeam = UBJG79G298;
 					};
-					6AE9E8D82DD500E8000F9AE8 = {
-						CreatedOnToolsVersion = 16.2;
-						TestTargetID = 6AE9E8C82DD500E7000F9AE8;
-					};
-					6AE9E8E22DD500E8000F9AE8 = {
-						CreatedOnToolsVersion = 16.2;
-						TestTargetID = 6AE9E8C82DD500E7000F9AE8;
+					9A8AA340B046EF13AB15AB9D = {
+						DevelopmentTeam = UBJG79G298;
 					};
 				};
 			};
-			buildConfigurationList = 6AE9E8C42DD500E7000F9AE8 /* Build configuration list for PBXProject "EsseJazzClub" */;
+			buildConfigurationList = 5218EEC986A74AA5F47FD344 /* Build configuration list for PBXProject "EsseJazzClub" */;
+			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
-				en,
 				Base,
+				en,
 			);
-			mainGroup = 6AE9E8C02DD500E7000F9AE8;
+			mainGroup = C2BFA200395F1D4417660D73;
 			minimizedProjectReferenceProxies = 1;
-			preferredProjectObjectVersion = 77;
-			productRefGroup = 6AE9E8CA2DD500E7000F9AE8 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				6AE9E8C82DD500E7000F9AE8 /* EsseJazzClub */,
-				6AE9E8D82DD500E8000F9AE8 /* EsseJazzClubTests */,
-				6AE9E8E22DD500E8000F9AE8 /* EsseJazzClubUITests */,
+				628FCDAD536D9995E7102934 /* API */,
+				9A8AA340B046EF13AB15AB9D /* Appstore */,
+				F95CA5F4B695804271E6C8AE /* ClubFeature */,
+				0604550E7B8EFCB5911B7A99 /* Core */,
+				5329541C90CE202BE3402912 /* Develop */,
+				1FF8D0816DFEDBEFD69F6025 /* HomeFeature */,
+				153D8DEA7DF20A4B74C2F17A /* ScheduleFeature */,
+				DE8B67A2200B2036F1096A79 /* Services */,
+				1E04693D828F3D1E46D03B80 /* SharedInfrastructure */,
+				718CC083E2794E1852737AAA /* Tests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		6AE9E8C72DD500E7000F9AE8 /* Resources */ = {
+		48CC9977705FB37138813167 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C76046E16C687A320888C537 /* Assets.xcassets in Resources */,
+				A478133807474959DA0C36F6 /* LaunchScreen.storyboard in Resources */,
+				E0538588A78B819E3031FC27 /* Preview Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		6AE9E8D72DD500E8000F9AE8 /* Resources */ = {
+		5E851EE5AC4D0DE61DAAB8B8 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A70441D59249DE06CBFD1444 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		6AE9E8E12DD500E8000F9AE8 /* Resources */ = {
+		E19C9AA200F6F5050A1B81C6 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				90A9CB40EE3E79AE61541F76 /* Assets.xcassets in Resources */,
+				2E013BE4E25642A660288620 /* LaunchScreen.storyboard in Resources */,
+				26E7EAE92227C8FD190BBFAD /* Preview Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		EEDF3500FF8FD41C6259D996 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				892A7C504C99F208D6EF9855 /* Media.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		6AE9E8C52DD500E7000F9AE8 /* Sources */ = {
+		361205BB15F3AE35DB6B3C70 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6A6462F02E1D80770094BDCC /* MusiciansService.swift in Sources */,
+				3BD070A3FF2A85CEC9FA352C /* DefaultApiClient.swift in Sources */,
+				026205E5BD61CC375CCD475F /* EventModel.swift in Sources */,
+				ADF677DE3A0E86DE056A96F2 /* EventsService.swift in Sources */,
+				90778EE75222E548DC5FEC51 /* ImageLoader.swift in Sources */,
+				478C998A1FA597BBFA9A8EF3 /* MusicianModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		6AE9E8D52DD500E8000F9AE8 /* Sources */ = {
+		3AD74DBE9FC9A025423FB4F7 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				ED612F886BF6AAF17A2A97E4 /* ApiClient.swift in Sources */,
+				C0658E31248B419E4CD88288 /* ApiEndpoint.swift in Sources */,
+				6A8E5A1F92752EF84CE6264D /* ApiError.swift in Sources */,
+				C48D3EF045C835625BD31545 /* ApiLogger.swift in Sources */,
+				F403A39F4A617629DD8AF7DA /* Endpoints.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		6AE9E8DF2DD500E8000F9AE8 /* Sources */ = {
+		3C46B8A725FF038FC7128827 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6A6462E82E1D31370094BDCC /* EventAction.swift in Sources */,
+				3E1E3E8FBBA467C1CDE0B07E /* EventContextButtons.swift in Sources */,
+				6A6462EC2E1D46800094BDCC /* EventCalendarCoordinator.swift in Sources */,
+				6A6462E62E16BDE90094BDCC /* DayView.swift in Sources */,
+				2016CC87BD9932EE8A431368 /* EventDetailView.swift in Sources */,
+				B2984B6C24B8421EDBEA0ADA /* EventInfoView.swift in Sources */,
+				7B16C1D5F72A3BB575E3B6FA /* EventPriceView.swift in Sources */,
+				F4625DD773D1DAFDF7CAA869 /* EventTimeView.swift in Sources */,
+				AFA66B82C4DC733B70CAA7E9 /* EventView.swift in Sources */,
+				6A6462E22E169F7C0094BDCC /* EventsGroup.swift in Sources */,
+				B43BC67D5E561F81C86410E9 /* EventViewModel.swift in Sources */,
+				9FF03738A10474EBEBC6D7BD /* SharedUIFactory.swift in Sources */,
+				6A26F9BE2E1580D1000E5B8C /* SearchTextField.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6BD0B16941586BD4C47B7C03 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8195B0610595FFE498ADB4E0 /* ClubFeature.swift in Sources */,
+				6A7605402ED5888A0019BB9A /* ClubFeaturesSlider.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A5A2A3A081987836A3391BCF /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9272922A9410AAFFA564438B /* AppContainer.swift in Sources */,
+				94CB6B651557E718BD51601E /* EsseJazzClubApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B426E2415ACB269D290DF7E9 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				87EF2DB0D070101A33FC8274 /* AppContainer.swift in Sources */,
+				670908CE8542D7F0B45E0040 /* EsseJazzClubApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B8085A56F0B636370C2B1A7E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AD8E45EBE5128BD6135F81E3 /* ApiTests.swift in Sources */,
+				1F49B96F2B71566ED10880C9 /* MockApiClient.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BECED9976123A496B6C30EC6 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9EF459DCB29CF55344D0ED99 /* ScheduleDayView.swift in Sources */,
+				6766412E89DC78B76CA389CC /* ScheduleEventView.swift in Sources */,
+				9770879617DE7C6C82E604C5 /* ScheduleScreen.swift in Sources */,
+				219359C0FEDF75172489488F /* ScheduleScreenViewModel.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		EA85B3628CCBFD31B58EBA15 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6A6462EE2E1D74390094BDCC /* String.swift in Sources */,
+				322CA1C8B1F7B9C04E8CDDF0 /* AppConfiguration.swift in Sources */,
+				6A6462F22E1DAB420094BDCC /* ExpandableText.swift in Sources */,
+				5B72B33802A0086D4725A8F6 /* CalendarEventsManager.swift in Sources */,
+				8D2C7C6DE7911E4A4B4B49FB /* Colors.swift in Sources */,
+				13A6CE0AEC938FDFFA59E26B /* FavoritesStorage.swift in Sources */,
+				6A26F9C02E168147000E5B8C /* UIScreen.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F9FCCB5CB498D1E9B60E1999 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7E01625D34E0EF8932874CD8 /* HomeScreen.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		6AE9E8DB2DD500E8000F9AE8 /* PBXTargetDependency */ = {
+		02590E759CB4845F52EEF391 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 6AE9E8C82DD500E7000F9AE8 /* EsseJazzClub */;
-			targetProxy = 6AE9E8DA2DD500E8000F9AE8 /* PBXContainerItemProxy */;
+			target = 1E04693D828F3D1E46D03B80 /* SharedInfrastructure */;
+			targetProxy = 539E054F11390F21D2A2BA3A /* PBXContainerItemProxy */;
 		};
-		6AE9E8E52DD500E8000F9AE8 /* PBXTargetDependency */ = {
+		0A09A52FD93D6D6BBDE76097 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 6AE9E8C82DD500E7000F9AE8 /* EsseJazzClub */;
-			targetProxy = 6AE9E8E42DD500E8000F9AE8 /* PBXContainerItemProxy */;
+			target = 0604550E7B8EFCB5911B7A99 /* Core */;
+			targetProxy = 7B27AB8C77D9BF1FE7017EAB /* PBXContainerItemProxy */;
+		};
+		0E600109DEB0F1C48A05011D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DE8B67A2200B2036F1096A79 /* Services */;
+			targetProxy = A8EBF20E134A8D17E2396C1F /* PBXContainerItemProxy */;
+		};
+		175230DB48987B5035C7D457 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DE8B67A2200B2036F1096A79 /* Services */;
+			targetProxy = 357C8659E3CA33CDA24E6AB5 /* PBXContainerItemProxy */;
+		};
+		1D521B3440D7CAA99E8C3328 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = F95CA5F4B695804271E6C8AE /* ClubFeature */;
+			targetProxy = 3F88EC64167EB20384F83BC3 /* PBXContainerItemProxy */;
+		};
+		217756F3E574BD168EF2F461 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 1E04693D828F3D1E46D03B80 /* SharedInfrastructure */;
+			targetProxy = 2B44BAFEED6ED3CC24429391 /* PBXContainerItemProxy */;
+		};
+		253E8F4350D13F865FE25D9E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 153D8DEA7DF20A4B74C2F17A /* ScheduleFeature */;
+			targetProxy = 9D89BA0CFFF40D45C08887AC /* PBXContainerItemProxy */;
+		};
+		26968592BEFB2E279C5AC10A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DE8B67A2200B2036F1096A79 /* Services */;
+			targetProxy = 7BE2FE302C33B1AF8DA1567C /* PBXContainerItemProxy */;
+		};
+		28844A9616642648BD660191 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DE8B67A2200B2036F1096A79 /* Services */;
+			targetProxy = 531D7C192C9AD383D40AD20F /* PBXContainerItemProxy */;
+		};
+		2D1090113BE1C15B09B8C9C4 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = F95CA5F4B695804271E6C8AE /* ClubFeature */;
+			targetProxy = 3094B24180E69CA0504FDC4E /* PBXContainerItemProxy */;
+		};
+		3C63763A53CF22EDEBEDBDB0 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 1E04693D828F3D1E46D03B80 /* SharedInfrastructure */;
+			targetProxy = D8060B6783A2EC3946EF03F5 /* PBXContainerItemProxy */;
+		};
+		40DFF815FB200341F657E735 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DE8B67A2200B2036F1096A79 /* Services */;
+			targetProxy = 4B3C7D9299C76F4F08151B41 /* PBXContainerItemProxy */;
+		};
+		511515130584B67855DEC8B9 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 0604550E7B8EFCB5911B7A99 /* Core */;
+			targetProxy = EA045CB4EEB16E09337CA9BC /* PBXContainerItemProxy */;
+		};
+		5B3FDDE4ED12F39F93EDD85C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 0604550E7B8EFCB5911B7A99 /* Core */;
+			targetProxy = 62F01C34585A9F150E9DACD5 /* PBXContainerItemProxy */;
+		};
+		63FB81C2133EFA618488E04C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DE8B67A2200B2036F1096A79 /* Services */;
+			targetProxy = E33C695CFF732FEA8C987868 /* PBXContainerItemProxy */;
+		};
+		6A7A168E89B4A59CBB3AFE53 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 0604550E7B8EFCB5911B7A99 /* Core */;
+			targetProxy = 25BE9123CBF0ADD0170A6985 /* PBXContainerItemProxy */;
+		};
+		6F6AAA1003C8D74131808BCE /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 628FCDAD536D9995E7102934 /* API */;
+			targetProxy = 105840B9B0353231A8094847 /* PBXContainerItemProxy */;
+		};
+		6FC76E20F148741D5652111F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 628FCDAD536D9995E7102934 /* API */;
+			targetProxy = 2C1C26AC0A1B8D4BD260F40B /* PBXContainerItemProxy */;
+		};
+		7AA3EF117533791A08132BAF /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 0604550E7B8EFCB5911B7A99 /* Core */;
+			targetProxy = F1311869B3F544278838E7C9 /* PBXContainerItemProxy */;
+		};
+		7F25CB301B8852F96406894C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 5329541C90CE202BE3402912 /* Develop */;
+			targetProxy = 7291B6131CB034C60BADC428 /* PBXContainerItemProxy */;
+		};
+		84A7B9B0A39D3738AC0C8E0A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 153D8DEA7DF20A4B74C2F17A /* ScheduleFeature */;
+			targetProxy = D314A97CEDCD551269BE4BFE /* PBXContainerItemProxy */;
+		};
+		90C67377B894B0C08E58CFD4 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 0604550E7B8EFCB5911B7A99 /* Core */;
+			targetProxy = A0F5B7A7026EFEDC2D55AFD7 /* PBXContainerItemProxy */;
+		};
+		9190D4081206B5292A1F6E40 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 0604550E7B8EFCB5911B7A99 /* Core */;
+			targetProxy = BF0B5C96FEA1485382184E56 /* PBXContainerItemProxy */;
+		};
+		9DEF1E32BB69566FF0181BD7 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 1FF8D0816DFEDBEFD69F6025 /* HomeFeature */;
+			targetProxy = 1D739348F15EA848E44D5C52 /* PBXContainerItemProxy */;
+		};
+		ABB659785BB6856B5EED8FD1 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 628FCDAD536D9995E7102934 /* API */;
+			targetProxy = C9A8E72CFA33DC8210109FED /* PBXContainerItemProxy */;
+		};
+		C2A0646353844466A255E3A4 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 628FCDAD536D9995E7102934 /* API */;
+			targetProxy = 6B27DB39B4AFDAEA2E25DE22 /* PBXContainerItemProxy */;
+		};
+		D0203D56C9B804AB28F46C4E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 1FF8D0816DFEDBEFD69F6025 /* HomeFeature */;
+			targetProxy = C5C2FF573276CBD390A4A88F /* PBXContainerItemProxy */;
+		};
+		E7E1BDB6B697FE88D6CB06A7 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 1E04693D828F3D1E46D03B80 /* SharedInfrastructure */;
+			targetProxy = E517194D506E9674C41CCF94 /* PBXContainerItemProxy */;
+		};
+		E91F7DD9C783F761984716A4 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 1E04693D828F3D1E46D03B80 /* SharedInfrastructure */;
+			targetProxy = D9FA855B405AF26A82E52672 /* PBXContainerItemProxy */;
+		};
+		F569A7779889F6717FF77FD5 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 0604550E7B8EFCB5911B7A99 /* Core */;
+			targetProxy = B4132ECB2BD8B9E0F3DD55D9 /* PBXContainerItemProxy */;
+		};
+		FB7D83D0D213EF8A9E1499C4 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 0604550E7B8EFCB5911B7A99 /* Core */;
+			targetProxy = E0B0EC7CF007F4D656E85944 /* PBXContainerItemProxy */;
+		};
+		FD7D459E3CA905E117DA5F70 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DE8B67A2200B2036F1096A79 /* Services */;
+			targetProxy = 12DA8AB66E33E0E5A5BCA4AD /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
-		6AE9E8EB2DD500E8000F9AE8 /* Debug */ = {
+		006421946B3BED73CAD0ADF4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = "Supporting Files/Core_Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				OTHER_SWIFT_FLAGS = "$(inherited) -Xfrontend -warn-long-expression-type-checking=300 -Xfrontend -warn-long-function-bodies=200 -Xfrontend -debug-time-function-bodies";
+				PRODUCT_BUNDLE_IDENTIFIER = com.unity.essejazz.Core;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.3;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Release;
+		};
+		0BE9F15A2F7B88865654D401 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = UBJG79G298;
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				INFOPLIST_FILE = "Supporting Files/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0.0;
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"\"-ObjC\"",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.unity.essejazz;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) DEVELOP";
+				SWIFT_VERSION = 5.3;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		0BF08980E702903028A47031 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = "Supporting Files/API_Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				OTHER_SWIFT_FLAGS = "$(inherited) -Xfrontend -warn-long-expression-type-checking=300 -Xfrontend -warn-long-function-bodies=200 -Xfrontend -debug-time-function-bodies";
+				PRODUCT_BUNDLE_IDENTIFIER = com.unity.essejazz.API;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.3;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Debug;
+		};
+		0D0E491E8B5E0920D007E8A0 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_ENABLE_OBJC_WEAK = YES;
@@ -306,14 +1482,13 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
 					"$(inherited)",
+					"DEBUG=1",
 				);
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
@@ -321,25 +1496,124 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
-				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
-		6AE9E8EC2DD500E8000F9AE8 /* Release */ = {
+		0EA50308875A268D211C8241 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = "Supporting Files/SharedInfrastructure_Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				OTHER_SWIFT_FLAGS = "$(inherited) -Xfrontend -warn-long-expression-type-checking=300 -Xfrontend -warn-long-function-bodies=200 -Xfrontend -debug-time-function-bodies";
+				PRODUCT_BUNDLE_IDENTIFIER = com.unity.essejazz.SharedInfrastructure;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.3;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Debug;
+		};
+		2215A893A64E46DDAA31FB65 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				INFOPLIST_FILE = "Supporting Files/Tests_Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.unity.essejazz.Tests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Develop.app/Develop";
+			};
+			name = Debug;
+		};
+		224E2D55667DB4B40C43DFF6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = UBJG79G298;
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				INFOPLIST_FILE = "Supporting Files/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0.0;
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"\"-ObjC\"",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.unity.essejazz;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) DEVELOP";
+				SWIFT_VERSION = 5.3;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		234D3FD7E5B33513DF9A4FD5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = "Supporting Files/ScheduleFeature_Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				OTHER_SWIFT_FLAGS = "$(inherited) -Xfrontend -warn-long-expression-type-checking=300 -Xfrontend -warn-long-function-bodies=200 -Xfrontend -debug-time-function-bodies";
+				PRODUCT_BUNDLE_IDENTIFIER = com.unity.essejazz.ScheduleFeature;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.3;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Debug;
+		};
+		30C2EF7FDD228E1503436390 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_ENABLE_OBJC_WEAK = YES;
@@ -369,8 +1643,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
@@ -378,186 +1651,454 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
-				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
-				VALIDATE_PRODUCT = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};
-		6AE9E8EE2DD500E8000F9AE8 /* Debug */ = {
+		3A09460BB23E85D7FC5A14A4 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_IDENTITY = "";
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"EsseJazzClub/Preview Content\"";
-				DEVELOPMENT_TEAM = UBJG79G298;
-				ENABLE_PREVIEWS = YES;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
-				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = "Supporting Files/ClubFeature_Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.unity..EsseJazzClub;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
+				OTHER_SWIFT_FLAGS = "$(inherited) -Xfrontend -warn-long-expression-type-checking=300 -Xfrontend -warn-long-function-bodies=200 -Xfrontend -debug-time-function-bodies";
+				PRODUCT_BUNDLE_IDENTIFIER = com.unity.essejazz.ClubFeature;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.3;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
 			};
-			name = Debug;
+			name = Release;
 		};
-		6AE9E8EF2DD500E8000F9AE8 /* Release */ = {
+		3F0493CFC86F6C3B74F40E86 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_IDENTITY = "";
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"EsseJazzClub/Preview Content\"";
-				DEVELOPMENT_TEAM = UBJG79G298;
-				ENABLE_PREVIEWS = YES;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
-				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = "Supporting Files/HomeFeature_Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.unity..EsseJazzClub;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
+				OTHER_SWIFT_FLAGS = "$(inherited) -Xfrontend -warn-long-expression-type-checking=300 -Xfrontend -warn-long-function-bodies=200 -Xfrontend -debug-time-function-bodies";
+				PRODUCT_BUNDLE_IDENTIFIER = com.unity.essejazz.HomeFeature;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.3;
 				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Release;
-		};
-		6AE9E8F12DD500E8000F9AE8 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = UBJG79G298;
-				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.unity..EsseJazzClubTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/EsseJazzClub.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/EsseJazzClub";
+				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
 		};
-		6AE9E8F22DD500E8000F9AE8 /* Release */ = {
+		41A33DE05FDA426EBCCCF1FC /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = UBJG79G298;
-				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.unity..EsseJazzClubTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/EsseJazzClub.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/EsseJazzClub";
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				INFOPLIST_FILE = "Supporting Files/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0.0;
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"\"-ObjC\"",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.unity.essejazz;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) APPSTORE";
+				SWIFT_VERSION = 5.3;
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
-		6AE9E8F42DD500E8000F9AE8 /* Debug */ = {
+		4A7183F39B66E46D719CD0D0 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = UBJG79G298;
-				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.unity..EsseJazzClubUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = EsseJazzClub;
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				INFOPLIST_FILE = "Supporting Files/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0.0;
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"\"-ObjC\"",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.unity.essejazz;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) APPSTORE";
+				SWIFT_VERSION = 5.3;
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
-		6AE9E8F52DD500E8000F9AE8 /* Release */ = {
+		515353281716E367233C5276 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_IDENTITY = "";
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = UBJG79G298;
-				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.unity..EsseJazzClubUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = "Supporting Files/ScheduleFeature_Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				OTHER_SWIFT_FLAGS = "$(inherited) -Xfrontend -warn-long-expression-type-checking=300 -Xfrontend -warn-long-function-bodies=200 -Xfrontend -debug-time-function-bodies";
+				PRODUCT_BUNDLE_IDENTIFIER = com.unity.essejazz.ScheduleFeature;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.3;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = EsseJazzClub;
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Release;
+		};
+		5C43A3C5FFBFB1A0D85F049B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = "Supporting Files/Core_Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				OTHER_SWIFT_FLAGS = "$(inherited) -Xfrontend -warn-long-expression-type-checking=300 -Xfrontend -warn-long-function-bodies=200 -Xfrontend -debug-time-function-bodies";
+				PRODUCT_BUNDLE_IDENTIFIER = com.unity.essejazz.Core;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.3;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Debug;
+		};
+		8AED8C234DD708E2B067307C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = "Supporting Files/API_Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				OTHER_SWIFT_FLAGS = "$(inherited) -Xfrontend -warn-long-expression-type-checking=300 -Xfrontend -warn-long-function-bodies=200 -Xfrontend -debug-time-function-bodies";
+				PRODUCT_BUNDLE_IDENTIFIER = com.unity.essejazz.API;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.3;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Release;
+		};
+		A13621385BA2AF1E5D048E65 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = "Supporting Files/ClubFeature_Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				OTHER_SWIFT_FLAGS = "$(inherited) -Xfrontend -warn-long-expression-type-checking=300 -Xfrontend -warn-long-function-bodies=200 -Xfrontend -debug-time-function-bodies";
+				PRODUCT_BUNDLE_IDENTIFIER = com.unity.essejazz.ClubFeature;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.3;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Debug;
+		};
+		A149D5CFE92278AFB0DE6527 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = "Supporting Files/Services_Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				OTHER_SWIFT_FLAGS = "$(inherited) -Xfrontend -warn-long-expression-type-checking=300 -Xfrontend -warn-long-function-bodies=200 -Xfrontend -debug-time-function-bodies";
+				PRODUCT_BUNDLE_IDENTIFIER = com.unity.essejazz.Services;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.3;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Debug;
+		};
+		CBBB0E12B824623B82696A93 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				INFOPLIST_FILE = "Supporting Files/Tests_Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.unity.essejazz.Tests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Develop.app/Develop";
+			};
+			name = Release;
+		};
+		CC94F3A219D81CE9281CD465 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = "Supporting Files/Services_Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				OTHER_SWIFT_FLAGS = "$(inherited) -Xfrontend -warn-long-expression-type-checking=300 -Xfrontend -warn-long-function-bodies=200 -Xfrontend -debug-time-function-bodies";
+				PRODUCT_BUNDLE_IDENTIFIER = com.unity.essejazz.Services;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.3;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Release;
+		};
+		D127EDF7F9093B8C7B3127AF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = "Supporting Files/SharedInfrastructure_Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				OTHER_SWIFT_FLAGS = "$(inherited) -Xfrontend -warn-long-expression-type-checking=300 -Xfrontend -warn-long-function-bodies=200 -Xfrontend -debug-time-function-bodies";
+				PRODUCT_BUNDLE_IDENTIFIER = com.unity.essejazz.SharedInfrastructure;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.3;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Release;
+		};
+		FF67056ADCA3FE980BA30667 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = "Supporting Files/HomeFeature_Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				OTHER_SWIFT_FLAGS = "$(inherited) -Xfrontend -warn-long-expression-type-checking=300 -Xfrontend -warn-long-function-bodies=200 -Xfrontend -debug-time-function-bodies";
+				PRODUCT_BUNDLE_IDENTIFIER = com.unity.essejazz.HomeFeature;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.3;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		6AE9E8C42DD500E7000F9AE8 /* Build configuration list for PBXProject "EsseJazzClub" */ = {
+		00879DCC31D3ED4E9324403F /* Build configuration list for PBXNativeTarget "Appstore" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				6AE9E8EB2DD500E8000F9AE8 /* Debug */,
-				6AE9E8EC2DD500E8000F9AE8 /* Release */,
+				4A7183F39B66E46D719CD0D0 /* Debug */,
+				41A33DE05FDA426EBCCCF1FC /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
-		6AE9E8ED2DD500E8000F9AE8 /* Build configuration list for PBXNativeTarget "EsseJazzClub" */ = {
+		0C4A1BC4CA7673080C6E42AE /* Build configuration list for PBXNativeTarget "Tests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				6AE9E8EE2DD500E8000F9AE8 /* Debug */,
-				6AE9E8EF2DD500E8000F9AE8 /* Release */,
+				2215A893A64E46DDAA31FB65 /* Debug */,
+				CBBB0E12B824623B82696A93 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
-		6AE9E8F02DD500E8000F9AE8 /* Build configuration list for PBXNativeTarget "EsseJazzClubTests" */ = {
+		1586E7AEE0926C6B97C77E19 /* Build configuration list for PBXNativeTarget "Develop" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				6AE9E8F12DD500E8000F9AE8 /* Debug */,
-				6AE9E8F22DD500E8000F9AE8 /* Release */,
+				0BE9F15A2F7B88865654D401 /* Debug */,
+				224E2D55667DB4B40C43DFF6 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
-		6AE9E8F32DD500E8000F9AE8 /* Build configuration list for PBXNativeTarget "EsseJazzClubUITests" */ = {
+		167D6FDC2D9DB22E496366BB /* Build configuration list for PBXNativeTarget "SharedInfrastructure" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				6AE9E8F42DD500E8000F9AE8 /* Debug */,
-				6AE9E8F52DD500E8000F9AE8 /* Release */,
+				0EA50308875A268D211C8241 /* Debug */,
+				D127EDF7F9093B8C7B3127AF /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
+		};
+		197B49935AEA0FDCF538471F /* Build configuration list for PBXNativeTarget "ClubFeature" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A13621385BA2AF1E5D048E65 /* Debug */,
+				3A09460BB23E85D7FC5A14A4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		5218EEC986A74AA5F47FD344 /* Build configuration list for PBXProject "EsseJazzClub" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0D0E491E8B5E0920D007E8A0 /* Debug */,
+				30C2EF7FDD228E1503436390 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		7482B682E40E0AF1EFB7EF09 /* Build configuration list for PBXNativeTarget "API" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0BF08980E702903028A47031 /* Debug */,
+				8AED8C234DD708E2B067307C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		B4A317C45A1624D7E81FD690 /* Build configuration list for PBXNativeTarget "HomeFeature" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3F0493CFC86F6C3B74F40E86 /* Debug */,
+				FF67056ADCA3FE980BA30667 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		D47AB1DEF7FBDB09C4906B7F /* Build configuration list for PBXNativeTarget "ScheduleFeature" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				234D3FD7E5B33513DF9A4FD5 /* Debug */,
+				515353281716E367233C5276 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		E382715FFD20320C74D3E747 /* Build configuration list for PBXNativeTarget "Core" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5C43A3C5FFBFB1A0D85F049B /* Debug */,
+				006421946B3BED73CAD0ADF4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		F7D1771E06A1BA2C4C10D279 /* Build configuration list for PBXNativeTarget "Services" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A149D5CFE92278AFB0DE6527 /* Debug */,
+				CC94F3A219D81CE9281CD465 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
 		};
 /* End XCConfigurationList section */
 	};
-	rootObject = 6AE9E8C12DD500E7000F9AE8 /* Project object */;
+	rootObject = E93BDE2F47C94A7B5E5573BD /* Project object */;
 }
