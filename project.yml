@@ -9,6 +9,7 @@ options:
 
 fileGroups:
   - Supporting Files
+  - Features
 
 settingGroups:
   application_debug:

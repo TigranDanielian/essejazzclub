@@ -17,8 +17,8 @@ public struct DayView: View {
     public init(title: String, sections: [GroupedEventSection], textWidth: Binding<CGFloat>? = nil, eventViewProvider: @escaping (EventViewModel) -> any View) {
         self.title = title
         self.sections = sections
-        _textWidth = textWidth ?? .constant(0)
         self.eventViewProvider = eventViewProvider
+        _textWidth = textWidth ?? .constant(0)
     }
     
     public var body: some View {

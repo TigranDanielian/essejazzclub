@@ -43,7 +43,8 @@ public struct ClubScreen: View {
                     
                     // MARK: - Features slider
                     ClubFeaturesSlider(items: bannerItems)
-                        .frame(height: 200)
+                        .frame(height: 220)
+//                        .padding(.horizontal, 8)
                     
                     // MARK: - Club essentials grid
                     LazyVGrid(columns: gridColumns, spacing: 16) {
@@ -52,13 +53,13 @@ public struct ClubScreen: View {
                         }
                     }
                     .padding(.bottom, 24)
+                    .padding(.horizontal, 16)
                 }
                 .padding(.top, 16)
             }
-            .padding(.horizontal, 8)
             .background(Color(uiColor: Colors.mainBackground).ignoresSafeArea())
-            .navigationTitle("Клуб")
-            .navigationBarTitleDisplayMode(.inline)
+//            .navigationTitle("Клуб")
+//            .navigationBarTitleDisplayMode(.inline)
         }
     }
 }

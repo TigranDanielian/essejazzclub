@@ -25,6 +25,7 @@ public struct EventView: View {
                     .clipped()
                     .background(Color.secondary)
                     .cornerRadius(8)
+                    .animation(.bouncy, value: viewModel.image == nil )
 
                 EventInfoView(viewModel: viewModel)
                     .frame(maxHeight: .infinity, alignment: .top)

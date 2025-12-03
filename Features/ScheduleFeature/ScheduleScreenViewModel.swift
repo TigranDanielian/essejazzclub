@@ -19,11 +19,15 @@ public final class ScheduleScreenViewModel: ObservableObject {
     @Published var selectedEvent: EventViewModel?
     @Published var searchInputText: String = ""
     
+    private let eventsService: EventsService
+    
     public init(
         eventsService: EventsService,
         viewModelFactory: ViewModelFactory
     ) {
+        self.eventsService = eventsService
         eventsService.state
+            .receive(on: DispatchQueue.main)
             .combineLatest($searchInputText.removeDuplicates())
             .tryMap { state, searchInput in
                 state.events.map { model -> EventViewModel in
@@ -39,6 +43,29 @@ public final class ScheduleScreenViewModel: ObservableObject {
                 self?.groupEvents($0)
             })
             .store(in: &cancellables)
+    }
+    
+    func refresh() async {
+        do {
+            try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
+                var cancellable: AnyCancellable?
+                cancellable = eventsService.load()
+                    .sink(
+                        receiveCompletion: { completion in
+                            switch completion {
+                            case .finished:
+                                continuation.resume()
+                            case .failure(let error):
+                                continuation.resume(throwing: error)
+                            }
+                            cancellable?.cancel()
+                        },
+                        receiveValue: { _ in }
+                    )
+            }
+        } catch {
+            // Ошибка обрабатывается через state publisher
+        }
     }
     
     func groupEvents(_ viewModels: [EventViewModel]) {

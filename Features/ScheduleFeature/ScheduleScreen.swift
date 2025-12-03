@@ -9,7 +9,6 @@ import SwiftUI
 import Services
 import Combine
 import Core
-import EventKit
 import SharedInfrastructure
 
 public protocol ScheduleScreenDependencies {
@@ -62,9 +61,12 @@ public struct ScheduleScreen: View {
                     .padding(.horizontal, 12)
                     .padding(.top, 20)
                 }
+                .refreshable {
+                    await viewModel.refresh()
+                }
             }
-            .navigationBarTitleDisplayMode(.inline)
-            .navigationTitle("Афиша")
+//            .navigationBarTitleDisplayMode(.inline)
+//            .navigationTitle("Афиша")
             .background(Color.init(uiColor: Colors.mainBackground))
         }
         .sheet(isPresented: $showFilter, content: {
@@ -72,44 +74,5 @@ public struct ScheduleScreen: View {
                 EmptyView()
             }
         })
-    }
-}
-
-struct TopLeftCutoutShape: Shape {
-    let cutoutSize: CGSize
-    let cornerRadius: CGFloat
-
-    func path(in rect: CGRect) -> Path {
-        var path = Path()
-
-        // Вся карточка
-        path.addRect(rect)
-
-        // Вырез
-        let cutRect = CGRect(origin: .zero, size: cutoutSize)
-
-        var cutout = Path()
-        cutout.move(to: CGPoint(x: cutRect.minX, y: cutRect.minY))
-        cutout.addLine(to: CGPoint(x: cutRect.maxX + cornerRadius, y: cutRect.minY))
-        cutout.addQuadCurve(
-            to: CGPoint(x: cutRect.maxX, y: cutRect.minY + cornerRadius),
-            control: CGPoint(x: cutRect.maxX, y: cutRect.minY)
-        )
-        
-        cutout.addLine(to: CGPoint(x: cutRect.maxX, y: cutRect.maxY - cornerRadius))
-        cutout.addQuadCurve(
-            to: CGPoint(x: cutRect.maxX - cornerRadius, y: cutRect.maxY),
-            control: CGPoint(x: cutRect.maxX, y: cutRect.maxY)
-        )
-        cutout.addLine(to: CGPoint(x: cutRect.minX + cornerRadius, y: cutRect.maxY))
-        cutout.addQuadCurve(
-            to: CGPoint(x: cutRect.minX, y: cutRect.maxY + cornerRadius),
-            control: CGPoint(x: cutRect.minX, y: cutRect.maxY)
-        )
-        cutout.closeSubpath()
-
-        path.addPath(cutout)
-
-        return path
     }
 }

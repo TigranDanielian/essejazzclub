@@ -43,11 +43,12 @@ struct ClubFeaturesSlider: View {
                     }
                     .padding(16)
                 }
+                .frame(height: 200)
                 .background(Color(uiColor: Colors.cardBackground))
                 .cornerRadius(16)
                 .shadow(radius: 8)
                 .padding(.vertical, 4)
-                .padding(.horizontal, 8)
+                .padding(.horizontal, 16)
             }
         }
         .cornerRadius(16)
