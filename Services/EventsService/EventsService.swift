@@ -9,11 +9,15 @@ import Foundation
 import Combine
 import API
 
+public struct EventsState {
+    public let events: [EventModel]
+}
+
 public protocol EventsService {
     /// Loads all events from current date
     func load() -> AnyPublisher<Void, Error>
 
-    var state: AnyPublisher<EventsServiceImpl.State, Never> { get }
+    var state: AnyPublisher<EventsState, Never> { get }
 }
 
 public final class EventsServiceImpl: EventsService {
@@ -22,16 +26,12 @@ public final class EventsServiceImpl: EventsService {
         let date: Date
     }
 
-    public struct State {
-        public let events: [EventModel]
-    }
-
     private var apiClient: ApiClient
     @Published private var events: [EventModel] = []
 
-    public var state: AnyPublisher<State, Never> {
+    public var state: AnyPublisher<EventsState, Never> {
         $events
-            .map { State(events: $0) }
+            .map { EventsState(events: $0) }
             .eraseToAnyPublisher()
     }
 

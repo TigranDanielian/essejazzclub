@@ -16,7 +16,7 @@ struct EventPriceView: View {
     }
 
     var body: some View {
-        Text(price.isEmpty ? "FREE" : price)
+        Text(price.isEmpty ? "FREE" : "\(price)")
             .padding(2)
             .font(.caption)
             .foregroundStyle(Color(uiColor: price.isEmpty ? Colors.freetag : Colors.primary))

@@ -10,13 +10,14 @@ import SwiftUI
 
 public struct ExpandableText: View {
     @Binding public var text: AttributedString
-    private let lineLimit: CGFloat = 300 // чтобы не было обрезки по умолчанию
+    private var lineLimit: CGFloat // чтобы не было обрезки по умолчанию
     
     @State private var expanded = false
     @State private var isTruncated = false
     
-    public init(text: Binding<AttributedString>) {
+    public init(text: Binding<AttributedString>, limit: CGFloat = 300) {
         self._text = text
+        self.lineLimit = limit
     }
     
     public var body: some View {

@@ -12,6 +12,21 @@ import API
 enum ImageLoaderError: LocalizedError {
     case invalidData
     case invalidURL
+    case networkError(Error)
+    case httpError(statusCode: Int)
+    
+    var errorDescription: String? {
+        switch self {
+        case .invalidData:
+            return "Invalid image data"
+        case .invalidURL:
+            return "Invalid URL"
+        case .networkError(let error):
+            return "Network error: \(error.localizedDescription)"
+        case .httpError(let statusCode):
+            return "HTTP error with status code: \(statusCode)"
+        }
+    }
 }
 
 public protocol ImageLoader: Sendable {
@@ -37,18 +52,34 @@ public final class ImageLoaderImpl: ImageLoader {
             return cachedImage
         }
        
-        let (data, _) = try await URLSession.shared.data(from: url)
-        
-        guard let image = await downsample(imageData: data, to: .init(width: 200, height: 200), scale: UIScreen.main.scale) else {
-            print("❌ [Image Loader] failed to downsample image with url \(url)")
-            throw ImageLoaderError.invalidData
+        do {
+            let (data, response) = try await URLSession.shared.data(from: url)
+            
+            // Проверяем HTTP статус код
+            if let httpResponse = response as? HTTPURLResponse {
+                guard (200...299).contains(httpResponse.statusCode) else {
+                    print("❌ [Image Loader] HTTP error with status code \(httpResponse.statusCode) for url \(url)")
+                    throw ImageLoaderError.httpError(statusCode: httpResponse.statusCode)
+                }
+            }
+            
+            guard let image = await downsample(imageData: data, to: .init(width: 200, height: 200), scale: UIScreen.main.scale) else {
+                print("❌ [Image Loader] failed to downsample image with url \(url)")
+                throw ImageLoaderError.invalidData
+            }
+            
+            await cache.insert(image, for: path)
+            
+            print("[Image Loader] loaded image for \(url)")
+            
+            return image
+        } catch let error as ImageLoaderError {
+            throw error
+        } catch {
+            // Обрабатываем сетевые ошибки (таймауты, отсутствие сети и т.д.)
+            print("❌ [Image Loader] network error for url \(url): \(error.localizedDescription)")
+            throw ImageLoaderError.networkError(error)
         }
-        
-        await cache.insert(image, for: path)
-        
-        print("[Image Loader] loaded image for \(url)")
-        
-        return image
     }
 }
 

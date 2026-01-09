@@ -18,14 +18,21 @@ public struct EventView: View {
     public var body: some View {
         ZStack(alignment: .topTrailing) {
             HStack(spacing: 12) {
-                Image(uiImage: viewModel.image ?? UIImage())
-                    .resizable()
-                    .scaledToFill()
-                    .frame(width: 100, height: 100)
-                    .clipped()
-                    .background(Color.secondary)
-                    .cornerRadius(8)
-                    .animation(.bouncy, value: viewModel.image == nil )
+                ZStack {
+                    Image(uiImage: viewModel.image ?? UIImage())
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: 100, height: 100)
+                        .clipped()
+                        .background(Color.secondary)
+                        .cornerRadius(8)
+
+                    if viewModel.isLoadingImage {
+                        SkeletonView()
+                            .cornerRadius(8)
+                    }
+                }
+                .frame(width: 100, height: 100)
 
                 EventInfoView(viewModel: viewModel)
                     .frame(maxHeight: .infinity, alignment: .top)

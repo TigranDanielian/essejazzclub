@@ -29,9 +29,9 @@ public final class AppContainer: ObservableObject {
         self.eventsService = EventsServiceImpl(apiClient: apiClient)
         self.musiciansService = MusiciansServiceImpl(apiClient: apiClient)
         
-        
         self.viewModelFactory = SharedViewModelFactory(
             eventsService: eventsService,
+            musiaciansService: musiciansService,
             favoriteStorage: favoritesStorage,
             imageLoader: imageLoader.loadImage(path:)
         )

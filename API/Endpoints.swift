@@ -42,10 +42,11 @@ public extension ApiEndpoint {
             )
         }
         
-        public static func eventMusicians() -> ApiEndpoint {
+        public static func eventMusicians(eventId: String) -> ApiEndpoint {
             ApiEndpoint(
                 method: .get,
-                path: "eventMusicians"
+                path: "eventMusicians",
+                task: .query(["id": eventId])
             )
         }
     }

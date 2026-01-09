@@ -30,19 +30,12 @@ public struct HomeScreen: View {
     public var body: some View {
         NavigationView {
             ScrollView(.vertical) {
-                VStack(alignment: .leading, spacing: 32) {
+                VStack(alignment: .leading, spacing: 24) {
                     
                     // MARK: - Top events  block
-                    ZStack {
-                        TopLeftCutoutShape(
-                            cutoutSize: .init(width: 165, height: 35),
-                            cornerRadius: 12
-                        )
-                        .fill(Color(uiColor: Colors.altBackground), style: FillStyle(eoFill: true))
-                        .cornerRadius(12)
-                        
+                    if !viewModel.mainEvents.isEmpty {
                         VStack(alignment: .leading) {
-                            Text("Month events")
+                            Text("Главные события")
                                 .font(.title2)
                                 .bold()
                                 .foregroundStyle(Color(uiColor: Colors.text))
@@ -52,75 +45,66 @@ public struct HomeScreen: View {
                                 LazyHStack(alignment: .center, spacing: 8) {
                                     ForEach(viewModel.mainEvents) { event in
                                         AnyView(uiFactory.produce(unit: .event(event)))
-                                            .frame(width: UIScreen.screenWidth * 0.9, height: 100)
+                                            .frame(
+                                                width: viewModel.mainEvents.count == 1 
+                                                    ? UIScreen.screenWidth - 24 
+                                                    : UIScreen.screenWidth * 0.9,
+                                                height: 100
+                                            )
                                             .onTapGesture {
                                                 actionHandler(.onSelect(event))
                                             }
                                     }
                                 }
-                                .padding(12)
+                                .padding(.horizontal, 12)
                                 .frame(maxHeight: 200)
                             }
                         }
+                        
+                        SeparatorView()
                     }
-                    .padding(.horizontal, 12)
 
                     // MARK: - Today events block
-                    
-                    ZStack {
-                        TopLeftCutoutShape(
-                            cutoutSize: .init(width: 90, height: 35),
-                            cornerRadius: 12
-                        )
-                        .fill(Color(uiColor: Colors.altBackground), style: FillStyle(eoFill: true))
-                        .cornerRadius(12)
+                    DayView(title: "Сегодня", sections: viewModel.todayEvents) { viewModel in
                         
-                        DayView(title: "Today", sections: viewModel.todayEvents) { viewModel in
-                            
-                            uiFactory.produce(unit: .event(viewModel))
-                                .onTapGesture {
-                                    actionHandler(.onSelect(viewModel))
-                                }
-                        }
-                        .padding(.horizontal, 6)
+                        uiFactory.produce(unit: .event(viewModel))
+                            .onTapGesture {
+                                actionHandler(.onSelect(viewModel))
+                            }
                     }
-                    .padding(.horizontal, 12)
-                    
+                    .padding(.horizontal, 6)
                     
                     // MARK: - Favorites block
                     
                     if !viewModel.favoriteEvents.isEmpty {
-                        ZStack {
-                            TopLeftCutoutShape(
-                                cutoutSize: .init(width: 120, height: 35),
-                                cornerRadius: 12
-                            )
-                            .fill(Color(uiColor: Colors.altBackground), style: FillStyle(eoFill: true))
-                            .cornerRadius(12)
+                        SeparatorView()
+                        
+                        VStack(alignment: .leading) {
+                            Text("Избранное")
+                                .font(.title2)
+                                .bold()
+                                .foregroundStyle(Color(uiColor: Colors.text))
+                                .padding(.horizontal, 12)
                             
-                            VStack(alignment: .leading) {
-                                Text("Favorites")
-                                    .font(.title2)
-                                    .bold()
-                                    .foregroundStyle(Color(uiColor: Colors.text))
-                                    .padding(.horizontal, 12)
-                                
-                                ScrollView(.horizontal, showsIndicators: false) {
-                                    LazyHStack(alignment: .center, spacing: 8) {
-                                        ForEach(viewModel.favoriteEvents) { event in
-                                            AnyView(uiFactory.produce(unit: .event(event)))
-                                                .frame(width: UIScreen.screenWidth * 0.9, height: 100)
-                                                .onTapGesture {
-                                                    actionHandler(.onSelect(event))
-                                                }
-                                        }
+                            ScrollView(.horizontal, showsIndicators: false) {
+                                LazyHStack(alignment: .center, spacing: 8) {
+                                    ForEach(viewModel.favoriteEvents) { event in
+                                        AnyView(uiFactory.produce(unit: .event(event)))
+                                            .frame(
+                                                width: viewModel.favoriteEvents.count == 1 
+                                                    ? UIScreen.screenWidth - 24 
+                                                    : UIScreen.screenWidth * 0.9,
+                                                height: 100
+                                            )
+                                            .onTapGesture {
+                                                actionHandler(.onSelect(event))
+                                            }
                                     }
-                                    .padding(12)
-                                    .frame(maxHeight: 200)
                                 }
+                                .padding(.horizontal, 12)
+                                .frame(maxHeight: 200)
                             }
                         }
-                        .padding(.horizontal, 12)
                     }
                     
                     Spacer()
@@ -132,7 +116,15 @@ public struct HomeScreen: View {
     }
 }
 
-
+struct SeparatorView: View {
+    var body: some View {
+        Rectangle()
+            .frame(height: 5)
+            .cornerRadius(5)
+            .foregroundColor(Color(uiColor: UIColor.darkGray))
+            .padding(.horizontal, 20)
+    }
+}
 
 //#Preview {
 //    HomeScreen()

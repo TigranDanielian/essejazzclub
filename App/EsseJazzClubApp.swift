@@ -83,6 +83,7 @@ struct RootView: View {
     @StateObject var calendarCoordinator: EventCalendarCoordinator
     
     @State private var selectedEvent: EventViewModel? = nil
+    @State private var selectedEventMusicians: [MusicianViewModel] = []
     
     var body: some View {
         TabView {
@@ -116,7 +117,7 @@ struct RootView: View {
                     Label("Клуб", systemImage: "music.note.house")
                 }
         }
-        .sheet(item: $selectedEvent) { event in
+        .sheet(item: $selectedEvent, onDismiss: { selectedEvent = nil }) { event in
             NavigationView {
                 AnyView(container.uiFactory.produce(unit: .eventDetails(event, handleAction(_:))))
             }
@@ -159,6 +160,12 @@ extension RootView {
             }
         case .onSelect(let viewModel):
             selectedEvent = viewModel
+            
+        case .dismiss:
+            selectedEvent = nil
+            
+        case .onBuy:
+            break
         }
     }
 }

@@ -11,6 +11,8 @@ import SwiftUI
 import Combine
 import Core
 
+public typealias MusiciansProvider = (String) async throws -> AnyPublisher<[MusicianViewModel], Never>
+
 @MainActor
 public final class EventViewModel: ObservableObject, Identifiable {
     public let id: String
@@ -18,9 +20,11 @@ public final class EventViewModel: ObservableObject, Identifiable {
     public let hasDate: Bool
 
     @Published public var image: UIImage? = nil
+    @Published public var isLoadingImage: Bool = false
     @Published public var dragOffset: CGFloat = 0
     @Published public var startDragOffset: CGFloat = 0
     @Published public var isFavorite: Bool = false
+    @Published public var musicians: [MusicianViewModel] = []
     
     public var title: String
     public var description: String
@@ -39,9 +43,17 @@ public final class EventViewModel: ObservableObject, Identifiable {
         return formatter.string(from: date)
     }
     
+    public func dateString(format: String = "d MMMM") -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = format
+        formatter.locale = Locale(identifier: "ru_RU")
+
+        return formatter.string(from: date)
+    }
+    
     public var priceString: String? {
         prices.compactMap({ $0.price }).min().map {
-            $0 > 0 ? "\($0)" : ""
+            $0 > 0 ? "от \($0) ₽" : ""
         }
     }
     
@@ -65,7 +77,8 @@ public final class EventViewModel: ObservableObject, Identifiable {
         hasContextMenu: Bool,
         withDate: Bool = false,
         imageLoader: @escaping AsyncImageLoader,
-        favoritesStorage: FavoritesStorage<String>
+        favoritesStorage: FavoritesStorage<String>,
+        musiciansProvider: MusiciansProvider?
     ) {
         self.model = model
         self.imageLoader = imageLoader
@@ -87,6 +100,13 @@ public final class EventViewModel: ObservableObject, Identifiable {
         Task {
             await loadImage()
         }
+        
+        Task {
+            try await musiciansProvider?(model.id)
+                .receive(on: DispatchQueue.main)
+                .assign(to: &$musicians)
+        }
+        
     }
     
     func toggleOffset() {
@@ -96,8 +116,10 @@ public final class EventViewModel: ObservableObject, Identifiable {
 
     private func loadImage() async {
         if let imageUrlString {
+            isLoadingImage = true
             let loadedImage = try? await imageLoader(imageUrlString)
             self.image = loadedImage
+            isLoadingImage = false
         }
     }
     

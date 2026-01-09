@@ -61,9 +61,6 @@ public struct ScheduleScreen: View {
                     .padding(.horizontal, 12)
                     .padding(.top, 20)
                 }
-                .refreshable {
-                    await viewModel.refresh()
-                }
             }
 //            .navigationBarTitleDisplayMode(.inline)
 //            .navigationTitle("Афиша")

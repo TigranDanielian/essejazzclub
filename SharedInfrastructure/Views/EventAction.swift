@@ -10,6 +10,8 @@ import Foundation
 public enum EventAction {
     case contextAction(EventContextButtonType)
     case onSelect(EventViewModel)
+    case dismiss
+    case onBuy
 }
 
 public typealias EventActionHandler = (EventAction) -> Void

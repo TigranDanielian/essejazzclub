@@ -46,9 +46,9 @@ public final class CalendarEventsManager: ObservableObject {
         if response {
             let event = EKEvent(eventStore: eventStore)
             event.calendar = eventStore.defaultCalendarForNewEvents
-            event.title = title
-            event.startDate = date
-            event.endDate = Calendar.current.date(byAdding: .hour, value: 2, to: date)!
+            event.title = "\(title)\nat ESSE Jazz Club"
+            event.startDate = Date()
+            event.endDate = Calendar.current.date(byAdding: .hour, value: 2, to: Date())!
             
             try eventStore.save(event, span: .thisEvent)
         }
