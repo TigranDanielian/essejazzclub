@@ -34,18 +34,18 @@ public protocol AppConfiguration {
 
 
 public struct AppConfigurationDebug: AppConfiguration {
-    public let apiBaseUrl = URL(string: "http://127.0.0.1:8080")!
-    
+    public let apiBaseUrl = URL(string: "http://193.168.3.162:8081")!
+
     public let imageBaseUrl = URL(string: "https://www.jazzesse.ru/upload/")!
     
     public let isRelease: Bool = false
-    
+
     public let flavor: Flavor = .dev
 }
 
 
 public struct AppConfigurationAppStore: AppConfiguration {
-    public let apiBaseUrl = URL(string: "http://127.0.0.1:8080")!
+    public let apiBaseUrl = URL(string: "http://193.168.3.162:8081")!
     
     public let imageBaseUrl = URL(string: "https://www.jazzesse.ru/upload/")!
     

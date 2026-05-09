@@ -16,6 +16,7 @@ public typealias MusiciansProvider = (String) async throws -> AnyPublisher<[Musi
 @MainActor
 public final class EventViewModel: ObservableObject, Identifiable {
     public let id: String
+    public var occurrenceIdentifier: String { eventOccurrenceIdentifier(for: model) }
     public let hasContextMenu: Bool
     public let hasDate: Bool
 

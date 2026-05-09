@@ -26,6 +26,7 @@ public final class DefaultApiClient: ApiClient {
         
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
+        request.timeoutInterval = 20
         
         logger.log(request: request)
         
@@ -46,10 +47,10 @@ public final class DefaultApiClient: ApiClient {
                 return data
             }
             .mapError { error in
-                if let urlError = error as? URLError {
-                    return ApiError.requestFailed(urlError)
+                if error is URLError {
+                    return ApiError.invalidURL
                 } else {
-                    return ApiError.requestFailed(error)
+                    return ApiError.requestFailed
                 }
             }
             .eraseToAnyPublisher()
@@ -63,6 +64,7 @@ public final class DefaultApiClient: ApiClient {
         
         var request = URLRequest(url: urlComponents.url!)
         request.httpMethod = endpoint.method.rawValue.uppercased()
+        request.timeoutInterval = 20
         
         // Обработка параметров
         if let task = endpoint.task {
@@ -114,12 +116,12 @@ public final class DefaultApiClient: ApiClient {
             }
             .decode(type: Model.self, decoder: JSONDecoder())
             .mapError { error in
-                if let urlError = error as? URLError {
-                    return ApiError.requestFailed(urlError)
-                } else if let decodingError = error as? DecodingError {
-                    return ApiError.decodingError(decodingError)
+                if error is URLError {
+                    return ApiError.invalidURL
+                } else if error is DecodingError {
+                    return ApiError.decodingError
                 } else {
-                    return ApiError.requestFailed(error)
+                    return ApiError.requestFailed
                 }
             }
             .eraseToAnyPublisher()

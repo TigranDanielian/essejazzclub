@@ -28,8 +28,7 @@ public struct HomeScreen: View {
     }
     
     public var body: some View {
-        NavigationView {
-            ScrollView(.vertical) {
+        ScrollView(.vertical) {
                 VStack(alignment: .leading, spacing: 24) {
                     
                     // MARK: - Top events  block
@@ -112,7 +111,6 @@ public struct HomeScreen: View {
                 .padding(.top, 12)
             }
             .background(Color(uiColor: Colors.mainBackground))
-        }
     }
 }
 

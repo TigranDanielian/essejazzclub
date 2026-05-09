@@ -35,6 +35,7 @@ public final class AppContainer: ObservableObject {
             favoriteStorage: favoritesStorage,
             imageLoader: imageLoader.loadImage(path:)
         )
+        
         self.uiFactory = SharedUIFactory()
 
         self.calendarCoordinator = EventCalendarCoordinator(calendarManager: calendarEventsManager)

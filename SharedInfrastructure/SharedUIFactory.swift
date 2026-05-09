@@ -21,6 +21,7 @@ public enum UIUnit {
     case event(EventViewModel)
     case eventDetails(EventViewModel, EventActionHandler)
     case searchTextField(Binding<String>)
+    case empty
 }
 
 public enum ViewModelUnit {
@@ -50,6 +51,8 @@ public final class SharedUIFactory: UIFactory {
             EventDetailView(viewModel: viewModel, actionHandler: actionHandler)
         case .searchTextField(let binding):
             SearchTextField(textInput: binding)
+        case .empty:
+            EmptyView()
         }
     }
 }

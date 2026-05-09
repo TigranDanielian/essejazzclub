@@ -18,6 +18,9 @@ public protocol EventsService {
     func load() -> AnyPublisher<Void, Error>
 
     var state: AnyPublisher<EventsState, Never> { get }
+
+    /// Модель из текущего кэша по идентификатору слота расписания (`eventOccurrenceIdentifier`).
+    func eventModel(forOccurrenceIdentifier identifier: String) -> EventModel?
 }
 
 public final class EventsServiceImpl: EventsService {
@@ -37,6 +40,10 @@ public final class EventsServiceImpl: EventsService {
 
     public init(apiClient: ApiClient) {
         self.apiClient = apiClient
+    }
+
+    public func eventModel(forOccurrenceIdentifier identifier: String) -> EventModel? {
+        events.first { eventOccurrenceIdentifier(for: $0) == identifier }
     }
 
     public func load() -> AnyPublisher<Void, Error> {
@@ -66,16 +73,33 @@ public final class EventsServiceImpl: EventsService {
                     }
                 }
 
-                let requests = resultEventDates
-                    .sorted(by: { $0.date < $1.date })
-                    .compactMap { eventDate in
-                        self.remoteEvent(id: eventDate.eventId)
-                            .map { EventModel(remoteEvent: $0, dates: dates, currentDate: eventDate) }
-                            .eraseToAnyPublisher()
-                    }
+                let sortedOccurrences = resultEventDates.sorted(by: { $0.date < $1.date })
+                let uniqueEventIds = Array(Set(sortedOccurrences.map(\.eventId))).sorted()
 
-                return Publishers.MergeMany(requests)
+                let remoteByIdRequests = uniqueEventIds.map { eventId -> AnyPublisher<(Int, RemoteEvent)?, Never> in
+                    self.remoteEvent(id: eventId)
+                        .map { Optional((eventId, $0)) }
+                        .catch { _ in Just(nil) }
+                        .eraseToAnyPublisher()
+                }
+
+                guard !remoteByIdRequests.isEmpty else {
+                    return Just([])
+                        .setFailureType(to: Error.self)
+                        .eraseToAnyPublisher()
+                }
+
+                return Publishers.MergeMany(remoteByIdRequests)
                     .collect()
+                    .map { optionalPairs -> [EventModel] in
+                        let pairs = optionalPairs.compactMap { $0 }
+                        let remotes = Dictionary(uniqueKeysWithValues: pairs)
+                        return sortedOccurrences.compactMap { eventDate in
+                            guard let remote = remotes[eventDate.eventId] else { return nil }
+                            return EventModel(remoteEvent: remote, dates: dates, currentDate: eventDate)
+                        }
+                    }
+                    .setFailureType(to: Error.self)
                     .eraseToAnyPublisher()
             }
             .eraseToAnyPublisher()

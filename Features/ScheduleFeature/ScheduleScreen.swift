@@ -19,28 +19,32 @@ public protocol ScheduleScreenDependencies {
 public struct ScheduleScreen: View {
     private var actionHandler: EventActionHandler
     private var uiFactory: any UIFactory
+    private var onOpenFilter: () -> Void
     @StateObject var viewModel: ScheduleScreenViewModel
-
-    @State private var showFilter: Bool = false
+    
+    @State private var isHeaderHidden = false
+    @State private var initialOffset: CGFloat?
 
     public init(
         viewModel: ScheduleScreenViewModel,
         uiFactory: any UIFactory,
-        actionHandler: @escaping EventActionHandler
+        actionHandler: @escaping EventActionHandler,
+        onOpenFilter: @escaping () -> Void = {}
     ) {
         _viewModel = StateObject(wrappedValue: viewModel)
         self.uiFactory = uiFactory
         self.actionHandler = actionHandler
+        self.onOpenFilter = onOpenFilter
     }
     
     public var body: some View {
-        return NavigationView {
-            VStack {
+        VStack {
                 HStack {
                     AnyView(uiFactory.produce(unit: .searchTextField($viewModel.searchInputText)))
                         .padding(.trailing, 4)
+
                     Button {
-                        showFilter = true
+                        onOpenFilter()
                     } label: {
                         Image(uiImage: UIImage(resource: .filter).withRenderingMode(.alwaysTemplate))
                             .resizable()
@@ -51,25 +55,60 @@ public struct ScheduleScreen: View {
                     }
                 }
                 .padding(12)
-                
+                .opacity(isHeaderHidden ? 0 : 1)
+                .offset(y: isHeaderHidden ? -20 : 0)
+
                 ScrollView {
+                    GeometryReader { geo in
+                        print(geo.frame(in: .global).minY)
+                        return Color.clear
+                            .preference(
+                                key: ScrollOffsetPreferenceKey.self,
+                                value: geo.frame(in: .global).minY
+                            )
+                    }
+                    .frame(height: 1)
+
                     LazyVStack(alignment: .leading, spacing: 16) {
                         ForEach(viewModel.grouped) { day in
-                            ScheduleDayView(eventsDay: day, actionHandler: actionHandler, uiFactory: uiFactory)
+                            ScheduleDayView(
+                                eventsDay: day,
+                                actionHandler: actionHandler,
+                                uiFactory: uiFactory
+                            )
                         }
                     }
                     .padding(.horizontal, 12)
                     .padding(.top, 20)
                 }
             }
-//            .navigationBarTitleDisplayMode(.inline)
-//            .navigationTitle("Афиша")
-            .background(Color.init(uiColor: Colors.mainBackground))
-        }
-        .sheet(isPresented: $showFilter, content: {
-            NavigationView {
-                EmptyView()
+            .background(Color(uiColor: Colors.mainBackground))
+            .onPreferenceChange(ScrollOffsetPreferenceKey.self) { value in
+                if initialOffset == nil {
+                    initialOffset = value
+                    return
+                }
+
+                let offset = value - (initialOffset ?? 0)
+                print("offset:", offset)
+
+                if offset < -20, !isHeaderHidden {
+                    withAnimation(.easeInOut(duration: 0.2)) {
+                        isHeaderHidden = true
+                    }
+                } else if offset > -5, isHeaderHidden {
+                    withAnimation(.easeInOut(duration: 0.2)) {
+                        isHeaderHidden = false
+                    }
+                }
             }
-        })
+    }
+}
+
+private struct ScrollOffsetPreferenceKey: PreferenceKey {
+    static var defaultValue: CGFloat = 0
+
+    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
+        value = nextValue()
     }
 }

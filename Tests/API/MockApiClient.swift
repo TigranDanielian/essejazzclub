@@ -23,7 +23,7 @@ class MockAPIClient: ApiClient {
         }
         
         return Just(data)
-            .mapError { _ in ApiError.decodingError(ApiError.invalidResponse) }
+            .mapError { _ in ApiError.decodingError }
             .eraseToAnyPublisher()
     }
     
@@ -38,7 +38,7 @@ class MockAPIClient: ApiClient {
         
         return Just(data)
             .decode(type: Model.self, decoder: JSONDecoder())
-            .mapError { _ in ApiError.decodingError(ApiError.invalidResponse) }
+            .mapError { _ in ApiError.decodingError }
             .eraseToAnyPublisher()
     }
 }

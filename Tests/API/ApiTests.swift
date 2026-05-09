@@ -69,18 +69,29 @@ final class APITests: XCTestCase {
         wait(for: [expectation], timeout: 2.0)
     }
 
-//    func testRequest_Error() async throws {
-//        mockClient.error = .invalidURL
-//
-//        struct User: Decodable { let name: String }
-//        let endpoint = ApiEndpoint(method: .get, path: "/user")
-//
-//        do {
-//            let _: User = try await mockClient.request(endpoint, as: User.self)
-//            XCTFail("Expected error but got success")
-//        } catch {
-//            XCTAssertEqual(error as? NetworkError, .invalidURL)
-//        }
-//    }
+    func testRequest_Error() {
+        mockClient.error = .invalidURL
+
+        struct User: Decodable { let name: String }
+        let endpoint = ApiEndpoint(method: .get, path: "/user")
+        
+        let expectation = XCTestExpectation(description: "Request should succeed")
+        
+        mockClient.requestModel(endpoint: endpoint)
+            .sink(
+                receiveCompletion: { completion in
+                    switch completion
+                    {
+                    case .failure(let error as ApiError):
+                        XCTAssertTrue(error == .invalidURL)
+                        expectation.fulfill()
+                    default:
+                        XCTFail("Expected error, got success instead")
+                    }
+                }, receiveValue: { (user: User) in XCTFail("Expected error, got success instead") } )
+            .store(in: &cancellables)
+
+        wait(for: [expectation], timeout: 2.0)
+    }
 }
 

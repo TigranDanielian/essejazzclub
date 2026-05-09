@@ -10,6 +10,7 @@ import Foundation
 public enum EventAction {
     case contextAction(EventContextButtonType)
     case onSelect(EventViewModel)
+    case onMusician(MusicianViewModel)
     case dismiss
     case onBuy
 }

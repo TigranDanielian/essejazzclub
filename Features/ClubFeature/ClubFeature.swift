@@ -25,10 +25,10 @@ public struct ClubScreen: View {
     ]
     
     private let gridItems: [ClubGridItem] = [
-        .init(title: "Афиша", imageName: "club_grid_schedule"),
-        .init(title: "Меню", imageName: "club_grid_menu"),
-        .init(title: "О клубе", imageName: "club_grid_about"),
-        .init(title: "Как добраться", imageName: "club_grid_location")
+        .init(title: "Клубная карта", subtitle: "Ваши привелегии", imageName: "club_grid_schedule"),
+        .init(title: "О клубе", subtitle: "Атмосфера и история", imageName: "club_grid_menu"),
+        .init(title: "Меню", subtitle: "Кухня и бар", imageName: "club_grid_about"),
+        .init(title: "Контакты", subtitle: "Адрес и контакты", imageName: "club_grid_location")
     ]
     
     private let gridColumns: [GridItem] = [
@@ -37,8 +37,7 @@ public struct ClubScreen: View {
     ]
     
     public var body: some View {
-        NavigationView {
-            ScrollView(.vertical, showsIndicators: false) {
+        ScrollView(.vertical, showsIndicators: false) {
                 VStack(alignment: .leading, spacing: 32) {
                     
                     // MARK: - Features slider
@@ -60,7 +59,6 @@ public struct ClubScreen: View {
             .background(Color(uiColor: Colors.mainBackground).ignoresSafeArea())
 //            .navigationTitle("Клуб")
 //            .navigationBarTitleDisplayMode(.inline)
-        }
     }
 }
 
@@ -76,6 +74,7 @@ struct ClubBannerItem: Identifiable {
 struct ClubGridItem: Identifiable {
     let id = UUID()
     let title: String
+    let subtitle: String
     let imageName: String
 }
 
@@ -96,6 +95,10 @@ private struct ClubGridTile: View {
             VStack(alignment: .leading, spacing: 4) {
                 Text(item.title)
                     .font(.headline)
+                    .foregroundColor(Color(uiColor: Colors.text))
+                
+                Text(item.subtitle)
+                    .font(.caption)
                     .foregroundColor(Color(uiColor: Colors.text))
             }
             .frame(maxWidth: .infinity, alignment: .leading)

@@ -11,8 +11,10 @@ import Services
 
 public final class MusicianViewModel: ObservableObject, Identifiable {
     public var id: String { "\(model.id)" }
+    public var musicianId: Int { model.id }
     public var name: String { model.name }
     public var description: String { model.description }
+    public var text: String { model.text }
     public var profession: String { model.profession }
     
     @Published public var image: UIImage? = nil

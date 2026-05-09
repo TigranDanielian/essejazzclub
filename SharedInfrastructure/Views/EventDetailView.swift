@@ -142,7 +142,9 @@ public struct EventDetailView: View {
                         ScrollView(.horizontal, showsIndicators: false) {
                             LazyHStack(spacing: 12) {
                                 ForEach(viewModel.musicians) { musician in
-                                    MusicianRowView(musician: musician)
+                                    MusicianRowView(musician: musician, onSelect: {
+                                        actionHandler(.onMusician(musician))
+                                    })
                                 }
                             }
                             .padding(.horizontal, 12)
@@ -170,7 +172,9 @@ public struct EventDetailView: View {
                 attributedText = text
             }
         }
+        
     }
+    
 }
 
 struct MyView_Previews: PreviewProvider {
@@ -200,6 +204,7 @@ extension EventModel {
 
 struct MusicianRowView: View {
     @ObservedObject var musician: MusicianViewModel
+    var onSelect: () -> Void = { }
 
     var body: some View {
         VStack {
@@ -215,6 +220,9 @@ struct MusicianRowView: View {
                         .frame(width: 72, height: 72)
                         .cornerRadius(36)
                 }
+            }
+            .onTapGesture {
+                onSelect()
             }
             
             Text(musician.name)

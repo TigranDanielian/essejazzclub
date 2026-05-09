@@ -9,6 +9,10 @@ import Foundation
 import UIKit
 import API
 
+/// Многие бэкенды отдают файлы только «браузерным» клиентам; голый URLSession часто получает 403 / HTML вместо картинки.
+private let imageRequestUserAgent =
+    "Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Mobile/15E148 Safari/604.1"
+
 enum ImageLoaderError: LocalizedError {
     case invalidData
     case invalidURL
@@ -41,9 +45,24 @@ public final class ImageLoaderImpl: ImageLoader {
     }
     
     private let cache = ImageCache()
-  
+
+    /// Абсолютные URL из API — как есть; относительные — относительно `host`; `//host/path` — как https.
+    private func resolvedURL(for path: String) -> URL? {
+        let trimmed = path.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else { return nil }
+        if trimmed.hasPrefix("//"), let url = URL(string: "https:\(trimmed)") {
+            return url
+        }
+        if let direct = URL(string: trimmed.trimmingCharacters(in: CharacterSet(charactersIn: "\""))), direct.scheme != nil {
+            return direct
+        }
+        let pathForRelative = trimmed.trimmingCharacters(in: CharacterSet(charactersIn: "\""))
+        guard let relative = URL(string: pathForRelative, relativeTo: host) else { return nil }
+        return relative.absoluteURL
+    }
+
     public func loadImage(path: String) async throws -> UIImage? {
-        guard let url = URL(string: path, relativeTo: host) else {
+        guard let url = resolvedURL(for: path) else {
             print("❌ [Image Loader] invalid URL path \(path)")
             throw ImageLoaderError.invalidURL
         }
@@ -51,27 +70,44 @@ public final class ImageLoaderImpl: ImageLoader {
             print("[Image Loader] using cached image for \(url)")
             return cachedImage
         }
-       
+
         do {
-            let (data, response) = try await URLSession.shared.data(from: url)
-            
+            var request = URLRequest(url: url, cachePolicy: .returnCacheDataElseLoad, timeoutInterval: 60)
+            request.setValue(imageRequestUserAgent, forHTTPHeaderField: "User-Agent")
+            request.setValue("image/*,*/*;q=0.8", forHTTPHeaderField: "Accept")
+            if url.host == host.host, let h = host.host {
+                request.setValue("\(host.scheme ?? "http")://\(h)", forHTTPHeaderField: "Referer")
+            }
+
+            let (data, response) = try await URLSession.shared.data(for: request)
+
             // Проверяем HTTP статус код
             if let httpResponse = response as? HTTPURLResponse {
                 guard (200...299).contains(httpResponse.statusCode) else {
                     print("❌ [Image Loader] HTTP error with status code \(httpResponse.statusCode) for url \(url)")
                     throw ImageLoaderError.httpError(statusCode: httpResponse.statusCode)
                 }
+                let mime = httpResponse.mimeType ?? ""
+                if mime.contains("text/html") {
+                    print("❌ [Image Loader] server returned HTML (often 403/login page), url \(url)")
+                }
             }
-            
-            guard let image = await downsample(imageData: data, to: .init(width: 200, height: 200), scale: UIScreen.main.scale) else {
-                print("❌ [Image Loader] failed to downsample image with url \(url)")
+
+            let scale = await MainActor.run { UIScreen.main.scale }
+            let image: UIImage
+            if let downsampled = downsample(imageData: data, to: .init(width: 200, height: 200), scale: scale) {
+                image = downsampled
+            } else if let raw = UIImage(data: data) {
+                image = raw
+            } else {
+                print("❌ [Image Loader] not a bitmap image (SVG/WebP-only?) or corrupt data, url \(url), \(data.count) bytes")
                 throw ImageLoaderError.invalidData
             }
-            
+
             await cache.insert(image, for: path)
-            
+
             print("[Image Loader] loaded image for \(url)")
-            
+
             return image
         } catch let error as ImageLoaderError {
             throw error

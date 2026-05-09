@@ -18,11 +18,17 @@ public protocol MusiciansService {
     func load() -> AnyPublisher<Void, Error>
     
     func forEvent(id: String) -> AnyPublisher<[Musician], Never>
+
+    func musician(forId id: Int) -> Musician?
     
     var state: AnyPublisher<MusiciansState, Never> { get }
 }
 
 public final class MusiciansServiceImpl: MusiciansService {
+    public func musician(forId id: Int) -> Musician? {
+        musiciansStore.first { $0.id == id }
+    }
+
     public func forEvent(id: String) -> AnyPublisher<[Musician], Never> {
         state.flatMap { state in
             self.eventMusicians(id: id)
@@ -37,6 +43,11 @@ public final class MusiciansServiceImpl: MusiciansService {
     
     public func load() -> AnyPublisher<Void, Error> {
         getMusicians()
+            .catch { error in
+                Just([])
+                    .setFailureType(to: Error.self)
+                    .eraseToAnyPublisher()
+            }
             .handleEvents(receiveOutput: { [weak self] in self?.musiciansStore = $0 })
             .print()
             .map { _ in () }
