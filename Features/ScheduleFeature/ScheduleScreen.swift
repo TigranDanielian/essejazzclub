@@ -6,15 +6,8 @@
 //
 
 import SwiftUI
-import Services
-import Combine
 import Core
 import SharedInfrastructure
-
-public protocol ScheduleScreenDependencies {
-    var eventsService: EventsService { get }
-    var favoritesStorage: FavoritesStorage<String> { get }
-}
 
 public struct ScheduleScreen: View {
     private var uiFactory: any UIFactory

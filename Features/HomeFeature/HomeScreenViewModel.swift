@@ -33,7 +33,9 @@ public final class HomeScreenViewModel: ObservableObject {
         eventsService.state
             .tryMap { state in
                 let viewModels = state.events.map { model -> EventViewModel in
-                    viewModelFactory.produce(unit: .event(hasDate: true, model)) as! EventViewModel
+                    viewModelFactory.produce(
+                        unit: .event(hasContextMenu: false, hasDate: true, model)
+                    ) as! EventViewModel
                 }
                 
                 let todayViewModels = viewModels.filter {

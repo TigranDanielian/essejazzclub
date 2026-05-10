@@ -37,7 +37,9 @@ public final class ScheduleScreenViewModel: ObservableObject {
             .combineLatest($searchInputText.removeDuplicates())
             .tryMap { state, searchInput in
                 state.events.map { model -> EventViewModel in
-                    viewModelFactory.produce(unit: .event(hasContextMenu: true, model)) as! EventViewModel
+                    viewModelFactory.produce(
+                        unit: .event(hasContextMenu: true, hasDate: false, model)
+                    ) as! EventViewModel
                 }
                 .filter { viewModel in
                     guard !searchInput.isEmpty else { return true }

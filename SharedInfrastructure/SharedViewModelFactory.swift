@@ -10,23 +10,27 @@ import Services
 import Core
 import Combine
 
+/// Отдельный кэш по варианту карточки: Главная и Афиша не делят один `EventViewModel` с разными `hasContextMenu` / `hasDate`.
+private struct EventViewModelCacheKey: Hashable {
+    let occurrenceIdentifier: String
+    let hasContextMenu: Bool
+    let hasDate: Bool
+}
+
 public final class SharedViewModelFactory: @preconcurrency ViewModelFactory {
-    private let eventsService: EventsService
     private let musiaciansService: MusiciansService
     private let favoriteStorage: FavoritesStorage<String>
     private let imageLoader: AsyncImageLoader
     private var musiciansProvider: MusiciansProvider?
 
-    private var eventViewModels: [String: EventViewModel] = [:]
+    private var eventViewModels: [EventViewModelCacheKey: EventViewModel] = [:]
     private var musicianViewModels: [Int: MusicianViewModel] = [:]
     
     public init(
-        eventsService: EventsService,
         musiaciansService: MusiciansService,
         favoriteStorage: FavoritesStorage<String>,
         imageLoader: @escaping AsyncImageLoader
     ) {
-        self.eventsService = eventsService
         self.musiaciansService = musiaciansService
         self.favoriteStorage = favoriteStorage
         self.imageLoader = imageLoader
@@ -37,10 +41,12 @@ public final class SharedViewModelFactory: @preconcurrency ViewModelFactory {
     public func produce(unit: ViewModelUnit) -> any ObservableObject {
         switch unit {
         case .event(let hasContextMenu, let hasDate, let model):
-            let key = eventOccurrenceIdentifier(for: model)
+            let key = EventViewModelCacheKey(
+                occurrenceIdentifier: eventOccurrenceIdentifier(for: model),
+                hasContextMenu: hasContextMenu,
+                hasDate: hasDate
+            )
             if let cached = eventViewModels[key] {
-                cached.hasContextMenu = hasContextMenu
-                cached.hasDate = hasDate
                 return cached
             }
             let created = EventViewModel(
@@ -89,31 +95,5 @@ public final class SharedViewModelFactory: @preconcurrency ViewModelFactory {
                 }
                 .eraseToAnyPublisher()
         }
-    }
-
-    @MainActor
-    public func cachedEventViewModelForNavigation(forOccurrenceIdentifier identifier: String) -> EventViewModel? {
-        eventViewModels[identifier]
-    }
-
-    @MainActor
-    public func cachedMusicianViewModelForNavigation(for musicianId: Int) -> MusicianViewModel? {
-        musicianViewModels[musicianId]
-    }
-
-    @MainActor
-    public func retainEventViewModelForNavigation(_ viewModel: EventViewModel) {
-        eventViewModels[viewModel.occurrenceIdentifier] = viewModel
-    }
-
-    @MainActor
-    public func retainMusicianViewModelForNavigation(_ viewModel: MusicianViewModel) {
-        musicianViewModels[viewModel.musicianId] = viewModel
-    }
-
-    @MainActor
-    public func synchronizeNavigationCaches(allowedOccurrenceIdentifiers: Set<String>, allowedMusicianIds: Set<Int>) {
-        eventViewModels = eventViewModels.filter { allowedOccurrenceIdentifiers.contains($0.key) }
-        musicianViewModels = musicianViewModels.filter { allowedMusicianIds.contains($0.key) }
     }
 }

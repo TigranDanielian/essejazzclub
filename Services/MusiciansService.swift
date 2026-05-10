@@ -18,8 +18,6 @@ public protocol MusiciansService {
     func load() -> AnyPublisher<Void, Error>
     
     func forEvent(id: String) -> AnyPublisher<[Musician], Never>
-
-    func musician(forId id: Int) -> Musician?
     
     var state: AnyPublisher<MusiciansState, Never> { get }
 }
@@ -36,10 +34,6 @@ public final class MusiciansServiceImpl: MusiciansService {
 
     /// Разделение одного сетевого запроса между параллельными подписчиками на тот же `eventId`.
     private var lineupInflight: [String: AnyPublisher<[EventMusician], Never>] = [:]
-
-    public func musician(forId id: Int) -> Musician? {
-        musiciansStore.first { $0.id == id }
-    }
 
     public func forEvent(id: String) -> AnyPublisher<[Musician], Never> {
         Publishers.CombineLatest(state, eventLineup(for: id))
