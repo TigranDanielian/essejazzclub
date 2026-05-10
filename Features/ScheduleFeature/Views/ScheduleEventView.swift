@@ -10,7 +10,7 @@ import Core
 import SharedInfrastructure
 
 struct ScheduleEventView: View {
-    @StateObject var viewModel: EventViewModel
+    @ObservedObject var viewModel: EventViewModel
     var onSelect: EventActionHandler = { _ in }
     var uiFactory: any UIFactory
     

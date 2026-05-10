@@ -17,53 +17,26 @@ struct RootView: View {
     @StateObject var homeNavigationRouter = HomeNavigationRouter()
     @StateObject var scheduleNavigationRouter = ScheduleNavigationRouter()
 
+    private var homeTabNavigation: HomeTabNavigating { homeNavigationRouter }
+    private var scheduleTabNavigation: ScheduleTabNavigating { scheduleNavigationRouter }
+
     var body: some View {
         TabView(selection: $appNavigationRouter.selectedTab) {
-            NavigationStack(path: $homeNavigationRouter.path) {
-                HomeScreen(
-                    viewModel: HomeScreenViewModel(
-                        eventsService: container.eventsService,
-                        viewModelFactory: container.viewModelFactory,
-                        favoritesStorage: container.favoritesStorage
-                    ),
-                    uiFactory: container.uiFactory,
-                    actionHandler: handleHomeAction(_:)
-                )
-                .navigationDestination(for: HomeNavigationRouter.Route.self) { route in
-                    homeRouteView(for: route)
-                }
-            }
-            .sheet(item: $homeNavigationRouter.sheetDestination) { route in
-                homeRouteView(for: route)
-            }
-            .fullScreenCover(item: $homeNavigationRouter.fullScreenDestination) { route in
-                homeRouteView(for: route)
-            }
+            HomeTabRoot(
+                router: homeNavigationRouter,
+                handleContext: handleContextAction,
+                routeView: { route in homeRouteView(for: route) }
+            )
             .tabItem {
                 Label("Главная", systemImage: "house")
             }
             .tag(AppTab.home)
 
-            NavigationStack(path: $scheduleNavigationRouter.path) {
-                ScheduleScreen(
-                    viewModel: ScheduleScreenViewModel(
-                        eventsService: container.eventsService,
-                        viewModelFactory: container.viewModelFactory
-                    ),
-                    uiFactory: container.uiFactory,
-                    actionHandler: handleScheduleAction(_:),
-                    onOpenFilter: { scheduleNavigationRouter.presentFilter(presentation: .sheet) }
-                )
-                .navigationDestination(for: ScheduleNavigationRouter.Route.self) { route in
-                    scheduleRouteView(for: route)
-                }
-            }
-            .sheet(item: $scheduleNavigationRouter.sheetDestination) { route in
-                scheduleRouteView(for: route)
-            }
-            .fullScreenCover(item: $scheduleNavigationRouter.fullScreenDestination) { route in
-                scheduleRouteView(for: route)
-            }
+            ScheduleTabRoot(
+                router: scheduleNavigationRouter,
+                handleContext: handleContextAction,
+                routeView: { route in scheduleRouteView(for: route) }
+            )
             .tabItem {
                 Label("Афиша", systemImage: "calendar")
             }
@@ -75,6 +48,7 @@ struct RootView: View {
                 }
                 .tag(AppTab.club)
         }
+        .environmentObject(container)
     }
 
     @ViewBuilder
@@ -83,10 +57,10 @@ struct RootView: View {
         case .eventDetail(let viewModel):
             eventDetailView(
                 viewModel: viewModel,
-                actionHandler: { eventActionHandler($0, navigation: { homeNavigationRouter.handle(.event(.navigation($0)), contextHandler: handleContextAction) })
-                })
+                actionHandler: homeTabNavigation.makeEventDetailActionHandler(contextHandler: handleContextAction)
+            )
         case .musicianDetail(let viewModel):
-            musicianDetailView(viewModel: viewModel, actionHandler: { _ in  homeNavigationRouter.dismissPresentedOrPop() })
+            musicianDetailView(viewModel: viewModel, actionHandler: homeTabNavigation.makeMusicianDetailActionHandler())
         }
     }
 
@@ -96,12 +70,12 @@ struct RootView: View {
         case .eventDetail(let viewModel):
             eventDetailView(
                 viewModel: viewModel,
-                actionHandler: { eventActionHandler($0, navigation: { scheduleNavigationRouter.handle(.event(.navigation($0)), contextHandler: handleContextAction) })
-                })
+                actionHandler: scheduleTabNavigation.makeEventDetailActionHandler(contextHandler: handleContextAction)
+            )
         case .musicianDetail(let viewModel):
-            musicianDetailView(viewModel: viewModel, actionHandler: { _ in  scheduleNavigationRouter.dismissPresentedOrPop() })
+            musicianDetailView(viewModel: viewModel, actionHandler: scheduleTabNavigation.makeMusicianDetailActionHandler())
         case .filter:
-            scheduleFilterPlaceholder(dismiss: { scheduleNavigationRouter.dismissPresentedOrPop() })
+            scheduleFilterPlaceholder(dismiss: { scheduleTabNavigation.dismissPresentedOrPop() })
         }
     }
 
@@ -128,13 +102,147 @@ struct RootView: View {
                 }
         }
     }
-    
-    private func eventActionHandler(_ action: EventAction, navigation: @escaping (EventNavigationAction) -> Void) {
-        switch action {
-        case .navigation(let action):
-            navigation(action)
-        case .contextAction(let action):
-            handleContextAction(action)
+}
+
+// MARK: - Вкладки: VM через `@StateObject` во вложенном view, куда `AppContainer` передаётся из `body`
+
+private struct HomeTabRoot<RouteContent: View>: View {
+    @EnvironmentObject private var container: AppContainer
+    @ObservedObject var router: HomeNavigationRouter
+    let handleContext: (EventContextButtonType) -> Void
+    @ViewBuilder let routeView: (HomeNavigationRouter.Route) -> RouteContent
+
+    init(
+        router: HomeNavigationRouter,
+        handleContext: @escaping (EventContextButtonType) -> Void,
+        @ViewBuilder routeView: @escaping (HomeNavigationRouter.Route) -> RouteContent
+    ) {
+        self.router = router
+        self.handleContext = handleContext
+        self.routeView = routeView
+    }
+
+    var body: some View {
+        HomeTabShell(
+            container: container,
+            router: router,
+            handleContext: handleContext,
+            routeView: routeView
+        )
+    }
+}
+
+private struct HomeTabShell<RouteContent: View>: View {
+    let container: AppContainer
+    @ObservedObject var router: HomeNavigationRouter
+    let handleContext: (EventContextButtonType) -> Void
+    @ViewBuilder let routeView: (HomeNavigationRouter.Route) -> RouteContent
+
+    @StateObject private var viewModel: HomeScreenViewModel
+
+    init(
+        container: AppContainer,
+        router: HomeNavigationRouter,
+        handleContext: @escaping (EventContextButtonType) -> Void,
+        @ViewBuilder routeView: @escaping (HomeNavigationRouter.Route) -> RouteContent
+    ) {
+        self.container = container
+        self.router = router
+        self.handleContext = handleContext
+        self.routeView = routeView
+        _viewModel = StateObject(
+            wrappedValue: HomeScreenViewModel(
+                eventsService: container.eventsService,
+                viewModelFactory: container.viewModelFactory,
+                favoritesStorage: container.favoritesStorage,
+                tabNavigation: router,
+                contextHandler: handleContext
+            )
+        )
+    }
+
+    var body: some View {
+        NavigationStack(path: $router.path) {
+            HomeScreen(viewModel: viewModel, uiFactory: container.uiFactory)
+                .navigationDestination(for: HomeNavigationRouter.Route.self) { route in
+                    routeView(route)
+                }
+        }
+        .sheet(item: $router.sheetDestination) { route in
+            routeView(route)
+        }
+        .fullScreenCover(item: $router.fullScreenDestination) { route in
+            routeView(route)
+        }
+    }
+}
+
+private struct ScheduleTabRoot<RouteContent: View>: View {
+    @EnvironmentObject private var container: AppContainer
+    @ObservedObject var router: ScheduleNavigationRouter
+    let handleContext: (EventContextButtonType) -> Void
+    @ViewBuilder let routeView: (ScheduleNavigationRouter.Route) -> RouteContent
+
+    init(
+        router: ScheduleNavigationRouter,
+        handleContext: @escaping (EventContextButtonType) -> Void,
+        @ViewBuilder routeView: @escaping (ScheduleNavigationRouter.Route) -> RouteContent
+    ) {
+        self.router = router
+        self.handleContext = handleContext
+        self.routeView = routeView
+    }
+
+    var body: some View {
+        ScheduleTabShell(
+            container: container,
+            router: router,
+            handleContext: handleContext,
+            routeView: routeView
+        )
+    }
+}
+
+private struct ScheduleTabShell<RouteContent: View>: View {
+    let container: AppContainer
+    @ObservedObject var router: ScheduleNavigationRouter
+    let handleContext: (EventContextButtonType) -> Void
+    @ViewBuilder let routeView: (ScheduleNavigationRouter.Route) -> RouteContent
+
+    @StateObject private var viewModel: ScheduleScreenViewModel
+
+    init(
+        container: AppContainer,
+        router: ScheduleNavigationRouter,
+        handleContext: @escaping (EventContextButtonType) -> Void,
+        @ViewBuilder routeView: @escaping (ScheduleNavigationRouter.Route) -> RouteContent
+    ) {
+        self.container = container
+        self.router = router
+        self.handleContext = handleContext
+        self.routeView = routeView
+        _viewModel = StateObject(
+            wrappedValue: ScheduleScreenViewModel(
+                eventsService: container.eventsService,
+                viewModelFactory: container.viewModelFactory,
+                tabNavigation: router,
+                contextHandler: handleContext
+            )
+        )
+    }
+
+    var body: some View {
+        NavigationStack(path: $router.path) {
+            ScheduleScreen(viewModel: viewModel, uiFactory: container.uiFactory)
+                .navigationDestination(for: ScheduleNavigationRouter.Route.self) { route in
+                    routeView(route)
+                }
+        }
+        .sheet(item: $router.sheetDestination) { route in
+            routeView(route)
+        }
+        .fullScreenCover(item: $router.fullScreenDestination) { route in
+            routeView(route)
         }
     }
 }

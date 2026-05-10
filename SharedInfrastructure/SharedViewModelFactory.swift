@@ -37,7 +37,22 @@ public final class SharedViewModelFactory: @preconcurrency ViewModelFactory {
     public func produce(unit: ViewModelUnit) -> any ObservableObject {
         switch unit {
         case .event(let hasContextMenu, let hasDate, let model):
-            return EventViewModel(model: model, hasContextMenu: hasContextMenu, withDate: hasDate, imageLoader: imageLoader, favoritesStorage: favoriteStorage, musiciansProvider: musiciansProvider)
+            let key = eventOccurrenceIdentifier(for: model)
+            if let cached = eventViewModels[key] {
+                cached.hasContextMenu = hasContextMenu
+                cached.hasDate = hasDate
+                return cached
+            }
+            let created = EventViewModel(
+                model: model,
+                hasContextMenu: hasContextMenu,
+                withDate: hasDate,
+                imageLoader: imageLoader,
+                favoritesStorage: favoriteStorage,
+                musiciansProvider: musiciansProvider
+            )
+            eventViewModels[key] = created
+            return created
             
         case .musician(let musician):
             if let cachedViewModel = musicianViewModels[musician.id] {

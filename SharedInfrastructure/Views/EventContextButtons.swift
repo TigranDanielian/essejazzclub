@@ -21,7 +21,7 @@ public struct EventContextButtons: View {
     public var body: some View {
         VStack(alignment: .trailing) {
             HStack(alignment: .top) {
-                EventContextButton(viewModel: viewModel.favoriteButtonViewModel, onTap: { onTap(.favorite(viewModel.id)) })
+                EventContextButton(viewModel: viewModel.favoriteButtonViewModel, onTap: { onTap(.favorite(viewModel.eventId)) })
                 EventContextButton(viewModel: viewModel.calendarButtonViewModel, onTap: { onTap(.calendar(viewModel)) })
             }
             

@@ -17,24 +17,19 @@ public protocol ScheduleScreenDependencies {
 }
 
 public struct ScheduleScreen: View {
-    private var actionHandler: (ScheduleScreenAction) -> Void
     private var uiFactory: any UIFactory
-    private var onOpenFilter: () -> Void
-    @StateObject var viewModel: ScheduleScreenViewModel
+    /// Родитель (`ScheduleTabShell`) держит VM в `@StateObject` — здесь только наблюдение.
+    @ObservedObject var viewModel: ScheduleScreenViewModel
     
     @State private var isHeaderHidden = false
     @State private var initialOffset: CGFloat?
 
     public init(
         viewModel: ScheduleScreenViewModel,
-        uiFactory: any UIFactory,
-        actionHandler: @escaping (ScheduleScreenAction) -> Void,
-        onOpenFilter: @escaping () -> Void = {}
+        uiFactory: any UIFactory
     ) {
-        _viewModel = StateObject(wrappedValue: viewModel)
+        _viewModel = ObservedObject(wrappedValue: viewModel)
         self.uiFactory = uiFactory
-        self.actionHandler = actionHandler
-        self.onOpenFilter = onOpenFilter
     }
     
     public var body: some View {
@@ -44,7 +39,7 @@ public struct ScheduleScreen: View {
                         .padding(.trailing, 4)
 
                     Button {
-                        onOpenFilter()
+                        viewModel.openFilter()
                     } label: {
                         Image(uiImage: UIImage(resource: .filter).withRenderingMode(.alwaysTemplate))
                             .resizable()
@@ -73,7 +68,7 @@ public struct ScheduleScreen: View {
                         ForEach(viewModel.grouped) { day in
                             ScheduleDayView(
                                 eventsDay: day,
-                                actionHandler: { actionHandler(.event($0)) },
+                                actionHandler: { viewModel.handleAction(.event($0)) },
                                 uiFactory: uiFactory
                             )
                         }

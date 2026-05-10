@@ -15,10 +15,10 @@ public final class HomeNavigationRouter: StackNavigationRouter<HomeNavigationRou
 
         public var id: String {
             switch self {
-            case .eventDetail(let occurrenceIdentifier):
-                return "home-event-\(occurrenceIdentifier)"
-            case .musicianDetail(let musicianId):
-                return "home-musician-\(musicianId)"
+            case .eventDetail(let viewModel):
+                return "home-event-\(viewModel.occurrenceIdentifier)"
+            case .musicianDetail(let viewModel):
+                return "home-musician-\(viewModel.musicianId)"
             }
         }
     }
@@ -26,34 +26,24 @@ public final class HomeNavigationRouter: StackNavigationRouter<HomeNavigationRou
     public override init() {
         super.init()
     }
-    
-    public func handle( _ action: HomeScreenAction, contextHandler: @escaping (EventContextButtonType) -> Void) {
+
+    public func applyEventNavigation(_ action: EventNavigationAction) {
         switch action {
-        case .event(let action):
-            switch action {
-            case .contextAction(let action):
-                if case .details(let viewModel) = action {
-                    presentEventDetail(viewModel: viewModel)
-                }
-                contextHandler(action)
-            case .navigation(let action):
-                switch action {
-                case .onEventDetails(let eventViewModel):
-                    presentEventDetail(viewModel: eventViewModel)
-                case .onMusicianDetails(let musicianViewModel):
-                    presentMusicianDetail(viewModel: musicianViewModel)
-                case .dismiss:
-                    dismissPresentedOrPop()
-                case .onBuy:
-                    break
-                }
-            
-            }
-        case .musician(let action):
-            switch action {
-            case .dismiss:
-                dismissPresentedOrPop()
-            }
+        case .onEventDetails(let eventViewModel):
+            presentEventDetail(viewModel: eventViewModel)
+        case .onMusicianDetails(let musicianViewModel):
+            presentMusicianDetail(viewModel: musicianViewModel)
+        case .dismiss:
+            dismissPresentedOrPop()
+        case .onBuy:
+            break
+        }
+    }
+
+    public func applyMusicianNavigation(_ action: MusicianAction) {
+        switch action {
+        case .dismiss:
+            dismissPresentedOrPop()
         }
     }
 

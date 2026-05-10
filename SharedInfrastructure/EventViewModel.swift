@@ -15,17 +15,22 @@ public typealias MusiciansProvider = (String) async throws -> AnyPublisher<[Musi
 
 public final class EventViewModel: ObservableObject, Identifiable, Hashable {
     public static func == (lhs: EventViewModel, rhs: EventViewModel) -> Bool {
-        return "\(lhs.id):\(lhs.model.dateWithTimes.id)" == "\(rhs.id):\(rhs.model.dateWithTimes.id)"
+        lhs.occurrenceIdentifier == rhs.occurrenceIdentifier
     }
 
     public func hash(into hasher: inout Hasher) {
-        hasher.combine("\(id):\(model.dateWithTimes.id)")
+        hasher.combine(occurrenceIdentifier)
     }
-    
-    public let id: String
+
+    /// Идентификатор события для избранного и API (без слота даты).
+    public let eventId: String
+    /// Уникален для строки расписания (`ForEach`, навигация).
+    public var id: String { occurrenceIdentifier }
     public var occurrenceIdentifier: String { eventOccurrenceIdentifier(for: model) }
-    public var hasContextMenu: Bool
-    public var hasDate: Bool
+
+    /// Вариант карточки: контекстное меню / дата — участвуют в UI, меняются при переиспользовании VM из фабрики.
+    @Published public var hasContextMenu: Bool
+    @Published public var hasDate: Bool
 
     @Published public var image: UIImage? = nil
     @Published public var isLoadingImage: Bool = false
@@ -66,7 +71,7 @@ public final class EventViewModel: ObservableObject, Identifiable, Hashable {
     }
     
     @MainActor
-    public lazy var favoriteButtonViewModel: EventContextButtonViewModel = EventContextButtonViewModel(imagePublisher: contextButtonImagePublisher(for: .favorite(id)))
+    public lazy var favoriteButtonViewModel: EventContextButtonViewModel = EventContextButtonViewModel(imagePublisher: contextButtonImagePublisher(for: .favorite(eventId)))
     
     @MainActor
     public lazy var shareButtonViewModel: EventContextButtonViewModel = EventContextButtonViewModel(imagePublisher: contextButtonImagePublisher(for: .share))
@@ -97,8 +102,8 @@ public final class EventViewModel: ObservableObject, Identifiable, Hashable {
         self.favoritesStorage = favoritesStorage
         self.hasContextMenu = hasContextMenu
         self.hasDate = withDate
-        
-        self.id = model.id
+
+        self.eventId = model.id
         self.isJazzLab = model.type == .jazzLab
         self.title = model.title
         self.description = model.description
@@ -126,6 +131,7 @@ public final class EventViewModel: ObservableObject, Identifiable, Hashable {
         startDragOffset = dragOffset
     }
 
+    @MainActor
     private func loadImage() async {
         if let imageUrlString {
             isLoadingImage = true
@@ -138,7 +144,7 @@ public final class EventViewModel: ObservableObject, Identifiable, Hashable {
     func handleTap(type: EventContextButtonType) {
         switch type {
         case .favorite:
-            favoritesStorage.toggleState(forValue: id, forKey: .events)
+            favoritesStorage.toggleState(forValue: eventId, forKey: .events)
             
             print("favorite")
         case .calendar:
@@ -155,7 +161,7 @@ public final class EventViewModel: ObservableObject, Identifiable, Hashable {
         switch type {
         case .favorite:
             favoritesStorage
-                .isFavoritePublisher(for: id, key: .events)
+                .isFavoritePublisher(for: eventId, key: .events)
                 .map { isFavorite in
                     UIImage(systemName: isFavorite ? "heart.fill" : "heart")
                 }

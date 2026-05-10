@@ -20,3 +20,22 @@ public enum EventAction {
 }
 
 public typealias EventActionHandler = (EventAction) -> Void
+
+/// Разделяет чистую навигацию (`EventNavigationAction`) и побочные эффекты контекстных кнопок.
+/// «Подробнее» в меню (`details`) открывает ту же карточку события, что и `onEventDetails`.
+@MainActor
+public func applyEventActionParts(
+    _ action: EventAction,
+    applyNavigation: (EventNavigationAction) -> Void,
+    handleContextButton: (EventContextButtonType) -> Void
+) {
+    switch action {
+    case .navigation(let nav):
+        applyNavigation(nav)
+    case .contextAction(let button):
+        if case .details(let viewModel) = button {
+            applyNavigation(.onEventDetails(viewModel))
+        }
+        handleContextButton(button)
+    }
+}

@@ -30,7 +30,8 @@ public struct GroupedEventsByDay: Identifiable {
 }
 
 public struct GroupedEventSection: Identifiable {
-    public let id = UUID()
+    /// Стабильный идентификатор внутри дня (не более одной секции каждого типа на дату).
+    public var id: String { type.rawValue }
     public let type: EventType // .mainStage или .jazzLab
     public let events: [EventViewModel]
     

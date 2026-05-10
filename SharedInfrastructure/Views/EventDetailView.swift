@@ -80,7 +80,7 @@ public struct EventDetailView: View {
                                     Spacer()
                                     EventContextButton(
                                         viewModel: viewModel.favoriteButtonViewModel,
-                                        onTap: { actionHandler(.contextAction(.favorite(viewModel.id))) }
+                                        onTap: { actionHandler(.contextAction(.favorite(viewModel.eventId))) }
                                     )
                                     EventContextButton(
                                         viewModel: viewModel.calendarButtonViewModel,

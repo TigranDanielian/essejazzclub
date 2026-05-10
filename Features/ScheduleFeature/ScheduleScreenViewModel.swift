@@ -20,12 +20,18 @@ public final class ScheduleScreenViewModel: ObservableObject {
     @Published var searchInputText: String = ""
     
     private let eventsService: EventsService
+    private let tabNavigation: ScheduleTabNavigating
+    private let contextHandler: (EventContextButtonType) -> Void
     
     public init(
         eventsService: EventsService,
-        viewModelFactory: ViewModelFactory
+        viewModelFactory: ViewModelFactory,
+        tabNavigation: ScheduleTabNavigating,
+        contextHandler: @escaping (EventContextButtonType) -> Void
     ) {
         self.eventsService = eventsService
+        self.tabNavigation = tabNavigation
+        self.contextHandler = contextHandler
         eventsService.state
             .receive(on: DispatchQueue.main)
             .combineLatest($searchInputText.removeDuplicates())
@@ -87,5 +93,24 @@ public final class ScheduleScreenViewModel: ObservableObject {
             return GroupedEventsByDay(date: date, sections: sections)
         }
         .sorted { $0.date < $1.date }
+    }
+
+    public func handleAction(_ action: ScheduleScreenAction) {
+        switch action {
+        case .event(let eventAction):
+            applyEventActionParts(
+                eventAction,
+                applyNavigation: { tabNavigation.applyEventNavigation($0) },
+                handleContextButton: contextHandler
+            )
+        case .musician(let musicianAction):
+            tabNavigation.applyMusicianNavigation(musicianAction)
+        case .filter:
+            tabNavigation.presentFilter(presentation: .sheet)
+        }
+    }
+
+    public func openFilter() {
+        tabNavigation.presentFilter(presentation: .sheet)
     }
 }

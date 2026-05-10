@@ -18,12 +18,18 @@ public final class HomeScreenViewModel: ObservableObject {
     @Published var favoriteEvents: [EventViewModel] = []
     
     private var cancellables: Set<AnyCancellable> = []
+    private let tabNavigation: HomeTabNavigating
+    private let contextHandler: (EventContextButtonType) -> Void
     
     public init(
         eventsService: EventsService,
         viewModelFactory: ViewModelFactory,
-        favoritesStorage: FavoritesStorage<String>
+        favoritesStorage: FavoritesStorage<String>,
+        tabNavigation: HomeTabNavigating,
+        contextHandler: @escaping (EventContextButtonType) -> Void
     ) {
+        self.tabNavigation = tabNavigation
+        self.contextHandler = contextHandler
         eventsService.state
             .tryMap { state in
                 let viewModels = state.events.map { model -> EventViewModel in
@@ -59,5 +65,22 @@ public final class HomeScreenViewModel: ObservableObject {
                 self?.favoriteEvents = $0
             })
             .store(in: &cancellables)
+    }
+
+    public func handleAction(_ action: HomeScreenAction) {
+        switch action {
+        case .event(let eventAction):
+            applyEventActionParts(
+                eventAction,
+                applyNavigation: { tabNavigation.applyEventNavigation($0) },
+                handleContextButton: contextHandler
+            )
+        case .musician(let musicianAction):
+            tabNavigation.applyMusicianNavigation(musicianAction)
+        }
+    }
+    
+    func onEventDetails(_ viewModel: EventViewModel) {
+        handleAction(.event(.navigation(.onEventDetails(viewModel))))
     }
 }
