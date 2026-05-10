@@ -12,6 +12,13 @@ import API
 public final class DefaultApiClient: ApiClient {
     private let baseURL: URL
     private let logger: Logger
+
+    /// Таймаут и число повторных попыток только для `requestModel` (всего до 3 запросов при ошибке).
+    private enum ModelRequestPolicy {
+        static let timeoutInterval: TimeInterval = 10
+        /// `retry(n)` в Combine — ещё n попыток после первой неудачи → всего `n + 1` запрос.
+        static let retryCount = 2
+    }
     
     public init(baseURL: URL, logger: ConsoleLogger = ConsoleLogger()) {
         self.baseURL = baseURL
@@ -64,7 +71,7 @@ public final class DefaultApiClient: ApiClient {
         
         var request = URLRequest(url: urlComponents.url!)
         request.httpMethod = endpoint.method.rawValue.uppercased()
-        request.timeoutInterval = 20
+        request.timeoutInterval = ModelRequestPolicy.timeoutInterval
         
         // Обработка параметров
         if let task = endpoint.task {
@@ -114,6 +121,16 @@ public final class DefaultApiClient: ApiClient {
                 }
                 return data
             }
+            .mapError { error -> Error in
+                if error is URLError {
+                    return ApiError.invalidURL
+                } else if let api = error as? ApiError {
+                    return api
+                } else {
+                    return ApiError.requestFailed
+                }
+            }
+            .retry(ModelRequestPolicy.retryCount)
             .decode(type: Model.self, decoder: JSONDecoder())
             .mapError { error in
                 if error is URLError {

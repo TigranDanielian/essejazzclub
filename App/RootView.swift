@@ -27,30 +27,17 @@ struct RootView: View {
                         favoritesStorage: container.favoritesStorage
                     ),
                     uiFactory: container.uiFactory,
-                    actionHandler: homeHandleAction(_:)
+                    actionHandler: handleHomeAction(_:)
                 )
                 .navigationDestination(for: HomeNavigationRouter.Route.self) { route in
                     homeRouteView(for: route)
                 }
             }
-            .sheet(item: $homeNavigationRouter.sheetDestination, onDismiss: {
-                homeNavigationRouter.synchronizeCaches()
-            }) { route in
+            .sheet(item: $homeNavigationRouter.sheetDestination) { route in
                 homeRouteView(for: route)
             }
-            .fullScreenCover(item: $homeNavigationRouter.fullScreenDestination, onDismiss: {
-                homeNavigationRouter.synchronizeCaches()
-            }) { route in
+            .fullScreenCover(item: $homeNavigationRouter.fullScreenDestination) { route in
                 homeRouteView(for: route)
-            }
-            .onChange(of: homeNavigationRouter.path) { _, _ in
-                homeNavigationRouter.synchronizeCaches()
-            }
-            .onChange(of: homeNavigationRouter.sheetDestination) { _, _ in
-                homeNavigationRouter.synchronizeCaches()
-            }
-            .onChange(of: homeNavigationRouter.fullScreenDestination) { _, _ in
-                homeNavigationRouter.synchronizeCaches()
             }
             .tabItem {
                 Label("Главная", systemImage: "house")
@@ -64,31 +51,18 @@ struct RootView: View {
                         viewModelFactory: container.viewModelFactory
                     ),
                     uiFactory: container.uiFactory,
-                    actionHandler: scheduleHandleAction(_:),
+                    actionHandler: handleScheduleAction(_:),
                     onOpenFilter: { scheduleNavigationRouter.presentFilter(presentation: .sheet) }
                 )
                 .navigationDestination(for: ScheduleNavigationRouter.Route.self) { route in
                     scheduleRouteView(for: route)
                 }
             }
-            .sheet(item: $scheduleNavigationRouter.sheetDestination, onDismiss: {
-                scheduleNavigationRouter.synchronizeCaches()
-            }) { route in
+            .sheet(item: $scheduleNavigationRouter.sheetDestination) { route in
                 scheduleRouteView(for: route)
             }
-            .fullScreenCover(item: $scheduleNavigationRouter.fullScreenDestination, onDismiss: {
-                scheduleNavigationRouter.synchronizeCaches()
-            }) { route in
+            .fullScreenCover(item: $scheduleNavigationRouter.fullScreenDestination) { route in
                 scheduleRouteView(for: route)
-            }
-            .onChange(of: scheduleNavigationRouter.path) { _, _ in
-                scheduleNavigationRouter.synchronizeCaches()
-            }
-            .onChange(of: scheduleNavigationRouter.sheetDestination) { _, _ in
-                scheduleNavigationRouter.synchronizeCaches()
-            }
-            .onChange(of: scheduleNavigationRouter.fullScreenDestination) { _, _ in
-                scheduleNavigationRouter.synchronizeCaches()
             }
             .tabItem {
                 Label("Афиша", systemImage: "calendar")
@@ -106,41 +80,39 @@ struct RootView: View {
     @ViewBuilder
     private func homeRouteView(for route: HomeNavigationRouter.Route) -> some View {
         switch route {
-        case .eventDetail(let occurrenceIdentifier):
-            eventDetailView(occurrenceIdentifier: occurrenceIdentifier, caches: homeNavigationRouter, actionHandler: homeHandleAction(_:))
-        case .musicianDetail(let musicianId):
-            musicianDetailView(musicianId: musicianId, caches: homeNavigationRouter, dismiss: { homeNavigationRouter.dismissPresentedOrPop() })
+        case .eventDetail(let viewModel):
+            eventDetailView(
+                viewModel: viewModel,
+                actionHandler: { eventActionHandler($0, navigation: { homeNavigationRouter.handle(.event(.navigation($0)), contextHandler: handleContextAction) })
+                })
+        case .musicianDetail(let viewModel):
+            musicianDetailView(viewModel: viewModel, actionHandler: { _ in  homeNavigationRouter.dismissPresentedOrPop() })
         }
     }
 
     @ViewBuilder
     private func scheduleRouteView(for route: ScheduleNavigationRouter.Route) -> some View {
         switch route {
-        case .eventDetail(let occurrenceIdentifier):
-            eventDetailView(occurrenceIdentifier: occurrenceIdentifier, caches: scheduleNavigationRouter, actionHandler: scheduleHandleAction(_:))
-        case .musicianDetail(let musicianId):
-            musicianDetailView(musicianId: musicianId, caches: scheduleNavigationRouter, dismiss: { scheduleNavigationRouter.dismissPresentedOrPop() })
+        case .eventDetail(let viewModel):
+            eventDetailView(
+                viewModel: viewModel,
+                actionHandler: { eventActionHandler($0, navigation: { scheduleNavigationRouter.handle(.event(.navigation($0)), contextHandler: handleContextAction) })
+                })
+        case .musicianDetail(let viewModel):
+            musicianDetailView(viewModel: viewModel, actionHandler: { _ in  scheduleNavigationRouter.dismissPresentedOrPop() })
         case .filter:
             scheduleFilterPlaceholder(dismiss: { scheduleNavigationRouter.dismissPresentedOrPop() })
         }
     }
 
     @ViewBuilder
-    private func eventDetailView(occurrenceIdentifier: String, caches: any EventOccurrenceRoutingCaches, actionHandler: @escaping EventActionHandler) -> some View {
-        if let viewModel = resolveEventDetailViewModel(occurrenceIdentifier: occurrenceIdentifier, caches: caches) {
-            AnyView(container.uiFactory.produce(unit: .eventDetails(viewModel, actionHandler)))
-        } else {
-            EmptyView()
-        }
+    private func eventDetailView(viewModel: EventViewModel, actionHandler: @escaping EventActionHandler) -> some View {
+        AnyView(container.uiFactory.produce(unit: .eventDetails(viewModel, actionHandler)))
     }
 
     @ViewBuilder
-    private func musicianDetailView(musicianId: Int, caches: any EventOccurrenceRoutingCaches, dismiss: @escaping () -> Void) -> some View {
-        if let viewModel = resolveMusicianViewModel(musicianId: musicianId, caches: caches) {
-            MusicianDetailsView(viewModel: viewModel, onDismiss: dismiss)
-        } else {
-            EmptyView()
-        }
+    private func musicianDetailView(viewModel: MusicianViewModel, actionHandler: @escaping MusicianActionHandler) -> some View {
+        MusicianDetailsView(viewModel: viewModel, actionHandler: actionHandler)
     }
 
     private func scheduleFilterPlaceholder(dismiss: @escaping () -> Void) -> some View {
@@ -154,6 +126,15 @@ struct RootView: View {
                         Button("Закрыть", action: dismiss)
                     }
                 }
+        }
+    }
+    
+    private func eventActionHandler(_ action: EventAction, navigation: @escaping (EventNavigationAction) -> Void) {
+        switch action {
+        case .navigation(let action):
+            navigation(action)
+        case .contextAction(let action):
+            handleContextAction(action)
         }
     }
 }

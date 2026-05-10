@@ -15,12 +15,12 @@ public struct HomeScreen: View {
     @StateObject public var viewModel: HomeScreenViewModel
     @EnvironmentObject private var favoritesStorage: FavoritesStorage<String>
     private let uiFactory: any UIFactory
-    private var actionHandler: (EventAction) -> Void
+    private var actionHandler: (HomeScreenAction) -> Void
     
     public init(
         viewModel: HomeScreenViewModel,
         uiFactory: any UIFactory,
-        actionHandler: @escaping (EventAction) -> Void
+        actionHandler: @escaping (HomeScreenAction) -> Void
     ) {
         _viewModel = StateObject(wrappedValue: viewModel)
         self.uiFactory = uiFactory
@@ -51,7 +51,7 @@ public struct HomeScreen: View {
                                                 height: 100
                                             )
                                             .onTapGesture {
-                                                actionHandler(.onSelect(event))
+                                                actionHandler(.event(.navigation(.onEventDetails(event))))
                                             }
                                     }
                                 }
@@ -68,7 +68,7 @@ public struct HomeScreen: View {
                         
                         uiFactory.produce(unit: .event(viewModel))
                             .onTapGesture {
-                                actionHandler(.onSelect(viewModel))
+                                actionHandler(.event(.navigation(.onEventDetails(viewModel))))
                             }
                     }
                     .padding(.horizontal, 6)
@@ -96,7 +96,7 @@ public struct HomeScreen: View {
                                                 height: 100
                                             )
                                             .onTapGesture {
-                                                actionHandler(.onSelect(event))
+                                                actionHandler(.event(.navigation(.onEventDetails(event))))
                                             }
                                     }
                                 }

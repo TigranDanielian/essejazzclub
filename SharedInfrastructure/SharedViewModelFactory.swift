@@ -16,6 +16,9 @@ public final class SharedViewModelFactory: @preconcurrency ViewModelFactory {
     private let favoriteStorage: FavoritesStorage<String>
     private let imageLoader: AsyncImageLoader
     private var musiciansProvider: MusiciansProvider?
+
+    private var eventViewModels: [String: EventViewModel] = [:]
+    private var musicianViewModels: [Int: MusicianViewModel] = [:]
     
     public init(
         eventsService: EventsService,
@@ -35,8 +38,16 @@ public final class SharedViewModelFactory: @preconcurrency ViewModelFactory {
         switch unit {
         case .event(let hasContextMenu, let hasDate, let model):
             return EventViewModel(model: model, hasContextMenu: hasContextMenu, withDate: hasDate, imageLoader: imageLoader, favoritesStorage: favoriteStorage, musiciansProvider: musiciansProvider)
+            
         case .musician(let musician):
-            return MusicianViewModel(model: musician, imageLoader: imageLoader)
+            if let cachedViewModel = musicianViewModels[musician.id] {
+                return cachedViewModel
+            }
+            
+            let viewModel = MusicianViewModel(model: musician, imageLoader: imageLoader)
+            musicianViewModels[musician.id] = viewModel
+            
+            return viewModel
         }
     }
     
@@ -63,5 +74,31 @@ public final class SharedViewModelFactory: @preconcurrency ViewModelFactory {
                 }
                 .eraseToAnyPublisher()
         }
+    }
+
+    @MainActor
+    public func cachedEventViewModelForNavigation(forOccurrenceIdentifier identifier: String) -> EventViewModel? {
+        eventViewModels[identifier]
+    }
+
+    @MainActor
+    public func cachedMusicianViewModelForNavigation(for musicianId: Int) -> MusicianViewModel? {
+        musicianViewModels[musicianId]
+    }
+
+    @MainActor
+    public func retainEventViewModelForNavigation(_ viewModel: EventViewModel) {
+        eventViewModels[viewModel.occurrenceIdentifier] = viewModel
+    }
+
+    @MainActor
+    public func retainMusicianViewModelForNavigation(_ viewModel: MusicianViewModel) {
+        musicianViewModels[viewModel.musicianId] = viewModel
+    }
+
+    @MainActor
+    public func synchronizeNavigationCaches(allowedOccurrenceIdentifiers: Set<String>, allowedMusicianIds: Set<Int>) {
+        eventViewModels = eventViewModels.filter { allowedOccurrenceIdentifiers.contains($0.key) }
+        musicianViewModels = musicianViewModels.filter { allowedMusicianIds.contains($0.key) }
     }
 }

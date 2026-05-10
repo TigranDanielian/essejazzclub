@@ -38,7 +38,6 @@ public final class MusiciansServiceImpl: MusiciansService {
                 .replaceError(with: [])
         }
         .eraseToAnyPublisher()
-//        .eraseToAnyPublisher()
     }
     
     public func load() -> AnyPublisher<Void, Error> {

@@ -42,9 +42,7 @@ public final class AppContainer: ObservableObject {
     }
     
     public func loadEssentialData(onComplete: @escaping (Result<Void, Error>) -> Void) {
-        
-        eventsService.load()
-            .zip(musiciansService.load())
+        Publishers.CombineLatest(eventsService.load(), musiciansService.load())
             .receive(on: DispatchQueue.main)
             .handleEvents(receiveCompletion: { _ in print("✅ Completed essential data loading")})
             .sink(

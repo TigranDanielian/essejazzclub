@@ -7,12 +7,16 @@
 
 import Foundation
 
-public enum EventAction {
-    case contextAction(EventContextButtonType)
-    case onSelect(EventViewModel)
-    case onMusician(MusicianViewModel)
+public enum EventNavigationAction {
+    case onEventDetails(EventViewModel)
+    case onMusicianDetails(MusicianViewModel)
     case dismiss
     case onBuy
+}
+
+public enum EventAction {
+    case navigation(EventNavigationAction)
+    case contextAction(EventContextButtonType)
 }
 
 public typealias EventActionHandler = (EventAction) -> Void

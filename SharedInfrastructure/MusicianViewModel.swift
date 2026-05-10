@@ -9,7 +9,15 @@ import Foundation
 import SwiftUI
 import Services
 
-public final class MusicianViewModel: ObservableObject, Identifiable {
+public final class MusicianViewModel: ObservableObject, Identifiable, Hashable {
+    public static func == (lhs: MusicianViewModel, rhs: MusicianViewModel) -> Bool {
+        return lhs.id == rhs.id
+    }
+    
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
+    
     public var id: String { "\(model.id)" }
     public var musicianId: Int { model.id }
     public var name: String { model.name }

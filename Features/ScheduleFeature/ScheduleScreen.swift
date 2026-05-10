@@ -17,7 +17,7 @@ public protocol ScheduleScreenDependencies {
 }
 
 public struct ScheduleScreen: View {
-    private var actionHandler: EventActionHandler
+    private var actionHandler: (ScheduleScreenAction) -> Void
     private var uiFactory: any UIFactory
     private var onOpenFilter: () -> Void
     @StateObject var viewModel: ScheduleScreenViewModel
@@ -28,7 +28,7 @@ public struct ScheduleScreen: View {
     public init(
         viewModel: ScheduleScreenViewModel,
         uiFactory: any UIFactory,
-        actionHandler: @escaping EventActionHandler,
+        actionHandler: @escaping (ScheduleScreenAction) -> Void,
         onOpenFilter: @escaping () -> Void = {}
     ) {
         _viewModel = StateObject(wrappedValue: viewModel)
@@ -73,7 +73,7 @@ public struct ScheduleScreen: View {
                         ForEach(viewModel.grouped) { day in
                             ScheduleDayView(
                                 eventsDay: day,
-                                actionHandler: actionHandler,
+                                actionHandler: { actionHandler(.event($0)) },
                                 uiFactory: uiFactory
                             )
                         }

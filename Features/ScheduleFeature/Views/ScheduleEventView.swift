@@ -21,7 +21,7 @@ struct ScheduleEventView: View {
             AnyView(uiFactory.produce(unit: .event(viewModel)))
         }
         .onTapGesture {
-            onSelect(.onSelect(viewModel))
+            onSelect(.navigation(.onEventDetails(viewModel)))
         }
     }
 }

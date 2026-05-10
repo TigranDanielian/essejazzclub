@@ -8,10 +8,10 @@ import SharedInfrastructure
 
 /// Навигация только для вкладки «Главная»: локальный стек и модалки модуля Home.
 @MainActor
-public final class HomeNavigationRouter: StackNavigationRouter<HomeNavigationRouter.Route>, EventOccurrenceRoutingCaches {
+public final class HomeNavigationRouter: StackNavigationRouter<HomeNavigationRouter.Route> {
     public enum Route: Hashable, Identifiable {
-        case eventDetail(String)
-        case musicianDetail(Int)
+        case eventDetail(EventViewModel)
+        case musicianDetail(MusicianViewModel)
 
         public var id: String {
             switch self {
@@ -23,54 +23,50 @@ public final class HomeNavigationRouter: StackNavigationRouter<HomeNavigationRou
         }
     }
 
-    private var eventViewModelsForNavigation: [String: EventViewModel] = [:]
-    private var musicianViewModelsForNavigation: [Int: MusicianViewModel] = [:]
-
     public override init() {
         super.init()
     }
-
-    public func presentEventDetail(_ viewModel: EventViewModel, presentation: NavigationPresentationStyle = .push) {
-        let occurrenceIdentifier = viewModel.occurrenceIdentifier
-        eventViewModelsForNavigation[occurrenceIdentifier] = viewModel
-        present(.eventDetail(occurrenceIdentifier), presentation: presentation)
+    
+    public func handle( _ action: HomeScreenAction, contextHandler: @escaping (EventContextButtonType) -> Void) {
+        switch action {
+        case .event(let action):
+            switch action {
+            case .contextAction(let action):
+                if case .details(let viewModel) = action {
+                    presentEventDetail(viewModel: viewModel)
+                }
+                contextHandler(action)
+            case .navigation(let action):
+                switch action {
+                case .onEventDetails(let eventViewModel):
+                    presentEventDetail(viewModel: eventViewModel)
+                case .onMusicianDetails(let musicianViewModel):
+                    presentMusicianDetail(viewModel: musicianViewModel)
+                case .dismiss:
+                    dismissPresentedOrPop()
+                case .onBuy:
+                    break
+                }
+            
+            }
+        case .musician(let action):
+            switch action {
+            case .dismiss:
+                dismissPresentedOrPop()
+            }
+        }
     }
 
-    public func presentMusicianDetail(_ viewModel: MusicianViewModel, presentation: NavigationPresentationStyle = .push) {
-        let musicianId = viewModel.musicianId
-        musicianViewModelsForNavigation[musicianId] = viewModel
-        present(.musicianDetail(musicianId), presentation: presentation)
+    public func presentEventDetail(viewModel: EventViewModel, presentation: NavigationPresentationStyle = .push) {
+        present(route: .eventDetail(viewModel), presentation: presentation)
     }
 
-    public func cachedEventViewModel(forOccurrenceIdentifier identifier: String) -> EventViewModel? {
-        eventViewModelsForNavigation[identifier]
+    public func presentMusicianDetail(viewModel: MusicianViewModel, presentation: NavigationPresentationStyle = .push) {
+        present(route: .musicianDetail(viewModel), presentation: presentation)
     }
+}
 
-    public func cachedMusicianViewModel(for musicianId: Int) -> MusicianViewModel? {
-        musicianViewModelsForNavigation[musicianId]
-    }
-
-    public override func synchronizeCaches() {
-        let pathOccurrences = Set(path.compactMap { route -> String? in
-            if case .eventDetail(let id) = route { return id }
-            return nil
-        })
-        let modalOccurrences = Set(modalRoutes.compactMap { route -> String? in
-            if case .eventDetail(let id) = route { return id }
-            return nil
-        })
-        let allowedOccurrences = pathOccurrences.union(modalOccurrences)
-        eventViewModelsForNavigation = eventViewModelsForNavigation.filter { allowedOccurrences.contains($0.key) }
-
-        let pathMusicians = Set(path.compactMap { route -> Int? in
-            if case .musicianDetail(let id) = route { return id }
-            return nil
-        })
-        let modalMusicians = Set(modalRoutes.compactMap { route -> Int? in
-            if case .musicianDetail(let id) = route { return id }
-            return nil
-        })
-        let allowedMusicians = pathMusicians.union(modalMusicians)
-        musicianViewModelsForNavigation = musicianViewModelsForNavigation.filter { allowedMusicians.contains($0.key) }
-    }
+public enum HomeScreenAction {
+    case event(EventAction)
+    case musician(MusicianAction)
 }

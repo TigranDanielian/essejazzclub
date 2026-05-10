@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 54;
+	objectVersion = 63;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -63,6 +63,7 @@
 		62F1B65DEA5D34995D9D8877 /* EventsGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD6DD822803F20051ECEB4B3 /* EventsGroup.swift */; };
 		670908CE8542D7F0B45E0040 /* EsseJazzClubApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1CB1DC577ECAD66C341017F /* EsseJazzClubApp.swift */; };
 		6A8E5A1F92752EF84CE6264D /* ApiError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5397B1B5EAC0109E659E2C92 /* ApiError.swift */; };
+		6A918A732FB00F3600DCAA17 /* MusicianAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A918A722FB00F3600DCAA17 /* MusicianAction.swift */; };
 		6B2F99AA5FCF3A6569D47F35 /* HomeScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 246C0095DAE977ABEDBFDA76 /* HomeScreen.swift */; };
 		6B8CD1D67EB24E3936B9AE1F /* EventCalendarCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 492563FAA6B0A28AFD47C9C6 /* EventCalendarCoordinator.swift */; };
 		713F80FC8ACE1E045F86441F /* RootView+Routing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40244F89FD17B3D96D07651C /* RootView+Routing.swift */; };
@@ -446,6 +447,7 @@
 		633682FC446C691876A451F9 /* String.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
 		657EC9D78E618CE1166F0244 /* ScheduleFeature_Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = ScheduleFeature_Info.plist; sourceTree = "<group>"; };
 		683E7C7F8A3173C4A3346F76 /* EventAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventAction.swift; sourceTree = "<group>"; };
+		6A918A722FB00F3600DCAA17 /* MusicianAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicianAction.swift; sourceTree = "<group>"; };
 		6B4201D1CD4815612ACDC1BC /* MusicianViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicianViewModel.swift; sourceTree = "<group>"; };
 		70CBE7DEED37FDD08A9AE139 /* ApiClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiClient.swift; sourceTree = "<group>"; };
 		71FC149340012E03D49B5629 /* Tests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -829,6 +831,7 @@
 			children = (
 				F0BDA29A0121533AB0A40858 /* DayView.swift */,
 				683E7C7F8A3173C4A3346F76 /* EventAction.swift */,
+				6A918A722FB00F3600DCAA17 /* MusicianAction.swift */,
 				B5F8F6DDF13979100D5FE0B5 /* EventContextButtons.swift */,
 				A9DB296155A5ACB286240D62 /* EventDetailView.swift */,
 				53F0D134ECFEC025103F9E15 /* EventInfoView.swift */,
@@ -1090,7 +1093,6 @@
 			);
 			mainGroup = C2BFA200395F1D4417660D73;
 			minimizedProjectReferenceProxies = 1;
-			preferredProjectObjectVersion = 54;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
@@ -1190,6 +1192,7 @@
 				B43BC67D5E561F81C86410E9 /* EventViewModel.swift in Sources */,
 				62F1B65DEA5D34995D9D8877 /* EventsGroup.swift in Sources */,
 				1E8DF8A6011991BAC6DBB82F /* MusicianDetailsView.swift in Sources */,
+				6A918A732FB00F3600DCAA17 /* MusicianAction.swift in Sources */,
 				38C5C465FFBB328AC22FE9CE /* MusicianViewModel.swift in Sources */,
 				DC42D8EAA0F43BD0D4920006 /* NavigationPresentationStyle.swift in Sources */,
 				A573EEBD43BAA78E71FBFD81 /* NavigationStackRouting.swift in Sources */,
@@ -1495,7 +1498,10 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0.0;
-				OTHER_LDFLAGS = "$(inherited) \"-ObjC\"";
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"\"-ObjC\"",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.unity.essejazz;
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) DEVELOP";
@@ -1655,7 +1661,10 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0.0;
-				OTHER_LDFLAGS = "$(inherited) \"-ObjC\"";
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"\"-ObjC\"",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.unity.essejazz;
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) DEVELOP";
@@ -1816,7 +1825,10 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0.0;
-				OTHER_LDFLAGS = "$(inherited) \"-ObjC\"";
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"\"-ObjC\"",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.unity.essejazz;
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) APPSTORE";
@@ -1843,7 +1855,10 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0.0;
-				OTHER_LDFLAGS = "$(inherited) \"-ObjC\"";
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"\"-ObjC\"",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.unity.essejazz;
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) APPSTORE";

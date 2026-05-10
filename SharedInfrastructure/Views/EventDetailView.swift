@@ -102,7 +102,7 @@ public struct EventDetailView: View {
                                 HStack {
                                     Spacer()
                                     BuyButton {
-                                        actionHandler(.onBuy)
+                                        actionHandler(.navigation(.onBuy))
                                     }
                                 }
                                 .padding(12)
@@ -143,7 +143,7 @@ public struct EventDetailView: View {
                             LazyHStack(spacing: 12) {
                                 ForEach(viewModel.musicians) { musician in
                                     MusicianRowView(musician: musician, onSelect: {
-                                        actionHandler(.onMusician(musician))
+                                        actionHandler(.navigation(.onMusicianDetails(musician)))
                                     })
                                 }
                             }
@@ -157,7 +157,7 @@ public struct EventDetailView: View {
                 }
             }
             
-            Button(action: { actionHandler(.dismiss) }) {
+            Button(action: { actionHandler(.navigation(.dismiss)) }) {
                 Image(systemName: "multiply")
                     .frame(width: 32, height: 32)
                     .foregroundColor(Color(uiColor: Colors.textInverted))

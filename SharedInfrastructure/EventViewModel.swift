@@ -13,12 +13,19 @@ import Core
 
 public typealias MusiciansProvider = (String) async throws -> AnyPublisher<[MusicianViewModel], Never>
 
-@MainActor
-public final class EventViewModel: ObservableObject, Identifiable {
+public final class EventViewModel: ObservableObject, Identifiable, Hashable {
+    public static func == (lhs: EventViewModel, rhs: EventViewModel) -> Bool {
+        return "\(lhs.id):\(lhs.model.dateWithTimes.id)" == "\(rhs.id):\(rhs.model.dateWithTimes.id)"
+    }
+
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine("\(id):\(model.dateWithTimes.id)")
+    }
+    
     public let id: String
     public var occurrenceIdentifier: String { eventOccurrenceIdentifier(for: model) }
-    public let hasContextMenu: Bool
-    public let hasDate: Bool
+    public var hasContextMenu: Bool
+    public var hasDate: Bool
 
     @Published public var image: UIImage? = nil
     @Published public var isLoadingImage: Bool = false
@@ -58,18 +65,22 @@ public final class EventViewModel: ObservableObject, Identifiable {
         }
     }
     
+    @MainActor
     public lazy var favoriteButtonViewModel: EventContextButtonViewModel = EventContextButtonViewModel(imagePublisher: contextButtonImagePublisher(for: .favorite(id)))
     
+    @MainActor
     public lazy var shareButtonViewModel: EventContextButtonViewModel = EventContextButtonViewModel(imagePublisher: contextButtonImagePublisher(for: .share))
     
+    @MainActor
     public lazy var calendarButtonViewModel: EventContextButtonViewModel = EventContextButtonViewModel(imagePublisher: contextButtonImagePublisher(for: .calendar(self)))
     
+    @MainActor
     public lazy var detailsButtonViewModel: EventContextButtonViewModel = EventContextButtonViewModel(imagePublisher: contextButtonImagePublisher(for: .details(self)))
 
     private var prices: [Price]
     private let imageLoader: AsyncImageLoader
     private let favoritesStorage: FavoritesStorage<String>
-    private let model: EventModel
+    private var model: EventModel
     
     public var onSelect: (() -> Void)?
 
@@ -154,5 +165,4 @@ public final class EventViewModel: ObservableObject, Identifiable {
             Just(UIImage(systemName: type.imageName)).eraseToAnyPublisher()
         }
     }
-    
 }

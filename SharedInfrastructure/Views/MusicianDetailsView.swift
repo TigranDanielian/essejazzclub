@@ -11,43 +11,55 @@ import Services
 
 public struct MusicianDetailsView: View {
     @ObservedObject var viewModel: MusicianViewModel
-    private var onDismiss: () -> Void
+    private var actionHandler: MusicianActionHandler
     @State private var attributedText: AttributedString = .init()
+
+    private enum Layout {
+        static let photoHeight: CGFloat = 240
+        static let textHorizontalPadding: CGFloat = 12
+    }
     
     public init(
         viewModel: MusicianViewModel,
-        onDismiss: @escaping () -> Void
+        actionHandler: @escaping MusicianActionHandler
     ) {
         self.viewModel = viewModel
-        self.onDismiss = onDismiss
+        self.actionHandler = actionHandler
     }
     
     public var body: some View {
         ZStack(alignment: .topTrailing) {
             ScrollView {
-                VStack(alignment: .leading) {
+                VStack(alignment: .leading, spacing: 0) {
                     ZStack {
-                        Image(uiImage: viewModel.image ?? UIImage())
-                            .resizable()
-                            .scaledToFit()
-                            .clipped()
-                            .cornerRadius(12)
+                        Group {
+                            if let image = viewModel.image {
+                                Image(uiImage: image)
+                                    .resizable()
+                                    .scaledToFill()
+                            } else {
+                                Color(uiColor: Colors.cardBackground)
+                            }
+                        }
 
                         if viewModel.isLoadingImage {
                             SkeletonView()
-                                .cornerRadius(12)
                         }
                     }
-                    .shadow(radius: 12)
-                    
+                    .frame(maxWidth: .infinity)
+                    .frame(height: Layout.photoHeight)
+                    .clipped()
+                    .ignoresSafeArea(.container, edges: .horizontal)
+
                     Text(viewModel.name)
                         .bold()
-                        .padding(.horizontal, 12)
+                        .padding(.horizontal, Layout.textHorizontalPadding)
+                        .padding(.top, 12)
                         .font(.system(size: 28, weight: .bold))
                         .foregroundColor(Color(uiColor: Colors.text))
                     
                     Text(viewModel.description)
-                        .padding(.horizontal, 12)
+                        .padding(.horizontal, Layout.textHorizontalPadding)
                         .font(.title3)
                         .foregroundColor(Color(uiColor: Colors.text))
                     
@@ -62,7 +74,7 @@ public struct MusicianDetailsView: View {
                 }
             }
             
-            Button(action: { onDismiss() }) {
+            Button(action: { actionHandler(.dismiss) }) {
                 Image(systemName: "multiply")
                     .frame(width: 32, height: 32)
                     .foregroundColor(Color(uiColor: Colors.textInverted))
