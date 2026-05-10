@@ -9,7 +9,6 @@ import Foundation
 import Services
 import API
 import Combine
-import ScheduleFeature
 import Core
 import SharedInfrastructure
 
@@ -30,7 +29,6 @@ public final class AppContainer: ObservableObject {
         self.musiciansService = MusiciansServiceImpl(apiClient: apiClient)
         
         self.viewModelFactory = SharedViewModelFactory(
-            eventsService: eventsService,
             musiaciansService: musiciansService,
             favoriteStorage: favoritesStorage,
             imageLoader: imageLoader.loadImage(path:)
@@ -42,7 +40,10 @@ public final class AppContainer: ObservableObject {
     }
     
     public func loadEssentialData(onComplete: @escaping (Result<Void, Error>) -> Void) {
-        Publishers.CombineLatest(eventsService.load(), musiciansService.load())
+        Publishers.CombineLatest(
+            eventsService.load(),
+            musiciansService.load()
+        )
             .receive(on: DispatchQueue.main)
             .handleEvents(receiveCompletion: { _ in print("✅ Completed essential data loading")})
             .sink(
@@ -59,6 +60,3 @@ public final class AppContainer: ObservableObject {
             .store(in: &cancellables)
     }
 }
-
-
-extension AppContainer: ScheduleScreenDependencies {}
