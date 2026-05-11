@@ -16,6 +16,8 @@ final class ClubNavigationRouter: StackNavigationRouter<ClubNavigationRouter.Rou
         case musicians
         case favorites
         case giftShop
+        case favoriteEventDetail(occurrenceIdentifier: String)
+        case musicianDetail(MusicianViewModel)
 
         var id: String {
             switch self {
@@ -25,6 +27,10 @@ final class ClubNavigationRouter: StackNavigationRouter<ClubNavigationRouter.Rou
             case .musicians: return "club-musicians"
             case .favorites: return "club-favorites"
             case .giftShop: return "club-gift-shop"
+            case .favoriteEventDetail(let oid):
+                return "club-fav-detail-\(oid)"
+            case .musicianDetail(let m):
+                return "club-musician-\(m.musicianId)"
             }
         }
     }

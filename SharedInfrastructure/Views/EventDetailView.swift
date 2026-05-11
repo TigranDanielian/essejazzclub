@@ -12,14 +12,17 @@ import Services
 public struct EventDetailView: View {
     @ObservedObject var viewModel: EventViewModel
     private var actionHandler: EventActionHandler
+    private let upcomingOccurrences: [EventDetailUpcomingOccurrence]?
     @State private var attributedText: AttributedString = .init()
-    
+
     public init(
         viewModel: EventViewModel,
-        actionHandler: @escaping EventActionHandler
+        actionHandler: @escaping EventActionHandler,
+        upcomingOccurrences: [EventDetailUpcomingOccurrence]? = nil
     ) {
         self.viewModel = viewModel
         self.actionHandler = actionHandler
+        self.upcomingOccurrences = upcomingOccurrences
     }
     
     public var body: some View {
@@ -126,6 +129,10 @@ public struct EventDetailView: View {
                         .foregroundColor(Color(uiColor: Colors.text))
                     
                     SeparatorView()
+
+                    if let upcomingOccurrences, !upcomingOccurrences.isEmpty {
+                        upcomingDatesSection(upcomingOccurrences)
+                    }
                     
                     ExpandableText(text: $attributedText, limit: 100)
                         .padding(12)
@@ -172,15 +179,55 @@ public struct EventDetailView: View {
                 attributedText = text
             }
         }
-        
     }
-    
+
+    private static let upcomingSectionDayFormatter: DateFormatter = {
+        let f = DateFormatter()
+        f.locale = Locale(identifier: "ru_RU")
+        f.dateFormat = "d MMMM, EEEE"
+        return f
+    }()
+
+    @ViewBuilder
+    private func upcomingDatesSection(_ items: [EventDetailUpcomingOccurrence]) -> some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Text("Ближайшие даты")
+                .bold()
+                .font(.title3)
+                .foregroundColor(Color(uiColor: Colors.text))
+                .padding(.horizontal, 12)
+
+            VStack(alignment: .leading, spacing: 8) {
+                ForEach(items) { item in
+                    HStack(alignment: .firstTextBaseline) {
+                        Text(Self.upcomingSectionDayFormatter.string(from: item.date))
+                            .font(.subheadline.weight(.medium))
+                            .foregroundColor(Color(uiColor: Colors.text))
+                        Spacer(minLength: 8)
+                        Text(item.timesSummary)
+                            .font(.subheadline)
+                            .foregroundColor(Color(uiColor: Colors.secondaryText))
+                            .multilineTextAlignment(.trailing)
+                    }
+                    .padding(.vertical, 6)
+                    .padding(.horizontal, 12)
+                    .background(Color(uiColor: Colors.cardBackground))
+                    .cornerRadius(10)
+                }
+            }
+            .padding(.horizontal, 12)
+        }
+    }
 }
 
 struct MyView_Previews: PreviewProvider {
     
     static var previews: some View {
-        EventDetailView(viewModel: EventViewModel(model: .preview, hasContextMenu: false, imageLoader: ImageLoaderImpl(host: URL(string: "https://www.jazzesse.ru/upload/")!).loadImage, favoritesStorage: .init(), musiciansProvider: nil), actionHandler: { _ in })
+        EventDetailView(
+            viewModel: EventViewModel(model: .preview, hasContextMenu: false, imageLoader: ImageLoaderImpl(host: URL(string: "https://www.jazzesse.ru/upload/")!).loadImage, favoritesStorage: .init(), musiciansProvider: nil),
+            actionHandler: { _ in },
+            upcomingOccurrences: nil
+        )
             .previewDisplayName("Mock preview")
     }
 }

@@ -65,16 +65,34 @@ public enum EventContextButtonType {
 }
 
 struct EventContextButton: View {
-    @StateObject var viewModel: EventContextButtonViewModel
+    /// Родитель владеет `EventContextButtonViewModel` (как у избранного в `EventViewModel` / `MusicianViewModel`).
+    @ObservedObject var viewModel: EventContextButtonViewModel
     var onTap: () -> Void
-    
+
     var body: some View {
         Button(action: onTap) {
-            Image(uiImage: viewModel.image ?? UIImage())
-                .frame(width: 30, height: 30)
-                .foregroundColor(.white)
-                .background(.gray)
+            icon
+                .frame(width: 22, height: 22)
+                .foregroundColor(Color.white)
+                .padding(4)
+                .frame(width: 36, height: 36)
+                .background(Color.gray.opacity(0.85))
                 .cornerRadius(8)
+        }
+        .buttonStyle(.plain)
+    }
+
+    @ViewBuilder
+    private var icon: some View {
+        if let uiImage = viewModel.image {
+            Image(uiImage: uiImage)
+                .renderingMode(.template)
+                .resizable()
+                .scaledToFit()
+        } else {
+            Image(systemName: "heart")
+                .resizable()
+                .scaledToFit()
         }
     }
 }

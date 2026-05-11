@@ -7,7 +7,9 @@
 
 import Foundation
 import SwiftUI
+import Combine
 import Services
+import Core
 
 public final class MusicianViewModel: ObservableObject, Identifiable, Hashable {
     public static func == (lhs: MusicianViewModel, rhs: MusicianViewModel) -> Bool {
@@ -27,15 +29,39 @@ public final class MusicianViewModel: ObservableObject, Identifiable, Hashable {
     
     @Published public var image: UIImage? = nil
     @Published public var isLoadingImage: Bool = false
-    
+
+    /// Идентификатор для `FavoritesStorageKey.musicians` (совпадает с `id`).
+    public var favoriteStorageId: String { id }
+
+    @MainActor
+    public lazy var favoriteButtonViewModel: EventContextButtonViewModel = EventContextButtonViewModel(
+        imagePublisher: favoriteHeartImagePublisher()
+    )
+
     private let imageLoader: AsyncImageLoader
+    private let favoritesStorage: FavoritesStorage<String>
     private let model: Musician
-    
-    public init(model: Musician, imageLoader: @escaping AsyncImageLoader) {
+
+    public init(
+        model: Musician,
+        imageLoader: @escaping AsyncImageLoader,
+        favoritesStorage: FavoritesStorage<String>
+    ) {
         self.model = model
         self.imageLoader = imageLoader
-        
+        self.favoritesStorage = favoritesStorage
+
         Task { await loadImage() }
+    }
+
+    @MainActor
+    private func favoriteHeartImagePublisher() -> AnyPublisher<UIImage?, Never> {
+        favoritesStorage
+            .isFavoritePublisher(for: favoriteStorageId, key: .musicians)
+            .map { isFavorite in
+                UIImage(systemName: isFavorite ? "heart.fill" : "heart")
+            }
+            .eraseToAnyPublisher()
     }
     
     @MainActor

@@ -10,7 +10,11 @@ import API
 import Combine
 
 public struct MusiciansState {
-    let musicians: [Musician]
+    public let musicians: [Musician]
+
+    public init(musicians: [Musician]) {
+        self.musicians = musicians
+    }
 }
 
 public protocol MusiciansService {

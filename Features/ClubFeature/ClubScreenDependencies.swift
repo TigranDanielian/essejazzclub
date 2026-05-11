@@ -1,0 +1,38 @@
+//
+//  ClubScreenDependencies.swift
+//  ClubFeature
+//
+
+import Combine
+import Core
+import Services
+import SharedInfrastructure
+
+/// Зависимости вкладки «Клуб» без привязки к таргету приложения (`AppContainer`).
+public struct ClubScreenDependencies {
+    public let eventsService: EventsService
+    public let musiciansService: MusiciansService
+    public let favoritesStorage: FavoritesStorage<String>
+    public let imageLoader: ImageLoader
+    public let viewModelFactory: ViewModelFactory
+    public let uiFactory: any UIFactory
+    public let calendarCoordinator: EventCalendarCoordinator
+
+    public init(
+        eventsService: EventsService,
+        musiciansService: MusiciansService,
+        favoritesStorage: FavoritesStorage<String>,
+        imageLoader: ImageLoader,
+        viewModelFactory: ViewModelFactory,
+        uiFactory: any UIFactory,
+        calendarCoordinator: EventCalendarCoordinator
+    ) {
+        self.eventsService = eventsService
+        self.musiciansService = musiciansService
+        self.favoritesStorage = favoritesStorage
+        self.imageLoader = imageLoader
+        self.viewModelFactory = viewModelFactory
+        self.uiFactory = uiFactory
+        self.calendarCoordinator = calendarCoordinator
+    }
+}

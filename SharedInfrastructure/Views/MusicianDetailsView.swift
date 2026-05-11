@@ -30,7 +30,7 @@ public struct MusicianDetailsView: View {
     public var body: some View {
         ZStack(alignment: .topTrailing) {
             ScrollView {
-                VStack(alignment: .leading, spacing: 0) {
+                VStack(alignment: .leading, spacing: 8) {
                     ZStack {
                         Group {
                             if let image = viewModel.image {
@@ -73,15 +73,25 @@ public struct MusicianDetailsView: View {
                     Spacer()
                 }
             }
-            
-            Button(action: { actionHandler(.dismiss) }) {
-                Image(systemName: "multiply")
-                    .frame(width: 32, height: 32)
-                    .foregroundColor(Color(uiColor: Colors.textInverted))
-                    .background(Color(uiColor: Colors.mainBackground))
-                    .cornerRadius(12)
-                    .padding(8)
+
+            HStack(spacing: 10) {
+                EventContextButton(
+                    viewModel: viewModel.favoriteButtonViewModel,
+                    onTap: { actionHandler(.favorite(viewModel.favoriteStorageId)) }
+                )
+//                Button(action: { actionHandler(.dismiss) }) {
+//                    Image(systemName: "multiply")
+//                        .font(.system(size: 16, weight: .semibold))
+//                        .frame(width: 32, height: 32)
+//                        .foregroundColor(Color(uiColor: Colors.textInverted))
+//                        .background(Color(uiColor: Colors.mainBackground))
+//                        .cornerRadius(12)
+//                }
+//                .buttonStyle(.plain)
+
             }
+            .padding(.top, 8)
+            .padding(.trailing, 12)
         }
         .background(Color(uiColor: Colors.mainBackground))
         .onAppear {

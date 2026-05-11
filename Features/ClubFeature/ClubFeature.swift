@@ -9,7 +9,11 @@ import SwiftUI
 import Core
 
 public struct ClubScreen: View {
-    public init() {}
+    private let dependencies: ClubScreenDependencies
+
+    public init(dependencies: ClubScreenDependencies) {
+        self.dependencies = dependencies
+    }
 
     @StateObject private var router = ClubNavigationRouter()
 
@@ -44,7 +48,7 @@ public struct ClubScreen: View {
             .navigationTitle("Клуб")
             .navigationBarTitleDisplayMode(.large)
             .navigationDestination(for: ClubNavigationRouter.Route.self) { route in
-                ClubSectionPlaceholderView(route: route)
+                ClubRouteDestinationView(route: route, router: router, dependencies: dependencies)
             }
         }
     }
@@ -170,6 +174,8 @@ private extension ClubNavigationRouter.Route {
         case .musicians: return "Музыканты"
         case .favorites: return "Избранное"
         case .giftShop: return "Гифт-шоп"
+        case .favoriteEventDetail, .musicianDetail:
+            return ""
         }
     }
 
@@ -179,8 +185,10 @@ private extension ClubNavigationRouter.Route {
         case .menu: return "Кухня и бар"
         case .contacts: return "Адрес, телефон, часы работы"
         case .musicians: return "Кто выступает в клубе"
-        case .favorites: return "Сохранённые события"
+        case .favorites: return "Концерты и музыканты"
         case .giftShop: return "Мерч и подарки"
+        case .favoriteEventDetail, .musicianDetail:
+            return ""
         }
     }
 
@@ -192,6 +200,8 @@ private extension ClubNavigationRouter.Route {
         case .musicians: return "music.mic"
         case .favorites: return "heart.fill"
         case .giftShop: return "gift.fill"
+        case .favoriteEventDetail, .musicianDetail:
+            return "circle"
         }
     }
 }
@@ -205,6 +215,6 @@ struct ClubBannerItem: Identifiable {
     let imageName: String
 }
 
-#Preview {
-    ClubScreen()
+#Preview("Club") {
+    Text("ClubScreen(dependencies:) — см. RootView")
 }

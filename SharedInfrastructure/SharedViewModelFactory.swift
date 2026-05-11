@@ -65,7 +65,7 @@ public final class SharedViewModelFactory: @preconcurrency ViewModelFactory {
                 return cachedViewModel
             }
             
-            let viewModel = MusicianViewModel(model: musician, imageLoader: imageLoader)
+            let viewModel = MusicianViewModel(model: musician, imageLoader: imageLoader, favoritesStorage: favoriteStorage)
             musicianViewModels[musician.id] = viewModel
             
             return viewModel

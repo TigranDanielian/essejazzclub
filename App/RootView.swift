@@ -20,6 +20,12 @@ struct RootView: View {
     private var homeTabNavigation: HomeTabNavigating { homeNavigationRouter }
     private var scheduleTabNavigation: ScheduleTabNavigating { scheduleNavigationRouter }
 
+    private var musicianFavoritesToggle: (String) -> Void {
+        { id in
+            container.favoritesStorage.toggleState(forValue: id, forKey: .musicians)
+        }
+    }
+
     var body: some View {
         TabView(selection: $appNavigationRouter.selectedTab) {
             HomeTabRoot(
@@ -42,11 +48,21 @@ struct RootView: View {
             }
             .tag(AppTab.schedule)
 
-            ClubScreen()
-                .tabItem {
-                    Label("Клуб", systemImage: "music.note.house")
-                }
-                .tag(AppTab.club)
+            ClubScreen(
+                dependencies: ClubScreenDependencies(
+                    eventsService: container.eventsService,
+                    musiciansService: container.musiciansService,
+                    favoritesStorage: container.favoritesStorage,
+                    imageLoader: container.imageLoader,
+                    viewModelFactory: container.viewModelFactory,
+                    uiFactory: container.uiFactory,
+                    calendarCoordinator: container.calendarCoordinator
+                )
+            )
+            .tabItem {
+                Label("Клуб", systemImage: "music.note.house")
+            }
+            .tag(AppTab.club)
         }
         .environmentObject(container)
     }
@@ -60,7 +76,12 @@ struct RootView: View {
                 actionHandler: homeTabNavigation.makeEventDetailActionHandler(contextHandler: handleContextAction)
             )
         case .musicianDetail(let viewModel):
-            musicianDetailView(viewModel: viewModel, actionHandler: homeTabNavigation.makeMusicianDetailActionHandler())
+            musicianDetailView(
+                viewModel: viewModel,
+                actionHandler: homeTabNavigation.makeMusicianDetailActionHandler(
+                    favoritesHandler: musicianFavoritesToggle
+                )
+            )
         }
     }
 
@@ -73,7 +94,12 @@ struct RootView: View {
                 actionHandler: scheduleTabNavigation.makeEventDetailActionHandler(contextHandler: handleContextAction)
             )
         case .musicianDetail(let viewModel):
-            musicianDetailView(viewModel: viewModel, actionHandler: scheduleTabNavigation.makeMusicianDetailActionHandler())
+            musicianDetailView(
+                viewModel: viewModel,
+                actionHandler: scheduleTabNavigation.makeMusicianDetailActionHandler(
+                    favoritesHandler: musicianFavoritesToggle
+                )
+            )
         case .filter:
             scheduleFilterPlaceholder(dismiss: { scheduleTabNavigation.dismissPresentedOrPop() })
         }
@@ -81,7 +107,7 @@ struct RootView: View {
 
     @ViewBuilder
     private func eventDetailView(viewModel: EventViewModel, actionHandler: @escaping EventActionHandler) -> some View {
-        AnyView(container.uiFactory.produce(unit: .eventDetails(viewModel, actionHandler)))
+        AnyView(container.uiFactory.produce(unit: .eventDetails(viewModel, actionHandler, nil)))
     }
 
     @ViewBuilder

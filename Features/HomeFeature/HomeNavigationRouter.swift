@@ -44,6 +44,8 @@ public final class HomeNavigationRouter: StackNavigationRouter<HomeNavigationRou
         switch action {
         case .dismiss:
             dismissPresentedOrPop()
+        case .favorite:
+            break
         }
     }
 

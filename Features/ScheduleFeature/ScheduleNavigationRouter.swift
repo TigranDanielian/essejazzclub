@@ -43,6 +43,8 @@ public final class ScheduleNavigationRouter: StackNavigationRouter<ScheduleNavig
         switch action {
         case .dismiss:
             dismissPresentedOrPop()
+        case .favorite:
+            break
         }
     }
 

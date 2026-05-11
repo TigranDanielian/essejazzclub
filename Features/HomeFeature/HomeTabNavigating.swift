@@ -27,7 +27,14 @@ public extension HomeTabNavigating {
         }
     }
 
-    func makeMusicianDetailActionHandler() -> MusicianActionHandler {
-        { _ in self.dismissPresentedOrPop() }
+    func makeMusicianDetailActionHandler(favoritesHandler: @escaping (String) -> Void) -> MusicianActionHandler {
+        { action in
+            switch action {
+            case .dismiss:
+                self.dismissPresentedOrPop()
+            case .favorite(let id):
+                favoritesHandler(id)
+            }
+        }
     }
 }

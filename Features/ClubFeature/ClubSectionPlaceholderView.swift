@@ -28,8 +28,9 @@ struct ClubSectionPlaceholderView: View {
         case .menu: return "Меню"
         case .contacts: return "Контакты"
         case .musicians: return "Музыканты"
-        case .favorites: return "Избранное"
         case .giftShop: return "Гифт-шоп"
+        case .favorites, .favoriteEventDetail, .musicianDetail:
+            return "Клуб"
         }
     }
 
@@ -43,10 +44,10 @@ struct ClubSectionPlaceholderView: View {
             return "Адрес, телефон, часы работы и схема проезда будут доступны в этом разделе."
         case .musicians:
             return "Каталог музыкантов и составов — раздел в разработке."
-        case .favorites:
-            return "Список избранных событий перенесём сюда. Пока отмечайте концерты сердечком на главной и во вкладке «Афиша» — они сохраняются в приложении."
         case .giftShop:
             return "Мерч, подарочные сертификаты и акции гифт-шопа — скоро в этом разделе."
+        case .favorites, .favoriteEventDetail, .musicianDetail:
+            return ""
         }
     }
 }
