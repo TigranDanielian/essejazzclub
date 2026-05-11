@@ -10,7 +10,9 @@ import Core
 
 public struct ClubScreen: View {
     public init() {}
-    
+
+    @StateObject private var router = ClubNavigationRouter()
+
     private let bannerItems: [ClubBannerItem] = [
         .init(
             title: "С приложением выгодно!",
@@ -23,46 +25,178 @@ public struct ClubScreen: View {
             imageName: "Logo_black_eng"
         )
     ]
-    
-    private let gridItems: [ClubGridItem] = [
-        .init(title: "Клубная карта", subtitle: "Ваши привелегии", imageName: "club_grid_schedule"),
-        .init(title: "О клубе", subtitle: "Атмосфера и история", imageName: "club_grid_menu"),
-        .init(title: "Меню", subtitle: "Кухня и бар", imageName: "club_grid_about"),
-        .init(title: "Контакты", subtitle: "Адрес и контакты", imageName: "club_grid_location")
-    ]
-    
-    private let gridColumns: [GridItem] = [
-        GridItem(.flexible(), spacing: 16),
-        GridItem(.flexible(), spacing: 16)
-    ]
-    
+
     public var body: some View {
-        ScrollView(.vertical, showsIndicators: false) {
-                VStack(alignment: .leading, spacing: 32) {
-                    
-                    // MARK: - Features slider
+        NavigationStack(path: $router.path) {
+            ScrollView(.vertical, showsIndicators: false) {
+                VStack(alignment: .leading, spacing: 28) {
+                    clubIdentityHeader
+
                     ClubFeaturesSlider(items: bannerItems)
                         .frame(height: 220)
-//                        .padding(.horizontal, 8)
-                    
-                    // MARK: - Club essentials grid
-                    LazyVGrid(columns: gridColumns, spacing: 16) {
-                        ForEach(gridItems) { item in
-                            ClubGridTile(item: item)
-                        }
-                    }
-                    .padding(.bottom, 24)
-                    .padding(.horizontal, 16)
+
+                    hubSectionGroups
                 }
-                .padding(.top, 16)
+                .padding(.top, 12)
+                .padding(.bottom, 28)
             }
             .background(Color(uiColor: Colors.mainBackground).ignoresSafeArea())
-//            .navigationTitle("Клуб")
-//            .navigationBarTitleDisplayMode(.inline)
+            .navigationTitle("Клуб")
+            .navigationBarTitleDisplayMode(.large)
+            .navigationDestination(for: ClubNavigationRouter.Route.self) { route in
+                ClubSectionPlaceholderView(route: route)
+            }
+        }
+    }
+
+    private var clubIdentityHeader: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Text("ESSE Jazz Club")
+                .font(.title.weight(.bold))
+                .foregroundStyle(Color(uiColor: Colors.text))
+
+            Text("Уникальная джазовая площадка, объединяющая истинных ценителей качественного звука.")
+                .font(.subheadline)
+                .foregroundStyle(Color(uiColor: Colors.secondaryText))
+                .fixedSize(horizontal: false, vertical: true)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(.horizontal, 16)
+    }
+
+    private var hubSectionGroups: some View {
+        VStack(alignment: .leading, spacing: 22) {
+            ForEach(ClubHubGroup.allCases, id: \.self) { group in
+                VStack(alignment: .leading, spacing: 10) {
+                    Text(group.title)
+                        .font(.footnote.weight(.semibold))
+                        .foregroundStyle(Color(uiColor: Colors.secondaryText))
+                        .textCase(.uppercase)
+                        .padding(.horizontal, 16)
+
+                    VStack(spacing: 0) {
+                        ForEach(Array(group.routes.enumerated()), id: \.element) { index, route in
+                            ClubHubRow(route: route) {
+                                router.present(route: route, presentation: .push)
+                            }
+                            if index < group.routes.count - 1 {
+                                Divider()
+                                    .padding(.leading, 56)
+                            }
+                        }
+                    }
+                    .background(Color(uiColor: Colors.cardBackground))
+                    .clipShape(RoundedRectangle(cornerRadius: 14))
+                    .padding(.horizontal, 16)
+                }
+            }
+        }
     }
 }
 
-// MARK: - Models
+// MARK: - Hub grouping
+
+private enum ClubHubGroup: CaseIterable {
+    case guest
+    case club
+    case connect
+
+    var title: String {
+        switch self {
+        case .guest: return "Для гостя"
+        case .club: return "Клуб"
+        case .connect: return "Как нас найти"
+        }
+    }
+
+    var routes: [ClubNavigationRouter.Route] {
+        switch self {
+        case .guest:
+            return [.favorites]
+        case .club:
+            return [.about, .musicians, .menu, .giftShop]
+        case .connect:
+            return [.contacts]
+        }
+    }
+}
+
+// MARK: - Row
+
+private struct ClubHubRow: View {
+    let route: ClubNavigationRouter.Route
+    let action: () -> Void
+
+    var body: some View {
+        Button(action: action) {
+            HStack(spacing: 14) {
+                Image(systemName: route.symbolName)
+                    .font(.title3)
+                    .foregroundStyle(Color(uiColor: Colors.text))
+                    .frame(width: 28, alignment: .center)
+
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(route.hubTitle)
+                        .font(.body.weight(.medium))
+                        .foregroundStyle(Color(uiColor: Colors.text))
+                    Text(route.hubSubtitle)
+                        .font(.caption)
+                        .foregroundStyle(Color(uiColor: Colors.secondaryText))
+                        .lineLimit(2)
+                }
+
+                Spacer(minLength: 8)
+
+                Image(systemName: "chevron.right")
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(Color(uiColor: Colors.secondaryText))
+            }
+            .padding(.vertical, 12)
+            .padding(.horizontal, 14)
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+    }
+}
+
+// MARK: - Route presentation
+
+private extension ClubNavigationRouter.Route {
+    var hubTitle: String {
+        switch self {
+        case .about: return "О клубе"
+        case .menu: return "Меню"
+        case .contacts: return "Контакты"
+        case .musicians: return "Музыканты"
+        case .favorites: return "Избранное"
+        case .giftShop: return "Гифт-шоп"
+        }
+    }
+
+    var hubSubtitle: String {
+        switch self {
+        case .about: return "История, залы, атмосфера"
+        case .menu: return "Кухня и бар"
+        case .contacts: return "Адрес, телефон, часы работы"
+        case .musicians: return "Кто выступает в клубе"
+        case .favorites: return "Сохранённые события"
+        case .giftShop: return "Мерч и подарки"
+        }
+    }
+
+    var symbolName: String {
+        switch self {
+        case .about: return "building.columns.fill"
+        case .menu: return "fork.knife"
+        case .contacts: return "mappin.and.ellipse"
+        case .musicians: return "music.mic"
+        case .favorites: return "heart.fill"
+        case .giftShop: return "gift.fill"
+        }
+    }
+}
+
+// MARK: - Promo slider model
 
 struct ClubBannerItem: Identifiable {
     let id = UUID()
@@ -70,46 +204,6 @@ struct ClubBannerItem: Identifiable {
     let subtitle: String
     let imageName: String
 }
-
-struct ClubGridItem: Identifiable {
-    let id = UUID()
-    let title: String
-    let subtitle: String
-    let imageName: String
-}
-
-// MARK: - Grid tile view
-
-private struct ClubGridTile: View {
-    let item: ClubGridItem
-    
-    var body: some View {
-        VStack(spacing: 0) {
-            Image(item.imageName)
-                .resizable()
-                .scaledToFill()
-                .frame(maxWidth: .infinity)
-                .frame(height: 110)
-                .clipped()
-            
-            VStack(alignment: .leading, spacing: 4) {
-                Text(item.title)
-                    .font(.headline)
-                    .foregroundColor(Color(uiColor: Colors.text))
-                
-                Text(item.subtitle)
-                    .font(.caption)
-                    .foregroundColor(Color(uiColor: Colors.text))
-            }
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .padding(8)
-        }
-        .background(Color(uiColor: Colors.cardBackground))
-        .cornerRadius(12)
-        .shadow(radius: 6)
-    }
-}
-
 
 #Preview {
     ClubScreen()
