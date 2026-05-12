@@ -12,6 +12,7 @@ import SharedInfrastructure
 public struct ClubScreenDependencies {
     public let eventsService: EventsService
     public let musiciansService: MusiciansService
+    public let contentService: ContentService
     public let favoritesStorage: FavoritesStorage<String>
     public let imageLoader: ImageLoader
     public let viewModelFactory: ViewModelFactory
@@ -21,6 +22,7 @@ public struct ClubScreenDependencies {
     public init(
         eventsService: EventsService,
         musiciansService: MusiciansService,
+        contentService: ContentService,
         favoritesStorage: FavoritesStorage<String>,
         imageLoader: ImageLoader,
         viewModelFactory: ViewModelFactory,
@@ -29,6 +31,7 @@ public struct ClubScreenDependencies {
     ) {
         self.eventsService = eventsService
         self.musiciansService = musiciansService
+        self.contentService = contentService
         self.favoritesStorage = favoritesStorage
         self.imageLoader = imageLoader
         self.viewModelFactory = viewModelFactory

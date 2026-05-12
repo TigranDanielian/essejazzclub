@@ -51,12 +51,8 @@ public struct ClubScreen: View {
 
     private var clubIdentityHeader: some View {
         VStack(alignment: .leading, spacing: 10) {
-            Text("ESSE Jazz Club")
-                .font(.title.weight(.bold))
-                .foregroundStyle(Color(uiColor: Colors.text))
-
             Text("Уникальная джазовая площадка, объединяющая истинных ценителей качественного звука.")
-                .font(.subheadline)
+                .font(.title2)
                 .foregroundStyle(Color(uiColor: Colors.secondaryText))
                 .fixedSize(horizontal: false, vertical: true)
         }

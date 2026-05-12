@@ -27,29 +27,27 @@ struct ClubFavoriteEventDetailHost: View {
     }
 
     var body: some View {
-        Group {
-            if let eventVM = detail.eventViewModel {
-                AnyView(
-                    detail.dependencies.uiFactory.produce(
-                        unit: .eventDetails(
-                            eventVM,
-                            detail.makeEventActionHandler(),
-                            detail.upcomingOccurrences,
-                            detail.detailDisplayOptions,
-                            onSelectUpcomingOccurrence: detail.onSelectUpcomingOccurrence
-                        )
+        if let eventVM = detail.eventViewModel {
+            AnyView(
+                detail.dependencies.uiFactory.produce(
+                    unit: .eventDetails(
+                        eventVM,
+                        detail.makeEventActionHandler(),
+                        detail.upcomingOccurrences,
+                        detail.detailDisplayOptions,
+                        onSelectUpcomingOccurrence: detail.onSelectUpcomingOccurrence
                     )
                 )
-            } else {
-                loadingPlaceholder
-            }
+            )
+        } else {
+            loadingPlaceholder
         }
     }
 
     private var loadingPlaceholder: some View {
         VStack(spacing: 16) {
             ProgressView()
-            Text("Загрузка события…")
+            Text("Загрузка мероприятия…")
                 .font(.subheadline)
                 .foregroundStyle(Color(uiColor: Colors.secondaryText))
         }

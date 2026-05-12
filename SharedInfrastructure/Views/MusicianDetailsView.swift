@@ -106,5 +106,7 @@ public struct MusicianDetailsView: View {
                 attributedText = text
             }
         }
+        .navigationTitle(viewModel.name)
+        .navigationBarTitleDisplayMode(.automatic)
     }
 }

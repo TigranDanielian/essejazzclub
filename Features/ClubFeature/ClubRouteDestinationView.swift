@@ -5,6 +5,7 @@
 
 import SwiftUI
 import Core
+import Services
 import SharedInfrastructure
 
 struct ClubRouteDestinationView: View {
@@ -38,7 +39,10 @@ struct ClubRouteDestinationView: View {
                     })
                 )
             )
-        case .about, .menu, .contacts, .musicians, .giftShop:
+        case .about:
+            AnyView(ClubAboutDestinationView(contentService: dependencies.contentService))
+
+        case .menu, .contacts, .musicians, .giftShop:
             AnyView(ClubSectionPlaceholderView(route: route))
         }
     }

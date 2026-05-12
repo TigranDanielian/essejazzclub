@@ -52,6 +52,7 @@ struct RootView: View {
                 dependencies: ClubScreenDependencies(
                     eventsService: container.eventsService,
                     musiciansService: container.musiciansService,
+                    contentService: container.contentService,
                     favoritesStorage: container.favoritesStorage,
                     imageLoader: container.imageLoader,
                     viewModelFactory: container.viewModelFactory,

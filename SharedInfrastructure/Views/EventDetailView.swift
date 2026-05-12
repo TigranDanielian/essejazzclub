@@ -177,6 +177,8 @@ public struct EventDetailView: View {
                 }
             }
         }
+        .navigationTitle(viewModel.title)
+        .navigationBarTitleDisplayMode(.automatic)
         .background(Color(uiColor: Colors.mainBackground))
         .onAppear {
             if let text = viewModel.text.htmlAttributed(font: .systemFont(ofSize: 14, weight: .medium), color: Colors.text) {
