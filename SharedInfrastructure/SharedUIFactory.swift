@@ -19,7 +19,13 @@ enum SharedUnitFactory {
 
 public enum UIUnit {
     case event(EventViewModel)
-    case eventDetails(EventViewModel, EventActionHandler, [EventDetailUpcomingOccurrence]?)
+    case eventDetails(
+        EventViewModel,
+        EventActionHandler,
+        [EventDetailUpcomingOccurrence]?,
+        EventDetailDisplayOptions,
+        onSelectUpcomingOccurrence: ((String) -> Void)?
+    )
     case musician(MusicianViewModel, MusicianActionHandler)
     case searchTextField(Binding<String>)
     case empty
@@ -48,11 +54,13 @@ public final class SharedUIFactory: UIFactory {
         switch unit {
         case .event(let viewModel):
             EventView(viewModel: viewModel)
-        case .eventDetails(let viewModel, let actionHandler, let upcomingOccurrences):
+        case .eventDetails(let viewModel, let actionHandler, let upcomingOccurrences, let displayOptions, onSelectUpcomingOccurrence: let onSelectUpcoming):
             EventDetailView(
                 viewModel: viewModel,
                 actionHandler: actionHandler,
-                upcomingOccurrences: upcomingOccurrences
+                upcomingOccurrences: upcomingOccurrences,
+                displayOptions: displayOptions,
+                onSelectUpcomingOccurrence: onSelectUpcoming
             )
         case .searchTextField(let binding):
             SearchTextField(textInput: binding)

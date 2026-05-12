@@ -28,40 +28,32 @@ enum ClubFavoriteEventSchedule {
         return parts.isEmpty ? "—" : parts.joined(separator: ", ")
     }
 
-    /// Слоты для блока «Ближайшие даты» на деталке (без текущего слота, чтобы не дублировать шапку).
-    static func upcomingForDetail(
-        forEventId eventId: String,
-        in events: [EventModel],
-        excludingCurrentOccurrenceIdentifier excluded: String
-    ) -> [EventDetailUpcomingOccurrence] {
+    static func allUpcomingOccurrences(forEventId eventId: String, in events: [EventModel]) -> [EventDetailUpcomingOccurrence] {
         let subset = upcomingSubset(from: occurrencesSorted(forEventId: eventId, in: events))
-        return subset
-            .filter { eventOccurrenceIdentifier(for: $0) != excluded }
-            .map {
-                EventDetailUpcomingOccurrence(
-                    occurrenceIdentifier: eventOccurrenceIdentifier(for: $0),
-                    date: $0.dateWithTimes.date,
-                    timesSummary: timesSummary(for: $0)
-                )
-            }
+        return subset.map {
+            EventDetailUpcomingOccurrence(
+                occurrenceIdentifier: eventOccurrenceIdentifier(for: $0),
+                date: $0.dateWithTimes.date,
+                timesSummary: timesSummary(for: $0)
+            )
+        }
     }
 
-    static func listSubtitle(for occurrences: [EventModel]) -> String {
+    private static let shortDayMonthFormatter: DateFormatter = {
+        let f = DateFormatter()
+        f.locale = Locale(identifier: "ru_RU")
+        f.dateFormat = "dd.MM"
+        return f
+    }()
+
+    /// Ближайшие слоты для чипов в списке избранного (как слоты времени на деталке события).
+    static func upcomingDateChips(for occurrences: [EventModel], maxCount: Int = 12) -> [(occurrenceId: String, label: String)] {
         let subset = upcomingSubset(from: occurrences)
-        guard !subset.isEmpty else { return "Нет дат в афише" }
-        let dayFormatter = DateFormatter()
-        dayFormatter.locale = Locale(identifier: "ru_RU")
-        dayFormatter.dateFormat = "d MMM"
-        let pieces: [String] = subset.prefix(2).map { model in
-            let d = dayFormatter.string(from: model.dateWithTimes.date)
-            let t = timesSummary(for: model)
-            return t == "—" ? d : "\(d), \(t)"
+        return subset.prefix(maxCount).map { model in
+            (
+                occurrenceId: eventOccurrenceIdentifier(for: model),
+                label: shortDayMonthFormatter.string(from: model.dateWithTimes.date)
+            )
         }
-        let rest = subset.count - pieces.count
-        var text = pieces.joined(separator: " · ")
-        if rest > 0 {
-            text += " +\(rest)"
-        }
-        return text
     }
 }

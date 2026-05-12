@@ -8,40 +8,41 @@ import Services
 import Core
 import SharedInfrastructure
 
-/// Деталка события из вкладки «Клуб» с блоком ближайших дат по всем слотам `eventId`.
+/// Оболочка над `ClubFavoriteEventDetailViewModel` + `eventDetails` из фабрики.
 struct ClubFavoriteEventDetailHost: View {
-    let occurrenceIdentifier: String
-    @ObservedObject var router: ClubNavigationRouter
-    let dependencies: ClubScreenDependencies
+    @ObservedObject var clubScreen: ClubScreenViewModel
 
-    @State private var events: [EventModel] = []
+    @StateObject private var detail: ClubFavoriteEventDetailViewModel
+
+    init(occurrenceIdentifier: String, mode: ClubNavigationRouter.FavoriteEventDetailMode, clubScreen: ClubScreenViewModel) {
+        self.clubScreen = clubScreen
+        _detail = StateObject(
+            wrappedValue: ClubFavoriteEventDetailViewModel(
+                dependencies: clubScreen.dependencies,
+                clubScreen: clubScreen,
+                occurrenceIdentifier: occurrenceIdentifier,
+                mode: mode
+            )
+        )
+    }
 
     var body: some View {
         Group {
-            if let model = events.first(where: { eventOccurrenceIdentifier(for: $0) == occurrenceIdentifier }),
-               let viewModel = dependencies.viewModelFactory.produce(
-                unit: .event(hasContextMenu: false, hasDate: true, model)
-               ) as? EventViewModel {
-                let extras = ClubFavoriteEventSchedule.upcomingForDetail(
-                    forEventId: model.id,
-                    in: events,
-                    excludingCurrentOccurrenceIdentifier: occurrenceIdentifier
-                )
+            if let eventVM = detail.eventViewModel {
                 AnyView(
-                    dependencies.uiFactory.produce(
+                    detail.dependencies.uiFactory.produce(
                         unit: .eventDetails(
-                            viewModel,
-                            makeEventActionHandler(),
-                            extras.isEmpty ? nil : extras
+                            eventVM,
+                            detail.makeEventActionHandler(),
+                            detail.upcomingOccurrences,
+                            detail.detailDisplayOptions,
+                            onSelectUpcomingOccurrence: detail.onSelectUpcomingOccurrence
                         )
                     )
                 )
             } else {
                 loadingPlaceholder
             }
-        }
-        .onReceive(dependencies.eventsService.state) { state in
-            events = state.events
         }
     }
 
@@ -54,42 +55,5 @@ struct ClubFavoriteEventDetailHost: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color(uiColor: Colors.mainBackground).ignoresSafeArea())
-    }
-
-    private func makeEventActionHandler() -> EventActionHandler {
-        { action in
-            applyEventActionParts(
-                action,
-                applyNavigation: { nav in
-                    switch nav {
-                    case .dismiss:
-                        router.pop()
-                    case .onMusicianDetails(let musician):
-                        router.present(route: .musicianDetail(musician), presentation: .push)
-                    case .onEventDetails(let vm):
-                        router.present(
-                            route: .favoriteEventDetail(occurrenceIdentifier: vm.occurrenceIdentifier),
-                            presentation: .push
-                        )
-                    case .onBuy:
-                        break
-                    }
-                },
-                handleContextButton: handleContext
-            )
-        }
-    }
-
-    private func handleContext(_ type: EventContextButtonType) {
-        switch type {
-        case .calendar(let viewModel):
-            dependencies.calendarCoordinator.handleAction(with: viewModel)
-        case .favorite(let id):
-            dependencies.favoritesStorage.toggleState(forValue: id, forKey: .events)
-        case .share:
-            break
-        case .details:
-            break
-        }
     }
 }

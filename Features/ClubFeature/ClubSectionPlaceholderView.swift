@@ -29,7 +29,7 @@ struct ClubSectionPlaceholderView: View {
         case .contacts: return "Контакты"
         case .musicians: return "Музыканты"
         case .giftShop: return "Гифт-шоп"
-        case .favorites, .favoriteEventDetail, .musicianDetail:
+        case .favorites, .favoriteEventDetail(_, _), .musicianDetail:
             return "Клуб"
         }
     }
@@ -46,7 +46,7 @@ struct ClubSectionPlaceholderView: View {
             return "Каталог музыкантов и составов — раздел в разработке."
         case .giftShop:
             return "Мерч, подарочные сертификаты и акции гифт-шопа — скоро в этом разделе."
-        case .favorites, .favoriteEventDetail, .musicianDetail:
+        case .favorites, .favoriteEventDetail(_, _), .musicianDetail:
             return ""
         }
     }

@@ -107,7 +107,7 @@ struct RootView: View {
 
     @ViewBuilder
     private func eventDetailView(viewModel: EventViewModel, actionHandler: @escaping EventActionHandler) -> some View {
-        AnyView(container.uiFactory.produce(unit: .eventDetails(viewModel, actionHandler, nil)))
+        AnyView(container.uiFactory.produce(unit: .eventDetails(viewModel, actionHandler, nil, .default, onSelectUpcomingOccurrence: nil)))
     }
 
     @ViewBuilder

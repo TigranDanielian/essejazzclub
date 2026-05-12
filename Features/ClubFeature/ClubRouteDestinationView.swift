@@ -9,28 +9,29 @@ import SharedInfrastructure
 
 struct ClubRouteDestinationView: View {
     let route: ClubNavigationRouter.Route
-    @ObservedObject var router: ClubNavigationRouter
-    let dependencies: ClubScreenDependencies
+    @ObservedObject var clubViewModel: ClubScreenViewModel
+
+    private var dependencies: ClubScreenDependencies { clubViewModel.dependencies }
 
     var body: some View {
         switch route {
         case .favorites:
-            AnyView(ClubFavoritesScreen(router: router, dependencies: dependencies))
-        case .favoriteEventDetail(let occurrenceIdentifier):
+            AnyView(ClubFavoritesScreen(screenModel: clubViewModel))
+        case .favoriteEventDetail(let occurrenceIdentifier, let mode):
             AnyView(
                 ClubFavoriteEventDetailHost(
                     occurrenceIdentifier: occurrenceIdentifier,
-                    router: router,
-                    dependencies: dependencies
+                    mode: mode,
+                    clubScreen: clubViewModel
                 )
             )
-        case .musicianDetail(let viewModel):
+        case .musicianDetail(let musicianVM):
             AnyView(
                 dependencies.uiFactory.produce(
-                    unit: .musician(viewModel, { action in
+                    unit: .musician(musicianVM, { action in
                         switch action {
                         case .dismiss:
-                            router.pop()
+                            clubViewModel.popNavigation()
                         case .favorite(let id):
                             dependencies.favoritesStorage.toggleState(forValue: id, forKey: .musicians)
                         }

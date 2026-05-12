@@ -13,16 +13,22 @@ public struct EventDetailView: View {
     @ObservedObject var viewModel: EventViewModel
     private var actionHandler: EventActionHandler
     private let upcomingOccurrences: [EventDetailUpcomingOccurrence]?
+    private let displayOptions: EventDetailDisplayOptions
+    private let onSelectUpcomingOccurrence: ((String) -> Void)?
     @State private var attributedText: AttributedString = .init()
 
     public init(
         viewModel: EventViewModel,
         actionHandler: @escaping EventActionHandler,
-        upcomingOccurrences: [EventDetailUpcomingOccurrence]? = nil
+        upcomingOccurrences: [EventDetailUpcomingOccurrence]? = nil,
+        displayOptions: EventDetailDisplayOptions = .default,
+        onSelectUpcomingOccurrence: ((String) -> Void)? = nil
     ) {
         self.viewModel = viewModel
         self.actionHandler = actionHandler
         self.upcomingOccurrences = upcomingOccurrences
+        self.displayOptions = displayOptions
+        self.onSelectUpcomingOccurrence = onSelectUpcomingOccurrence
     }
     
     public var body: some View {
@@ -47,22 +53,26 @@ public struct EventDetailView: View {
                         ZStack {
                             // 1️⃣ Основной контент
                             VStack(alignment: .leading) {
-                                Text(viewModel.dateString(format: "d MMMM, EEEE"))
-                                    .bold()
-                                    .font(.headline)
-                                    .foregroundColor(.white)
-                                    .padding(.top, 8)
+                                if displayOptions.showsHeroDateAndTimes {
+                                    Text(viewModel.dateString(format: "d MMMM, EEEE"))
+                                        .bold()
+                                        .font(.headline)
+                                        .foregroundColor(.white)
+                                        .padding(.top, 8)
 
-                                HStack {
-                                    Image(systemName: "clock")
-                                        .resizable()
-                                        .frame(width: 12, height: 12)
-                                        .foregroundColor(Color(uiColor: Colors.text))
+                                    HStack {
+                                        Image(systemName: "clock")
+                                            .resizable()
+                                            .frame(width: 12, height: 12)
+                                            .foregroundColor(Color(uiColor: Colors.text))
 
-                                    ForEach(viewModel.times, id: \.self) { time in
-                                        EventTimeView(time: time)
+                                        ForEach(viewModel.times, id: \.self) { time in
+                                            EventTimeView(time: time)
+                                        }
                                     }
                                 }
+                                
+                                Spacer()
 
                                 HStack {
                                     Image(systemName: "ticket")
@@ -94,21 +104,24 @@ public struct EventDetailView: View {
                                         onTap: { actionHandler(.contextAction(.share)) }
                                     )
                                 }
-                                .padding(12)
+                                .padding(.horizontal, 12)
+                                .padding(.bottom, 4)
+                                .padding(.top, 12)
 
                                 Spacer()
                             }
 
-                            // 3️⃣ Кнопка покупки снизу справа
-                            VStack {
-                                Spacer()
-                                HStack {
+                            if displayOptions.showsBuyTicketButton {
+                                VStack {
                                     Spacer()
-                                    BuyButton {
-                                        actionHandler(.navigation(.onBuy))
+                                    HStack {
+                                        Spacer()
+                                        BuyButton {
+                                            actionHandler(.navigation(.onBuy))
+                                        }
                                     }
+                                    .padding(12)
                                 }
-                                .padding(12)
                             }
                         }
                     }
@@ -163,15 +176,6 @@ public struct EventDetailView: View {
                     Spacer()
                 }
             }
-            
-            Button(action: { actionHandler(.navigation(.dismiss)) }) {
-                Image(systemName: "multiply")
-                    .frame(width: 32, height: 32)
-                    .foregroundColor(Color(uiColor: Colors.textInverted))
-                    .background(Color(uiColor: Colors.mainBackground))
-                    .cornerRadius(12)
-                    .padding(8)
-            }
         }
         .background(Color(uiColor: Colors.mainBackground))
         .onAppear {
@@ -191,7 +195,7 @@ public struct EventDetailView: View {
     @ViewBuilder
     private func upcomingDatesSection(_ items: [EventDetailUpcomingOccurrence]) -> some View {
         VStack(alignment: .leading, spacing: 10) {
-            Text("Ближайшие даты")
+            Text("Даты выступлений")
                 .bold()
                 .font(.title3)
                 .foregroundColor(Color(uiColor: Colors.text))
@@ -199,24 +203,48 @@ public struct EventDetailView: View {
 
             VStack(alignment: .leading, spacing: 8) {
                 ForEach(items) { item in
-                    HStack(alignment: .firstTextBaseline) {
-                        Text(Self.upcomingSectionDayFormatter.string(from: item.date))
-                            .font(.subheadline.weight(.medium))
-                            .foregroundColor(Color(uiColor: Colors.text))
-                        Spacer(minLength: 8)
-                        Text(item.timesSummary)
-                            .font(.subheadline)
-                            .foregroundColor(Color(uiColor: Colors.secondaryText))
-                            .multilineTextAlignment(.trailing)
+                    let row = upcomingOccurrenceRow(item)
+                    if displayOptions.linksUpcomingOccurrences, let onSelect = onSelectUpcomingOccurrence {
+                        Button {
+                            onSelect(item.occurrenceIdentifier)
+                        } label: {
+                            row
+                        }
+                        .buttonStyle(.plain)
+                    } else {
+                        row
                     }
-                    .padding(.vertical, 6)
-                    .padding(.horizontal, 12)
-                    .background(Color(uiColor: Colors.cardBackground))
-                    .cornerRadius(10)
                 }
             }
             .padding(.horizontal, 12)
         }
+        .padding(.vertical, 12)
+    }
+
+    private func upcomingOccurrenceRow(_ item: EventDetailUpcomingOccurrence) -> some View {
+        HStack(alignment: .center, spacing: 10) {
+            VStack(alignment: .leading, spacing: 4) {
+                Text(Self.upcomingSectionDayFormatter.string(from: item.date))
+                    .font(.subheadline.weight(.medium))
+                    .foregroundColor(Color(uiColor: Colors.text))
+                    .multilineTextAlignment(.leading)
+                Text(item.timesSummary)
+                    .font(.subheadline)
+                    .foregroundColor(Color(uiColor: Colors.secondaryText))
+                    .multilineTextAlignment(.leading)
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+
+            if displayOptions.linksUpcomingOccurrences {
+                Image(systemName: "chevron.right")
+                    .font(.caption.weight(.semibold))
+                    .foregroundColor(Color(uiColor: Colors.secondaryText))
+            }
+        }
+        .padding(.vertical, 10)
+        .padding(.horizontal, 12)
+        .background(Color(uiColor: Colors.cardBackground))
+        .cornerRadius(10)
     }
 }
 
@@ -226,7 +254,9 @@ struct MyView_Previews: PreviewProvider {
         EventDetailView(
             viewModel: EventViewModel(model: .preview, hasContextMenu: false, imageLoader: ImageLoaderImpl(host: URL(string: "https://www.jazzesse.ru/upload/")!).loadImage, favoritesStorage: .init(), musiciansProvider: nil),
             actionHandler: { _ in },
-            upcomingOccurrences: nil
+            upcomingOccurrences: nil,
+            displayOptions: .default,
+            onSelectUpcomingOccurrence: nil
         )
             .previewDisplayName("Mock preview")
     }

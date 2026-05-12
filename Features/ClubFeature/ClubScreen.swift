@@ -1,21 +1,17 @@
 //
-//  ClubFeature.swift
-//  API
-//
-//  Created by Tigran Danielian on 30.05.2025.
+//  ClubScreen.swift
+//  ClubFeature
 //
 
 import SwiftUI
 import Core
 
 public struct ClubScreen: View {
-    private let dependencies: ClubScreenDependencies
+    @StateObject private var viewModel: ClubScreenViewModel
 
     public init(dependencies: ClubScreenDependencies) {
-        self.dependencies = dependencies
+        _viewModel = StateObject(wrappedValue: ClubScreenViewModel(dependencies: dependencies))
     }
-
-    @StateObject private var router = ClubNavigationRouter()
 
     private let bannerItems: [ClubBannerItem] = [
         .init(
@@ -31,7 +27,7 @@ public struct ClubScreen: View {
     ]
 
     public var body: some View {
-        NavigationStack(path: $router.path) {
+        NavigationStack(path: $viewModel.router.path) {
             ScrollView(.vertical, showsIndicators: false) {
                 VStack(alignment: .leading, spacing: 28) {
                     clubIdentityHeader
@@ -48,7 +44,7 @@ public struct ClubScreen: View {
             .navigationTitle("Клуб")
             .navigationBarTitleDisplayMode(.large)
             .navigationDestination(for: ClubNavigationRouter.Route.self) { route in
-                ClubRouteDestinationView(route: route, router: router, dependencies: dependencies)
+                ClubRouteDestinationView(route: route, clubViewModel: viewModel)
             }
         }
     }
@@ -81,7 +77,7 @@ public struct ClubScreen: View {
                     VStack(spacing: 0) {
                         ForEach(Array(group.routes.enumerated()), id: \.element) { index, route in
                             ClubHubRow(route: route) {
-                                router.present(route: route, presentation: .push)
+                                viewModel.openHubRoute(route)
                             }
                             if index < group.routes.count - 1 {
                                 Divider()
@@ -163,7 +159,7 @@ private struct ClubHubRow: View {
     }
 }
 
-// MARK: - Route presentation
+// MARK: - Route presentation (хаб)
 
 private extension ClubNavigationRouter.Route {
     var hubTitle: String {
@@ -174,7 +170,7 @@ private extension ClubNavigationRouter.Route {
         case .musicians: return "Музыканты"
         case .favorites: return "Избранное"
         case .giftShop: return "Гифт-шоп"
-        case .favoriteEventDetail, .musicianDetail:
+        case .favoriteEventDetail(_, _), .musicianDetail:
             return ""
         }
     }
@@ -187,7 +183,7 @@ private extension ClubNavigationRouter.Route {
         case .musicians: return "Кто выступает в клубе"
         case .favorites: return "Концерты и музыканты"
         case .giftShop: return "Мерч и подарки"
-        case .favoriteEventDetail, .musicianDetail:
+        case .favoriteEventDetail(_, _), .musicianDetail:
             return ""
         }
     }
@@ -200,7 +196,7 @@ private extension ClubNavigationRouter.Route {
         case .musicians: return "music.mic"
         case .favorites: return "heart.fill"
         case .giftShop: return "gift.fill"
-        case .favoriteEventDetail, .musicianDetail:
+        case .favoriteEventDetail(_, _), .musicianDetail:
             return "circle"
         }
     }

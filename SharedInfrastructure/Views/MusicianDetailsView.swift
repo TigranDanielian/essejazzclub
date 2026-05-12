@@ -34,9 +34,13 @@ public struct MusicianDetailsView: View {
                     ZStack {
                         Group {
                             if let image = viewModel.image {
-                                Image(uiImage: image)
-                                    .resizable()
-                                    .scaledToFill()
+                                GeometryReader { geo in
+                                    Image(uiImage: image)
+                                        .resizable()
+                                        .scaledToFill()
+                                        .frame(width: geo.size.width, height: geo.size.height, alignment: .top)
+                                        .clipped()
+                                }
                             } else {
                                 Color(uiColor: Colors.cardBackground)
                             }
@@ -44,10 +48,13 @@ public struct MusicianDetailsView: View {
 
                         if viewModel.isLoadingImage {
                             SkeletonView()
+                                .cornerRadius(12)
                         }
                     }
+                    .shadow(radius: 12)
                     .frame(maxWidth: .infinity)
                     .frame(height: Layout.photoHeight)
+                    .cornerRadius(12)
                     .clipped()
                     .ignoresSafeArea(.container, edges: .horizontal)
 

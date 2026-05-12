@@ -9,26 +9,33 @@ import Core
 import SharedInfrastructure
 
 struct ClubFavoritesScreen: View {
-    @ObservedObject private var router: ClubNavigationRouter
-    @StateObject private var viewModel: ClubFavoritesViewModel
-    private let imageLoader: ImageLoader
-    private let viewModelFactory: ViewModelFactory
+    @ObservedObject private var viewModel: ClubScreenViewModel
 
-    init(router: ClubNavigationRouter, dependencies: ClubScreenDependencies) {
-        self.router = router
-        self.imageLoader = dependencies.imageLoader
-        self.viewModelFactory = dependencies.viewModelFactory
-        _viewModel = StateObject(
-            wrappedValue: ClubFavoritesViewModel(
-                eventsService: dependencies.eventsService,
-                musiciansService: dependencies.musiciansService,
-                favoritesStorage: dependencies.favoritesStorage
-            )
-        )
+    private var dependencies: ClubScreenDependencies { viewModel.dependencies }
+
+    /// `nil` — оба блока; иначе только выбранный тип.
+    @State private var activeFilter: [FavoritesSegment] = []
+
+    init(screenModel: ClubScreenViewModel) {
+        self.viewModel = screenModel
     }
 
     private var isCompletelyEmpty: Bool {
         viewModel.concertRows.isEmpty && viewModel.musicianRows.isEmpty
+    }
+
+    private var hasConcerts: Bool { !viewModel.concertRows.isEmpty }
+    private var hasMusicians: Bool { !viewModel.musicianRows.isEmpty }
+
+    /// Панель фильтра нужна только когда оба списка непусты.
+    private var showsFilterBar: Bool { hasConcerts && hasMusicians }
+
+    private var showsConcertsSection: Bool {
+        hasConcerts && (activeFilter.isEmpty || activeFilter.contains(.concerts))
+    }
+
+    private var showsMusiciansSection: Bool {
+        hasMusicians && (activeFilter.isEmpty || activeFilter.contains(.musicians))
     }
 
     var body: some View {
@@ -36,41 +43,63 @@ struct ClubFavoritesScreen: View {
             if isCompletelyEmpty {
                 emptyState
             } else {
-                ScrollView {
-                    LazyVStack(alignment: .leading, spacing: 22) {
-                        if !viewModel.concertRows.isEmpty {
-                            favoritesSectionHeader("Концерты")
-                            LazyVStack(spacing: 12) {
-                                ForEach(viewModel.concertRows) { row in
-                                    Button {
-                                        router.present(
-                                            route: .favoriteEventDetail(occurrenceIdentifier: row.primaryOccurrenceIdentifier),
-                                            presentation: .push
-                                        )
-                                    } label: {
-                                        ClubFavoriteConcertRowView(row: row, imageLoader: imageLoader)
-                                    }
-                                    .buttonStyle(.plain)
-                                }
-                            }
-                        }
 
-                        if !viewModel.musicianRows.isEmpty {
-                            favoritesSectionHeader("Музыканты")
-                            LazyVStack(spacing: 12) {
-                                ForEach(viewModel.musicianRows) { row in
-                                    Button {
-                                        openMusicianDetail(row: row)
-                                    } label: {
-                                        ClubFavoriteMusicianRowView(row: row, imageLoader: imageLoader)
+                VStack(spacing: 0) {
+                    if showsFilterBar {
+                        HStack(spacing: 10) {
+                            filterChip(title: "Концерты", segment: .concerts)
+                            filterChip(title: "Музыканты", segment: .musicians)
+                            Spacer(minLength: 0)
+                        }
+                        .padding(.horizontal, 16)
+                        .padding(.vertical, 12)
+                    }
+
+                    ScrollView {
+                        LazyVStack(alignment: .leading, spacing: 22) {
+                            if showsConcertsSection {
+                                favoritesSectionHeader("Концерты")
+                                LazyVStack(spacing: 12) {
+                                    ForEach(viewModel.concertRows) { row in
+                                        Button {
+                                            viewModel.presentRoute(
+                                                .favoriteEventDetail(
+                                                    occurrenceIdentifier: row.primaryOccurrenceIdentifier,
+                                                    mode: .overview
+                                                ),
+                                                presentation: .push
+                                            )
+                                        } label: {
+                                            ClubFavoriteConcertRowView(
+                                                row: row,
+                                                imageLoader: dependencies.imageLoader
+                                            )
+                                        }
+                                        .buttonStyle(.plain)
                                     }
-                                    .buttonStyle(.plain)
+                                }
+                            }
+
+                            if showsMusiciansSection {
+                                favoritesSectionHeader("Музыканты")
+                                LazyVStack(spacing: 12) {
+                                    ForEach(viewModel.musicianRows) { row in
+                                        Button {
+                                            openMusicianDetail(row: row)
+                                        } label: {
+                                            ClubFavoriteMusicianRowView(
+                                                row: row,
+                                                imageLoader: dependencies.imageLoader
+                                            )
+                                        }
+                                        .buttonStyle(.plain)
+                                    }
                                 }
                             }
                         }
+                        .padding(.horizontal, 16)
+                        .padding(.vertical, 12)
                     }
-                    .padding(.horizontal, 16)
-                    .padding(.vertical, 12)
                 }
             }
         }
@@ -80,6 +109,26 @@ struct ClubFavoritesScreen: View {
         .navigationBarTitleDisplayMode(.inline)
     }
 
+    private func filterChip(title: String, segment: FavoritesSegment) -> some View {
+        let isSelected = activeFilter.contains(segment)
+        return Button {
+            if activeFilter.contains(segment) {
+                activeFilter.removeAll { $0 == segment }
+            } else {
+                activeFilter.append(segment)
+            }
+        } label: {
+            Text(title)
+                .font(.subheadline.weight(.semibold))
+                .foregroundStyle(Color(uiColor: isSelected ? Colors.textInverted : Colors.text))
+                .padding(.horizontal, 14)
+                .padding(.vertical, 8)
+                .background(Color(uiColor: isSelected ? Colors.primary : Colors.cardBackground))
+                .cornerRadius(10)
+        }
+        .buttonStyle(.plain)
+    }
+
     private func favoritesSectionHeader(_ title: String) -> some View {
         Text(title)
             .font(.footnote.weight(.semibold))
@@ -87,7 +136,7 @@ struct ClubFavoritesScreen: View {
             .textCase(.uppercase)
     }
 
-    private func openMusicianDetail(row: ClubFavoritesViewModel.MusicianRow) {
+    private func openMusicianDetail(row: ClubScreenViewModel.MusicianRow) {
         let musician = viewModel.musicianFromCatalog(id: row.musicianId)
             ?? Musician(
                 id: row.musicianId,
@@ -97,8 +146,8 @@ struct ClubFavoritesScreen: View {
                 profession: row.subtitle,
                 imageUrl: row.imageUrl
             )
-        guard let vm = viewModelFactory.produce(unit: .musician(musician)) as? MusicianViewModel else { return }
-        router.present(route: .musicianDetail(vm), presentation: .push)
+        guard let vm = dependencies.viewModelFactory.produce(unit: .musician(musician)) as? MusicianViewModel else { return }
+        viewModel.presentRoute(.musicianDetail(vm), presentation: .push)
     }
 
     private var emptyState: some View {
@@ -119,8 +168,13 @@ struct ClubFavoritesScreen: View {
     }
 }
 
+private enum FavoritesSegment: Equatable {
+    case concerts
+    case musicians
+}
+
 private struct ClubFavoriteConcertRowView: View {
-    let row: ClubFavoritesViewModel.ConcertRow
+    let row: ClubScreenViewModel.ConcertRow
     let imageLoader: ImageLoader
 
     @State private var image: UIImage?
@@ -151,14 +205,29 @@ private struct ClubFavoriteConcertRowView: View {
                     .foregroundStyle(Color(uiColor: Colors.text))
                     .multilineTextAlignment(.leading)
 
-                HStack(alignment: .top, spacing: 6) {
+                HStack(alignment: .center, spacing: 6) {
                     Image(systemName: "calendar")
                         .font(.caption)
                         .foregroundStyle(Color(uiColor: Colors.secondaryText))
-                    Text(row.subtitle)
-                        .font(.caption)
-                        .foregroundStyle(Color(uiColor: Colors.secondaryText))
-                        .fixedSize(horizontal: false, vertical: true)
+                    if row.dateChips.isEmpty {
+                        Text("Нет дат в афише")
+                            .font(.caption)
+                            .foregroundStyle(Color(uiColor: Colors.secondaryText))
+                    } else {
+                        ScrollView(.horizontal, showsIndicators: false) {
+                            HStack(spacing: 4) {
+                                ForEach(row.dateChips) { chip in
+                                    Text(chip.label)
+                                        .padding(2)
+                                        .font(.caption)
+                                        .foregroundStyle(Color(uiColor: Colors.text))
+                                        .background(Color(uiColor: Colors.mainBackground))
+                                        .cornerRadius(4)
+                                }
+                            }
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    }
                 }
             }
             .frame(maxWidth: .infinity, alignment: .leading)
@@ -190,7 +259,7 @@ private struct ClubFavoriteConcertRowView: View {
 }
 
 private struct ClubFavoriteMusicianRowView: View {
-    let row: ClubFavoritesViewModel.MusicianRow
+    let row: ClubScreenViewModel.MusicianRow
     let imageLoader: ImageLoader
 
     @State private var image: UIImage?
@@ -244,10 +313,6 @@ private struct ClubFavoriteMusicianRowView: View {
                 }
             }
             .frame(maxWidth: .infinity, alignment: .leading)
-
-            Image(systemName: "chevron.right")
-                .font(.caption.weight(.semibold))
-                .foregroundStyle(Color(uiColor: Colors.secondaryText))
         }
         .padding(12)
         .background(Color(uiColor: Colors.cardBackground))
