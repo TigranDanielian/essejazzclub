@@ -13,34 +13,9 @@ import SharedInfrastructure
 /// Вью-модель вкладки «Клуб»: зависимости, избранное, делегирование навигации роутеру.
 @MainActor
 public final class ClubScreenViewModel: ObservableObject {
-    public struct ConcertDateChip: Identifiable, Hashable {
-        public let id: String
-        public let label: String
-
-        public init(occurrenceIdentifier: String, label: String) {
-            self.id = occurrenceIdentifier
-            self.label = label
-        }
-    }
-
-    public struct ConcertRow: Identifiable, Hashable {
-        public let id: String
-        public let eventId: String
-        public let title: String
-        public let thumbnailUrl: String?
-        public let primaryOccurrenceIdentifier: String
-        /// Ближайшие даты, `dd.MM`, для отображения чипами как время на деталке события.
-        public let dateChips: [ConcertDateChip]
-        public let sortDate: Date
-    }
-
-    public struct MusicianRow: Identifiable, Hashable {
-        public let id: String
-        public let musicianId: Int
-        public let name: String
-        public let subtitle: String
-        public let imageUrl: String?
-    }
+    public typealias ConcertDateChip = FavoriteConcertDateChip
+    public typealias ConcertRow = FavoriteConcertRow
+    public typealias MusicianRow = FavoriteMusicianRow
 
     public let dependencies: ClubScreenDependencies
     public var router: ClubNavigationRouter
@@ -55,6 +30,7 @@ public final class ClubScreenViewModel: ObservableObject {
     public init(dependencies: ClubScreenDependencies) {
         self.dependencies = dependencies
         self.router = ClubNavigationRouter()
+        
         router.objectWillChange
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
@@ -93,14 +69,13 @@ public final class ClubScreenViewModel: ObservableObject {
         .map { favoriteIds, state -> [ConcertRow] in
             let rows: [ConcertRow] = favoriteIds.compactMap { eventId in
                 let occ = ClubFavoriteEventSchedule.occurrencesSorted(forEventId: eventId, in: state.events)
-                guard let primary = ClubFavoriteEventSchedule.upcomingSubset(from: occ).first ?? occ.first else {
+                guard let primary = FavoriteEventSchedule.primaryOccurrence(forEventId: eventId, in: state.events) else {
                     return nil
                 }
                 let chips = ClubFavoriteEventSchedule.upcomingDateChips(for: occ).map {
-                    ConcertDateChip(occurrenceIdentifier: $0.occurrenceId, label: $0.label)
+                    FavoriteConcertDateChip(occurrenceIdentifier: $0.occurrenceId, label: $0.label)
                 }
-                return ConcertRow(
-                    id: eventId,
+                return FavoriteConcertRow(
                     eventId: eventId,
                     title: primary.title,
                     thumbnailUrl: primary.thumbnailUrl,
@@ -126,7 +101,7 @@ public final class ClubScreenViewModel: ObservableObject {
             let rows: [MusicianRow] = favoriteIds.compactMap { idString in
                 guard let mid = Int(idString) else { return nil }
                 if let m = catalog.first(where: { $0.id == mid }) {
-                    return MusicianRow(
+                    return FavoriteMusicianRow(
                         id: idString,
                         musicianId: mid,
                         name: m.name,
@@ -134,7 +109,7 @@ public final class ClubScreenViewModel: ObservableObject {
                         imageUrl: m.imageUrl
                     )
                 }
-                return MusicianRow(
+                return FavoriteMusicianRow(
                     id: idString,
                     musicianId: mid,
                     name: "Музыкант",

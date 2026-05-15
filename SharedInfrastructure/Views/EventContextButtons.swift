@@ -72,10 +72,9 @@ struct EventContextButton: View {
     var body: some View {
         Button(action: onTap) {
             icon
-                .frame(width: 22, height: 22)
+                .frame(width: 16, height: 16)
                 .foregroundColor(Color.white)
-                .padding(4)
-                .frame(width: 36, height: 36)
+                .padding(8)
                 .background(Color.gray.opacity(0.85))
                 .cornerRadius(8)
         }

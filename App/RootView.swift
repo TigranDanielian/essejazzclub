@@ -83,6 +83,19 @@ struct RootView: View {
                     favoritesHandler: musicianFavoritesToggle
                 )
             )
+        case .bookmarkedEventDetail(let occurrenceIdentifier, let mode):
+            HomeFavoriteEventDetailHost(
+                occurrenceIdentifier: occurrenceIdentifier,
+                mode: mode,
+                dependencies: HomeFavoriteEventDetailDependencies(
+                    eventsService: container.eventsService,
+                    favoritesStorage: container.favoritesStorage,
+                    viewModelFactory: container.viewModelFactory,
+                    uiFactory: container.uiFactory,
+                    calendarCoordinator: container.calendarCoordinator
+                ),
+                router: homeNavigationRouter
+            )
         }
     }
 
@@ -180,6 +193,7 @@ private struct HomeTabShell<RouteContent: View>: View {
         _viewModel = StateObject(
             wrappedValue: HomeScreenViewModel(
                 eventsService: container.eventsService,
+                musiciansService: container.musiciansService,
                 viewModelFactory: container.viewModelFactory,
                 favoritesStorage: container.favoritesStorage,
                 tabNavigation: router,

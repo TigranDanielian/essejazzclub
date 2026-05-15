@@ -17,7 +17,7 @@ struct ClubRouteDestinationView: View {
     var body: some View {
         switch route {
         case .favorites:
-            AnyView(ClubFavoritesScreen(screenModel: clubViewModel))
+            AnyView(ClubFavoritesScreen(viewModel: clubViewModel))
         case .favoriteEventDetail(let occurrenceIdentifier, let mode):
             AnyView(
                 ClubFavoriteEventDetailHost(

@@ -69,7 +69,7 @@ final class ClubFavoriteEventDetailViewModel: ObservableObject {
         guard mode == .overview,
               let model = events.first(where: { eventOccurrenceIdentifier(for: $0) == occurrenceIdentifier })
         else { return nil }
-        let rows = ClubFavoriteEventSchedule.allUpcomingOccurrences(forEventId: model.id, in: events)
+        let rows = FavoriteEventSchedule.allDetailUpcomingOccurrences(forEventId: model.id, in: events)
         return rows.isEmpty ? nil : rows
     }
 
