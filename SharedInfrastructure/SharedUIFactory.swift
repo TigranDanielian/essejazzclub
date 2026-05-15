@@ -27,6 +27,8 @@ public enum UIUnit {
         onSelectUpcomingOccurrence: ((String) -> Void)?
     )
     case musician(MusicianViewModel, MusicianActionHandler)
+    case favoriteConcertRow(FavoriteConcertRow)
+    case favoriteMusicianRow(FavoriteMusicianRow)
     case searchTextField(Binding<String>)
     case empty
 }
@@ -47,8 +49,12 @@ public protocol ViewModelFactory: AnyObject {
 }
 
 public final class SharedUIFactory: UIFactory {
-    public init() {}
-    
+    private let imageLoader: ImageLoader
+
+    public init(imageLoader: ImageLoader) {
+        self.imageLoader = imageLoader
+    }
+
     @ViewBuilder
     public func produce(unit: UIUnit) -> some View {
         switch unit {
@@ -62,6 +68,10 @@ public final class SharedUIFactory: UIFactory {
                 displayOptions: displayOptions,
                 onSelectUpcomingOccurrence: onSelectUpcoming
             )
+        case .favoriteConcertRow(let row):
+            FavoriteConcertRowView(row: row, imageLoader: imageLoader)
+        case .favoriteMusicianRow(let row):
+            FavoriteMusicianRowView(row: row, imageLoader: imageLoader)
         case .searchTextField(let binding):
             SearchTextField(textInput: binding)
         case .musician(let viewModel, let actionHandler):

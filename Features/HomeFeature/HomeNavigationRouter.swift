@@ -9,9 +9,16 @@ import SharedInfrastructure
 /// Навигация только для вкладки «Главная»: локальный стек и модалки модуля Home.
 @MainActor
 public final class HomeNavigationRouter: StackNavigationRouter<HomeNavigationRouter.Route> {
+    /// Режим деталки избранного с главной: обзор по событию или конкретный слот с датой и покупкой.
+    public enum FavoriteEventDetailMode: String, Hashable {
+        case overview
+        case slot
+    }
+
     public enum Route: Hashable, Identifiable {
         case eventDetail(EventViewModel)
         case musicianDetail(MusicianViewModel)
+        case bookmarkedEventDetail(occurrenceIdentifier: String, mode: FavoriteEventDetailMode)
 
         public var id: String {
             switch self {
@@ -19,6 +26,8 @@ public final class HomeNavigationRouter: StackNavigationRouter<HomeNavigationRou
                 return "home-event-\(viewModel.occurrenceIdentifier)"
             case .musicianDetail(let viewModel):
                 return "home-musician-\(viewModel.musicianId)"
+            case .bookmarkedEventDetail(let oid, let mode):
+                return "home-bookmark-detail-\(oid)-\(mode.rawValue)"
             }
         }
     }
@@ -53,8 +62,19 @@ public final class HomeNavigationRouter: StackNavigationRouter<HomeNavigationRou
         present(route: .eventDetail(viewModel), presentation: presentation)
     }
 
-    public func presentMusicianDetail(viewModel: MusicianViewModel, presentation: NavigationPresentationStyle = .push) {
+    public func presentMusicianDetail(viewModel: MusicianViewModel) {
+        present(route: .musicianDetail(viewModel), presentation: .push)
+    }
+
+    public func presentMusicianDetail(viewModel: MusicianViewModel, presentation: NavigationPresentationStyle) {
         present(route: .musicianDetail(viewModel), presentation: presentation)
+    }
+
+    public func presentBookmarkedEventOverview(occurrenceIdentifier: String) {
+        present(
+            route: .bookmarkedEventDetail(occurrenceIdentifier: occurrenceIdentifier, mode: .overview),
+            presentation: .push
+        )
     }
 }
 

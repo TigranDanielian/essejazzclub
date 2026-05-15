@@ -36,7 +36,7 @@ public final class AppContainer: ObservableObject {
             imageLoader: imageLoader.loadImage(path:)
         )
         
-        self.uiFactory = SharedUIFactory()
+        self.uiFactory = SharedUIFactory(imageLoader: imageLoader)
 
         self.calendarCoordinator = EventCalendarCoordinator(calendarManager: calendarEventsManager)
     }

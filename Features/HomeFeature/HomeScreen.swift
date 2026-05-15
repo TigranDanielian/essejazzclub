@@ -9,7 +9,6 @@ import SwiftUI
 import Combine
 import Core
 import SharedInfrastructure
-import Services
 
 public struct HomeScreen: View {
     /// Родитель (`HomeTabShell`) держит VM в `@StateObject` — здесь только наблюдение.
@@ -68,35 +67,50 @@ public struct HomeScreen: View {
                 }
                 .padding(.horizontal, 6)
                 
-                // MARK: - Favorites block
+                // MARK: - Favorites block (до 3 концертов и 3 музыкантов — горизонтальные слайдеры)
                 
-                if !viewModel.favoriteEvents.isEmpty {
+                if !viewModel.favoriteConcertRows.isEmpty || !viewModel.favoriteMusicianRows.isEmpty {
                     SeparatorView()
                     
-                    VStack(alignment: .leading) {
+                    VStack(alignment: .leading, spacing: 16) {
                         Text("Избранное")
                             .font(.title2)
                             .bold()
                             .foregroundStyle(Color(uiColor: Colors.text))
-                            .padding(.horizontal, 12)
+                            .padding(.horizontal, 16)
                         
-                        ScrollView(.horizontal, showsIndicators: false) {
-                            LazyHStack(alignment: .center, spacing: 8) {
-                                ForEach(viewModel.favoriteEvents) { event in
-                                    AnyView(uiFactory.produce(unit: .event(event)))
-                                        .frame(
-                                            width: viewModel.favoriteEvents.count == 1
-                                            ? UIScreen.screenWidth - 24
-                                            : UIScreen.screenWidth * 0.9,
-                                            height: 100
-                                        )
-                                        .onTapGesture {
-                                            viewModel.onEventDetails(event)
-                                        }
+                        if !viewModel.favoriteConcertRows.isEmpty {
+                            homeFavoritesSubheader("Концерты")
+                            ScrollView(.horizontal, showsIndicators: false) {
+                                LazyHStack(alignment: .center, spacing: 12) {
+                                    ForEach(viewModel.favoriteConcertRows) { row in
+                                        AnyView(uiFactory.produce(unit: .favoriteConcertRow(row)))
+                                            .frame(width: homeFavoritesCarouselCardWidth(itemCount: viewModel.favoriteConcertRows.count))
+                                            .contentShape(Rectangle())
+                                            .onTapGesture {
+                                                viewModel.onFavoriteConcertTap(row)
+                                            }
+                                    }
                                 }
+                                .padding(.horizontal, 16)
                             }
-                            .padding(.horizontal, 12)
-                            .frame(maxHeight: 200)
+                        }
+                        
+                        if !viewModel.favoriteMusicianRows.isEmpty {
+                            homeFavoritesSubheader("Музыканты")
+                            ScrollView(.horizontal, showsIndicators: false) {
+                                LazyHStack(alignment: .center, spacing: 12) {
+                                    ForEach(viewModel.favoriteMusicianRows) { row in
+                                        AnyView(uiFactory.produce(unit: .favoriteMusicianRow(row)))
+                                            .frame(width: homeFavoritesCarouselCardWidth(itemCount: viewModel.favoriteMusicianRows.count))
+                                            .contentShape(Rectangle())
+                                            .onTapGesture {
+                                                viewModel.onFavoriteMusicianTap(row)
+                                            }
+                                    }
+                                }
+                                .padding(.horizontal, 16)
+                            }
                         }
                     }
                 }
@@ -106,6 +120,21 @@ public struct HomeScreen: View {
             .padding(.top, 12)
         }
         .background(Color(uiColor: Colors.mainBackground))
+    }
+
+    private func homeFavoritesSubheader(_ title: String) -> some View {
+        Text(title)
+            .font(.footnote.weight(.semibold))
+            .foregroundStyle(Color(uiColor: Colors.secondaryText))
+            .textCase(.uppercase)
+            .padding(.horizontal, 16)
+    }
+
+    private func homeFavoritesCarouselCardWidth(itemCount: Int) -> CGFloat {
+        if itemCount == 1 {
+            return UIScreen.screenWidth - 32
+        }
+        return min(UIScreen.screenWidth * 0.88, 360)
     }
 }
 

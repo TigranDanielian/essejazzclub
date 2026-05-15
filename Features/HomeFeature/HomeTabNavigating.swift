@@ -11,9 +11,9 @@ public protocol HomeTabNavigating: AnyObject {
     func applyEventNavigation(_ action: EventNavigationAction)
     func applyMusicianNavigation(_ action: MusicianAction)
     func dismissPresentedOrPop()
+    func presentBookmarkedEventOverview(occurrenceIdentifier: String)
+    func presentMusicianDetail(viewModel: MusicianViewModel)
 }
-
-extension HomeNavigationRouter: HomeTabNavigating {}
 
 public extension HomeTabNavigating {
     /// Обработчик для `EventDetailView`: навигация → роутер, контекстные кнопки → снаружи.
@@ -38,3 +38,6 @@ public extension HomeTabNavigating {
         }
     }
 }
+
+extension HomeNavigationRouter: HomeTabNavigating {}
+
