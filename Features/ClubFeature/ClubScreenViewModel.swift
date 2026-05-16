@@ -30,13 +30,6 @@ public final class ClubScreenViewModel: ObservableObject {
     public init(dependencies: ClubScreenDependencies) {
         self.dependencies = dependencies
         self.router = ClubNavigationRouter()
-        
-        router.objectWillChange
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] _ in
-                self?.objectWillChange.send()
-            }
-            .store(in: &cancellables)
         bindFavorites()
     }
 

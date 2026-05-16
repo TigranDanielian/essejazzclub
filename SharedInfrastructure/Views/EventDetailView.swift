@@ -300,6 +300,8 @@ struct MusicianRowView: View {
                         .cornerRadius(36)
                 }
             }
+            .onAppear { musician.loadImageIfNeeded() }
+            .onDisappear { musician.cancelImageLoad() }
             .onTapGesture {
                 onSelect()
             }

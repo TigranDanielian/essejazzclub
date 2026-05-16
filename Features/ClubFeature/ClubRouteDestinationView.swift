@@ -14,6 +14,7 @@ struct ClubRouteDestinationView: View {
 
     private var dependencies: ClubScreenDependencies { clubViewModel.dependencies }
 
+    /// Ветки маршрута имеют разные конкретные типы `View` + `produce` даёт `associatedtype` у `UIFactory` — без `AnyView` `switch` не компилируется.
     var body: some View {
         switch route {
         case .favorites:
@@ -42,7 +43,20 @@ struct ClubRouteDestinationView: View {
         case .about:
             AnyView(ClubAboutDestinationView(contentService: dependencies.contentService))
 
-        case .menu, .contacts, .musicians, .giftShop:
+        case .musicians:
+            AnyView(
+                ClubMusiciansScreen(
+                    dependencies: ClubMusiciansScreenDependencies(
+                        musiciansService: dependencies.musiciansService,
+                        favoritesStorage: dependencies.favoritesStorage,
+                        imageLoader: dependencies.imageLoader,
+                        viewModelFactory: dependencies.viewModelFactory,
+                        uiFactory: dependencies.uiFactory
+                    ),
+                    router: clubViewModel.router
+                )
+            )
+        case .menu, .contacts, .giftShop:
             AnyView(ClubSectionPlaceholderView(route: route))
         }
     }

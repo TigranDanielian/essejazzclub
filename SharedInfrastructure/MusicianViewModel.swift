@@ -11,17 +11,19 @@ import Combine
 import Services
 import Core
 
+@MainActor
 public final class MusicianViewModel: ObservableObject, Identifiable, Hashable {
-    public static func == (lhs: MusicianViewModel, rhs: MusicianViewModel) -> Bool {
-        return lhs.id == rhs.id
+    /// Стабильный id для навигации (`Route.id`) и `Hashable` вне MainActor.
+    public nonisolated let musicianId: Int
+    public nonisolated var id: String { "\(musicianId)" }
+
+    public nonisolated static func == (lhs: MusicianViewModel, rhs: MusicianViewModel) -> Bool {
+        lhs.musicianId == rhs.musicianId
     }
-    
-    public func hash(into hasher: inout Hasher) {
-        hasher.combine(id)
+
+    public nonisolated func hash(into hasher: inout Hasher) {
+        hasher.combine(musicianId)
     }
-    
-    public var id: String { "\(model.id)" }
-    public var musicianId: Int { model.id }
     public var name: String { model.name }
     public var description: String { model.description }
     public var text: String { model.text }
@@ -33,7 +35,6 @@ public final class MusicianViewModel: ObservableObject, Identifiable, Hashable {
     /// Идентификатор для `FavoritesStorageKey.musicians` (совпадает с `id`).
     public var favoriteStorageId: String { id }
 
-    @MainActor
     public lazy var favoriteButtonViewModel: EventContextButtonViewModel = EventContextButtonViewModel(
         imagePublisher: favoriteHeartImagePublisher()
     )
@@ -41,20 +42,37 @@ public final class MusicianViewModel: ObservableObject, Identifiable, Hashable {
     private let imageLoader: AsyncImageLoader
     private let favoritesStorage: FavoritesStorage<String>
     private let model: Musician
+    private var imageLoadTask: Task<Void, Never>?
 
     public init(
         model: Musician,
         imageLoader: @escaping AsyncImageLoader,
         favoritesStorage: FavoritesStorage<String>
     ) {
+        self.musicianId = model.id
         self.model = model
         self.imageLoader = imageLoader
         self.favoritesStorage = favoritesStorage
-
-        Task { await loadImage() }
     }
 
-    @MainActor
+    /// Запускает загрузку фото, если ещё нет картинки и нет активной задачи.
+    public func loadImageIfNeeded() {
+        guard image == nil, model.imageUrl != nil else { return }
+        guard imageLoadTask == nil else { return }
+
+        imageLoadTask = Task { [weak self] in
+            await self?.loadImage()
+        }
+    }
+
+    /// Отменяет незавершённую загрузку (например, ячейка ушла с экрана). Уже загруженное фото сохраняется.
+    public func cancelImageLoad() {
+        guard image == nil else { return }
+        imageLoadTask?.cancel()
+        imageLoadTask = nil
+        isLoadingImage = false
+    }
+
     private func favoriteHeartImagePublisher() -> AnyPublisher<UIImage?, Never> {
         favoritesStorage
             .isFavoritePublisher(for: favoriteStorageId, key: .musicians)
@@ -64,19 +82,25 @@ public final class MusicianViewModel: ObservableObject, Identifiable, Hashable {
             .eraseToAnyPublisher()
     }
     
-    @MainActor
     private func loadImage() async {
-        if let imageUrlString = model.imageUrl {
-            isLoadingImage = true
-            do {
-                let loadedImage = try await imageLoader(imageUrlString)
-                self.image = loadedImage
+        defer {
+            imageLoadTask = nil
+            if !Task.isCancelled {
                 isLoadingImage = false
             }
-            catch {
-                self.image = UIImage(systemName: "person.crop.circle")
-                isLoadingImage = false
-            }
+        }
+
+        guard !Task.isCancelled else { return }
+        guard let imageUrlString = model.imageUrl else { return }
+
+        isLoadingImage = true
+        do {
+            let loadedImage = try await imageLoader(imageUrlString)
+            guard !Task.isCancelled else { return }
+            self.image = loadedImage
+        } catch {
+            guard !Task.isCancelled else { return }
+            self.image = UIImage(systemName: "person.crop.circle")
         }
     }
 }

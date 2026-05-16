@@ -101,12 +101,24 @@ public struct MusicianDetailsView: View {
             .padding(.trailing, 12)
         }
         .background(Color(uiColor: Colors.mainBackground))
-        .onAppear {
-            if let text = viewModel.text.htmlAttributed(font: .systemFont(ofSize: 14, weight: .medium), color: Colors.text) {
-                attributedText = text
-            }
+        .task(id: viewModel.id) {
+            viewModel.loadImageIfNeeded()
+            await loadAttributedBio()
         }
         .navigationTitle(viewModel.name)
         .navigationBarTitleDisplayMode(.automatic)
+    }
+
+    private func loadAttributedBio() async {
+        let html = viewModel.text
+        let font = UIFont.systemFont(ofSize: 14, weight: .medium)
+        let color = Colors.text
+        let parsed = await Task.detached(priority: .userInitiated) {
+            html.htmlAttributed(font: font, color: color)
+        }.value
+        guard !Task.isCancelled else { return }
+        if let parsed {
+            attributedText = parsed
+        }
     }
 }

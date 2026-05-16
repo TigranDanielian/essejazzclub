@@ -27,7 +27,26 @@ public struct ClubScreen: View {
     ]
 
     public var body: some View {
-        NavigationStack(path: $viewModel.router.path) {
+        ClubNavigationShell(viewModel: viewModel, bannerItems: bannerItems)
+    }
+}
+
+/// Стек привязан к `router.path` через отдельный `@ObservedObject` на роутере.
+/// Раньше `router.objectWillChange` пробрасывали в `ClubScreenViewModel`, и каждый push/pop
+/// перерисовывал всю вкладку поверх обновления `NavigationStack` — после серии переходов ломались жесты.
+private struct ClubNavigationShell: View {
+    @ObservedObject var viewModel: ClubScreenViewModel
+    @ObservedObject var router: ClubNavigationRouter
+    let bannerItems: [ClubBannerItem]
+
+    init(viewModel: ClubScreenViewModel, bannerItems: [ClubBannerItem]) {
+        _viewModel = ObservedObject(wrappedValue: viewModel)
+        _router = ObservedObject(wrappedValue: viewModel.router)
+        self.bannerItems = bannerItems
+    }
+
+    var body: some View {
+        NavigationStack(path: $router.path) {
             ScrollView(.vertical, showsIndicators: false) {
                 VStack(alignment: .leading, spacing: 28) {
                     clubIdentityHeader

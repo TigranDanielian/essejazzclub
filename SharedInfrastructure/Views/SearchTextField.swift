@@ -10,7 +10,8 @@ import Core
 
 struct SearchTextField: View {
     @Binding var textInput: String
-    
+    var prompt: String = "Search event"
+
     var body: some View {
         HStack {
             Image(systemName: "magnifyingglass")
@@ -20,9 +21,9 @@ struct SearchTextField: View {
             TextField(
                 "",
                 text: $textInput,
-                prompt: Text("Search event").foregroundColor(.gray)
+                prompt: Text(prompt).foregroundColor(.gray)
             )
-            .padding([.trailing, .vertical], 4)
+            .padding([.trailing, .vertical], 8)
             .foregroundColor(Color(uiColor: Colors.text))
             .background(.clear)
             .tint(Color(uiColor: Colors.text))
@@ -35,5 +36,5 @@ struct SearchTextField: View {
 }
 
 #Preview {
-    SearchTextField(textInput: .constant(""))
+    SearchTextField(textInput: .constant(""), prompt: "Search event")
 }

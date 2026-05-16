@@ -29,7 +29,7 @@ public enum UIUnit {
     case musician(MusicianViewModel, MusicianActionHandler)
     case favoriteConcertRow(FavoriteConcertRow)
     case favoriteMusicianRow(FavoriteMusicianRow)
-    case searchTextField(Binding<String>)
+    case searchTextField(Binding<String>, prompt: String)
     case empty
 }
 
@@ -72,8 +72,8 @@ public final class SharedUIFactory: UIFactory {
             FavoriteConcertRowView(row: row, imageLoader: imageLoader)
         case .favoriteMusicianRow(let row):
             FavoriteMusicianRowView(row: row, imageLoader: imageLoader)
-        case .searchTextField(let binding):
-            SearchTextField(textInput: binding)
+        case .searchTextField(let binding, let prompt):
+            SearchTextField(textInput: binding, prompt: prompt)
         case .musician(let viewModel, let actionHandler):
             MusicianDetailsView(viewModel: viewModel, actionHandler: actionHandler)
         case .empty:

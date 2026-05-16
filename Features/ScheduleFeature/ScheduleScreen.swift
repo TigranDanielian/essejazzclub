@@ -28,7 +28,7 @@ public struct ScheduleScreen: View {
     public var body: some View {
         VStack {
                 HStack {
-                    AnyView(uiFactory.produce(unit: .searchTextField($viewModel.searchInputText)))
+                    AnyView(uiFactory.produce(unit: .searchTextField($viewModel.searchInputText, prompt: "Search event")))
                         .padding(.trailing, 4)
 
                     Button {
