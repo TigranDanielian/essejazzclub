@@ -16,6 +16,7 @@ public struct ScheduleScreen: View {
     
     @State private var isHeaderHidden = false
     @State private var initialOffset: CGFloat?
+    @State private var prevOffset: CGFloat?
     
     public init(
         viewModel: ScheduleScreenViewModel,
@@ -26,37 +27,38 @@ public struct ScheduleScreen: View {
     }
     
     public var body: some View {
-        VStack {
-            HStack {
-                AnyView(uiFactory.produce(unit: .searchTextField($viewModel.searchInputText, prompt: "Название мероприятия")))
-                //                        .padding(.trailing, 4)
-                
-                //                    Button {
-                //                        viewModel.openFilter()
-                //                    } label: {
-                //                        Image(uiImage: UIImage(resource: .filter).withRenderingMode(.alwaysTemplate))
-                //                            .resizable()
-                //                            .scaledToFit()
-                //                            .frame(width: 32, height: 32)
-                //                            .foregroundStyle(Color(uiColor: Colors.secondaryText))
-                //                            .cornerRadius(8)
-                //                    }
-            }
-            .padding(.horizontal, 12)
-            .padding(.vertical, 8)
-            .opacity(isHeaderHidden ? 0 : 1)
-            .offset(y: isHeaderHidden ? -20 : 0)
-            
+        ZStack(alignment: .topLeading) {
             ScrollView {
                 GeometryReader { geo in
-//                    print(geo.frame(in: .global).minY)
-                    return Color.clear
-                        .preference(
-                            key: ScrollOffsetPreferenceKey.self,
-                            value: geo.frame(in: .global).minY
-                        )
+                    Color.clear.preference(
+                        key: ScrollOffsetPreferenceKey.self,
+                        value: geo.frame(in: .global).minY
+                    )
                 }
                 .frame(height: 1)
+                .onPreferenceChange(ScrollOffsetPreferenceKey.self) { value in
+                    if initialOffset == nil {
+                        initialOffset = value
+                        return
+                    }
+                    
+                    let offset = value - (initialOffset ?? 0)
+                    let prev = prevOffset ?? 0
+                    
+                    // Hides search header while scrolling down, and shows when scrolling up
+                    
+                    if offset < 60, prev > offset, !isHeaderHidden {
+                        withAnimation(.easeInOut(duration: 0.2)) {
+                            isHeaderHidden = true
+                        }
+                    } else if prev < offset, isHeaderHidden {
+                        withAnimation(.easeInOut(duration: 0.2)) {
+                            isHeaderHidden = false
+                        }
+                    }
+                    
+                    prevOffset = offset
+                }
                 
                 LazyVStack(alignment: .leading, spacing: 16) {
                     ForEach(viewModel.grouped) { day in
@@ -68,29 +70,39 @@ public struct ScheduleScreen: View {
                     }
                 }
                 .padding(.top, 20)
+                .offset(y: 36)
             }
             .appScrollContentBackgroundHidden()
+            
+            HStack {
+                AnyView(
+                    uiFactory.produce(
+                        unit: .searchTextField($viewModel.searchInputText, prompt: "Название мероприятия")
+                    )
+                )
+                
+                // TODO: Filter
+                
+//                .padding(.trailing, 4)
+//                
+//                Button {
+//                    viewModel.openFilter()
+//                } label: {
+//                    Image(uiImage: UIImage(resource: .filter).withRenderingMode(.alwaysTemplate))
+//                        .resizable()
+//                        .scaledToFit()
+//                        .frame(width: 32, height: 32)
+//                        .foregroundStyle(Color(uiColor: Colors.secondaryText))
+//                        .cornerRadius(8)
+//                }
+            }
+            .padding(.horizontal, 12)
+            .padding(.vertical, 8)
+            .opacity(isHeaderHidden ? 0 : 1)
+            .offset(y: isHeaderHidden ? -20 : 0)
+            
         }
         .background(Color(uiColor: Colors.mainBackground))
-        .onPreferenceChange(ScrollOffsetPreferenceKey.self) { value in
-            if initialOffset == nil {
-                initialOffset = value
-                return
-            }
-            
-            let offset = value - (initialOffset ?? 0)
-            print(offset)
-            
-            if offset < -20, !isHeaderHidden {
-                withAnimation(.easeInOut(duration: 0.2)) {
-                    isHeaderHidden = true
-                }
-            } else if offset > -5, isHeaderHidden {
-                withAnimation(.easeInOut(duration: 0.2)) {
-                    isHeaderHidden = false
-                }
-            }
-        }
     }
 }
 
