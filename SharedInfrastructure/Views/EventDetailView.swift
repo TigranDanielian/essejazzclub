@@ -57,7 +57,7 @@ public struct EventDetailView: View {
                                     Text(viewModel.dateString(format: "d MMMM, EEEE"))
                                         .bold()
                                         .font(.headline)
-                                        .foregroundColor(.white)
+                                        .foregroundColor(Color(uiColor: Colors.text))
                                         .padding(.top, 8)
 
                                     HStack {
@@ -179,6 +179,7 @@ public struct EventDetailView: View {
         }
         .navigationTitle(viewModel.title)
         .navigationBarTitleDisplayMode(.automatic)
+        .appScrollContentBackgroundHidden()
         .background(Color(uiColor: Colors.mainBackground))
         .onAppear {
             if let text = viewModel.text.htmlAttributed(font: .systemFont(ofSize: 14, weight: .medium), color: Colors.text) {
@@ -311,7 +312,7 @@ struct MusicianRowView: View {
                 .font(.caption)
                 .lineLimit(2)
                 .multilineTextAlignment(.center)
-                .foregroundColor(.white)
+                .foregroundColor(Color(uiColor: Colors.text))
         }
     }
 }
@@ -341,7 +342,7 @@ struct SeparatorView: View {
         Rectangle()
             .frame(height: 5)
             .cornerRadius(5)
-            .foregroundColor(Color(uiColor: UIColor.darkGray))
+            .foregroundColor(Color(uiColor: Colors.separator))
             .padding(.horizontal, 20)
     }
 }

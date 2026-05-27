@@ -80,6 +80,7 @@ public struct MusicianDetailsView: View {
                     Spacer()
                 }
             }
+            .appScrollContentBackgroundHidden()
 
             HStack(spacing: 10) {
                 EventContextButton(

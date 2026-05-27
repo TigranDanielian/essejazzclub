@@ -21,7 +21,7 @@ struct SearchTextField: View {
             TextField(
                 "",
                 text: $textInput,
-                prompt: Text(prompt).foregroundColor(.gray)
+                prompt: Text(prompt).foregroundColor(Color(uiColor: Colors.secondaryText))
             )
             .padding([.trailing, .vertical], 8)
             .foregroundColor(Color(uiColor: Colors.text))

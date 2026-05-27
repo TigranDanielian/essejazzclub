@@ -55,7 +55,7 @@ public struct EventView: View {
                         .scaledToFit()
                         .frame(width: 16, height: 16)
                         .padding(2)
-                        .foregroundStyle(.white)
+                        .foregroundStyle(Color(uiColor: Colors.accentSheet))
                         .cornerRadius(8)
                         .shadow(radius: 2)
                 }

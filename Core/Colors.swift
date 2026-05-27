@@ -48,6 +48,14 @@ public enum Colors {
     public static var freetag: UIColor {
         return UIColor(hex: "61B15A")
     }
+    
+    public static var homeSection: UIColor {
+        return UIColor(hex: "6a605c")
+    }
+
+    public static var separator: UIColor {
+        return UIColor(hex: "3d3d3d")
+    }
 }
 
 private extension UIColor {

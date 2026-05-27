@@ -25,91 +25,81 @@ public struct HomeScreen: View {
     
     public var body: some View {
         ScrollView(.vertical) {
-            VStack(alignment: .leading, spacing: 24) {
+            VStack(alignment: .leading, spacing: 32) {
                 // MARK: - Top events  block
                 if !viewModel.mainEvents.isEmpty {
-                    VStack(alignment: .leading) {
-                        Text("Главные события")
-                            .font(.title2)
-                            .bold()
-                            .foregroundStyle(Color(uiColor: Colors.text))
-                            .padding(.horizontal, 12)
-                        
-                        ScrollView(.horizontal, showsIndicators: false) {
-                            LazyHStack(alignment: .center, spacing: 8) {
-                                ForEach(viewModel.mainEvents) { event in
-                                    AnyView(uiFactory.produce(unit: .event(event)))
-                                        .frame(
-                                            width: viewModel.mainEvents.count == 1
-                                            ? UIScreen.screenWidth - 24
-                                            : UIScreen.screenWidth * 0.9,
-                                            height: 100
-                                        )
-                                        .onTapGesture {
-                                            viewModel.onEventDetails(event)
-                                        }
+                    HomeScreenSection(title: "Главные события") {
+                        VStack(alignment: .leading) {
+                            ScrollView(.horizontal, showsIndicators: false) {
+                                LazyHStack(alignment: .center, spacing: 8) {
+                                    ForEach(viewModel.mainEvents) { event in
+                                        AnyView(uiFactory.produce(unit: .event(event)))
+                                            .frame(
+                                                width: viewModel.mainEvents.count == 1
+                                                ? UIScreen.screenWidth - 24
+                                                : UIScreen.screenWidth * 0.9,
+                                                height: 100
+                                            )
+                                            .onTapGesture {
+                                                viewModel.onEventDetails(event)
+                                            }
+                                    }
                                 }
+                                .padding(.horizontal, 12)
+                                .frame(maxHeight: 200)
                             }
-                            .padding(.horizontal, 12)
-                            .frame(maxHeight: 200)
                         }
                     }
-                    
-                    SeparatorView()
                 }
                 
                 // MARK: - Today events block
-                DayView(title: "Сегодня", sections: viewModel.todayEvents) { event in
-                    uiFactory.produce(unit: .event(event))
-                        .onTapGesture {
-                            viewModel.onEventDetails(event)
-                        }
+                HomeScreenSection(title: "Сегодня") {
+                    DayView(sections: viewModel.todayEvents) { event in
+                        uiFactory.produce(unit: .event(event))
+                            .onTapGesture {
+                                viewModel.onEventDetails(event)
+                            }
+                    }
                 }
-                .padding(.horizontal, 6)
+               
                 
                 // MARK: - Favorites block (до 3 концертов и 3 музыкантов — горизонтальные слайдеры)
                 
                 if !viewModel.favoriteConcertRows.isEmpty || !viewModel.favoriteMusicianRows.isEmpty {
-                    SeparatorView()
-                    
-                    VStack(alignment: .leading, spacing: 16) {
-                        Text("Избранное")
-                            .font(.title2)
-                            .bold()
-                            .foregroundStyle(Color(uiColor: Colors.text))
-                            .padding(.horizontal, 16)
-                        
-                        if !viewModel.favoriteConcertRows.isEmpty {
-                            homeFavoritesSubheader("Концерты")
-                            ScrollView(.horizontal, showsIndicators: false) {
-                                LazyHStack(alignment: .center, spacing: 12) {
-                                    ForEach(viewModel.favoriteConcertRows) { row in
-                                        AnyView(uiFactory.produce(unit: .favoriteConcertRow(row)))
-                                            .frame(width: homeFavoritesCarouselCardWidth(itemCount: viewModel.favoriteConcertRows.count))
-                                            .contentShape(Rectangle())
-                                            .onTapGesture {
-                                                viewModel.onFavoriteConcertTap(row)
-                                            }
+                    HomeScreenSection(title: "Избранное") {
+                        VStack(alignment: .leading, spacing: 12) {
+                            if !viewModel.favoriteConcertRows.isEmpty {
+                                homeFavoritesSubheader("Концерты")
+                                ScrollView(.horizontal, showsIndicators: false) {
+                                    LazyHStack(alignment: .center, spacing: 12) {
+                                        ForEach(viewModel.favoriteConcertRows) { row in
+                                            AnyView(uiFactory.produce(unit: .favoriteConcertRow(row)))
+                                                .frame(width: homeFavoritesCarouselCardWidth(itemCount: viewModel.favoriteConcertRows.count))
+                                                .contentShape(Rectangle())
+                                                .onTapGesture {
+                                                    viewModel.onFavoriteConcertTap(row)
+                                                }
+                                        }
                                     }
+                                    .padding(.horizontal, 12)
                                 }
-                                .padding(.horizontal, 16)
                             }
-                        }
-                        
-                        if !viewModel.favoriteMusicianRows.isEmpty {
-                            homeFavoritesSubheader("Музыканты")
-                            ScrollView(.horizontal, showsIndicators: false) {
-                                LazyHStack(alignment: .center, spacing: 12) {
-                                    ForEach(viewModel.favoriteMusicianRows) { row in
-                                        AnyView(uiFactory.produce(unit: .favoriteMusicianRow(row)))
-                                            .frame(width: homeFavoritesCarouselCardWidth(itemCount: viewModel.favoriteMusicianRows.count))
-                                            .contentShape(Rectangle())
-                                            .onTapGesture {
-                                                viewModel.onFavoriteMusicianTap(row)
-                                            }
+                            
+                            if !viewModel.favoriteMusicianRows.isEmpty {
+                                homeFavoritesSubheader("Музыканты")
+                                ScrollView(.horizontal, showsIndicators: false) {
+                                    LazyHStack(alignment: .center, spacing: 12) {
+                                        ForEach(viewModel.favoriteMusicianRows) { row in
+                                            AnyView(uiFactory.produce(unit: .favoriteMusicianRow(row)))
+                                                .frame(width: homeFavoritesCarouselCardWidth(itemCount: viewModel.favoriteMusicianRows.count))
+                                                .contentShape(Rectangle())
+                                                .onTapGesture {
+                                                    viewModel.onFavoriteMusicianTap(row)
+                                                }
+                                        }
                                     }
+                                    .padding(.horizontal, 12)
                                 }
-                                .padding(.horizontal, 16)
                             }
                         }
                     }
@@ -119,13 +109,14 @@ public struct HomeScreen: View {
             }
             .padding(.top, 12)
         }
+        .appScrollContentBackgroundHidden()
         .background(Color(uiColor: Colors.mainBackground))
     }
 
     private func homeFavoritesSubheader(_ title: String) -> some View {
         Text(title)
-            .font(.footnote.weight(.semibold))
-            .foregroundStyle(Color(uiColor: Colors.secondaryText))
+            .font(.headline)
+            .foregroundStyle(Color(uiColor: Colors.accentSheet))
             .textCase(.uppercase)
             .padding(.horizontal, 16)
     }
@@ -143,8 +134,47 @@ struct SeparatorView: View {
         Rectangle()
             .frame(height: 5)
             .cornerRadius(5)
-            .foregroundColor(Color(uiColor: UIColor.darkGray))
+            .foregroundColor(Color(uiColor: Colors.separator))
             .padding(.horizontal, 20)
+    }
+}
+
+struct HomeScreenSection: View {
+    var title: String
+    var content: () -> any View
+    @State private var textWidth: CGFloat = 0
+    
+    var body: some View {
+        ZStack(alignment: .topLeading) {
+            TopLeftCutoutShape(
+                cutoutSize: CGSize(width: textWidth, height: 48),
+                cornerRadius: 12
+            )
+            .fill(Color(uiColor: Colors.altBackground), style: FillStyle(eoFill: true))
+            .cornerRadius(12)
+            
+            Text(title)
+                .font(.largeTitle)
+                .bold()
+                .foregroundStyle(Color(uiColor: Colors.secondaryText))
+                .padding(.horizontal, 12)
+                .background(
+                    GeometryReader { geo in
+                        Color.clear.preference(
+                            key: TextWidthPreferenceKey.self,
+                            value: geo.size.width
+                        )
+                    }
+                )
+                .onPreferenceChange(TextWidthPreferenceKey.self) { value in
+                    textWidth = value
+                }
+            
+            AnyView(content())
+                .padding(.top, 60)
+                .padding(.bottom, 12)
+        }
+        .cornerRadius(12)
     }
 }
 

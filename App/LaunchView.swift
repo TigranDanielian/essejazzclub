@@ -5,6 +5,7 @@
 
 import SwiftUI
 import API
+import Core
 
 struct LaunchView: View {
     @EnvironmentObject var container: AppContainer
@@ -18,6 +19,8 @@ struct LaunchView: View {
             .scaleEffect(isAnimating ? 2.0 : 1.0)
             .opacity(isAnimating ? 0 : 1)
             .animation(.easeInOut(duration: 0.5), value: isAnimating)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .background(Color.appMainBackground)
             .onAppear {
                 retryLoading()
             }
@@ -61,12 +64,19 @@ struct ShimmeringImage: View {
 
     var body: some View {
         Image(ImageResource.logoBlackEng)
+            .renderingMode(.template)
             .resizable()
             .scaledToFit()
+            .foregroundStyle(Color.appText)
             .padding(.horizontal, 40)
             .overlay(
                 shimmer
-                    .mask(Image(ImageResource.logoBlackEng).resizable().scaledToFit())
+                    .mask(
+                        Image(ImageResource.logoBlackEng)
+                            .renderingMode(.template)
+                            .resizable()
+                            .scaledToFit()
+                    )
             )
             .onAppear {
                 withAnimation(
@@ -80,7 +90,7 @@ struct ShimmeringImage: View {
 
     private var shimmer: some View {
         LinearGradient(
-            gradient: Gradient(colors: [Color.clear, Color.white.opacity(0.6), Color.clear]),
+            gradient: Gradient(colors: [Color.clear, Color.appText.opacity(0.45), Color.clear]),
             startPoint: .leading,
             endPoint: .trailing
         )

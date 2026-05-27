@@ -56,7 +56,9 @@ struct ClubRouteDestinationView: View {
                     router: clubViewModel.router
                 )
             )
-        case .menu, .contacts, .giftShop:
+        case .contacts:
+            AnyView(ClubContactsScreen())
+        case .menu, .giftShop:
             AnyView(ClubSectionPlaceholderView(route: route))
         }
     }

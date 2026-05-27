@@ -8,16 +8,18 @@
 import SwiftUI
 import Core
 
-struct SkeletonView: View {
+public struct SkeletonView: View {
     @State private var opacity: Double = 0.5
     
-    var body: some View {
+    public init() {}
+    
+    public var body: some View {
         Rectangle()
             .fill(Color(uiColor: Colors.text))
             .opacity(opacity)
             .animation(
                 Animation
-                    .easeInOut(duration: 0.5)
+                    .easeInOut(duration: 1.0)
                     .repeatForever(autoreverses: true),
                 value: opacity
             )

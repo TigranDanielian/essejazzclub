@@ -16,20 +16,25 @@ struct EsseJazzClubApp: App {
     private let container = AppContainer(apiClient: DefaultApiClient(baseURL: Config.apiBaseUrl))
 
     init() {
+        AppTheme.applyInterfaceStyle()
         setupTabBarAppearance()
         setupNavBarAppearance()
     }
 
     var body: some Scene {
         WindowGroup {
-            if appState.isReady {
-                RootView()
-                    .environmentObject(container)
-            } else {
-                LaunchView()
-                    .environmentObject(container)
-                    .environmentObject(appState)
+            Group {
+                if appState.isReady {
+                    RootView()
+                        .environmentObject(container)
+                } else {
+                    LaunchView()
+                        .environmentObject(container)
+                        .environmentObject(appState)
+                }
             }
+            .appPreferredColorScheme()
+            .background(Color.appMainBackground)
         }
     }
 }

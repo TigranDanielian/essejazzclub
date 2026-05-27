@@ -17,6 +17,7 @@ struct ClubSectionPlaceholderView: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(20)
         }
+        .appScrollContentBackgroundHidden()
         .background(Color(uiColor: Colors.mainBackground).ignoresSafeArea())
         .navigationTitle(title)
         .navigationBarTitleDisplayMode(.inline)

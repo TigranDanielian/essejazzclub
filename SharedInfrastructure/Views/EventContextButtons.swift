@@ -73,9 +73,9 @@ struct EventContextButton: View {
         Button(action: onTap) {
             icon
                 .frame(width: 16, height: 16)
-                .foregroundColor(Color.white)
+                .foregroundColor(Color(uiColor: Colors.text))
                 .padding(8)
-                .background(Color.gray.opacity(0.85))
+                .background(Color(uiColor: Colors.cardBackground).opacity(0.92))
                 .cornerRadius(8)
         }
         .buttonStyle(.plain)

@@ -59,9 +59,8 @@ private struct ClubNavigationShell: View {
                 .padding(.top, 12)
                 .padding(.bottom, 28)
             }
+            .appScrollContentBackgroundHidden()
             .background(Color(uiColor: Colors.mainBackground).ignoresSafeArea())
-            .navigationTitle("Клуб")
-            .navigationBarTitleDisplayMode(.large)
             .navigationDestination(for: ClubNavigationRouter.Route.self) { route in
                 ClubRouteDestinationView(route: route, clubViewModel: viewModel)
             }
@@ -69,7 +68,11 @@ private struct ClubNavigationShell: View {
     }
 
     private var clubIdentityHeader: some View {
-        VStack(alignment: .leading, spacing: 10) {
+        VStack(alignment: .leading, spacing: 12) {
+            Text("ESSE Jazz Club")
+                .font(.largeTitle.weight(.bold))
+                .foregroundStyle(Color(uiColor: Colors.text))
+            
             Text("Уникальная джазовая площадка, объединяющая истинных ценителей качественного звука.")
                 .font(.title2)
                 .foregroundStyle(Color(uiColor: Colors.secondaryText))
@@ -112,21 +115,21 @@ private struct ClubNavigationShell: View {
 // MARK: - Hub grouping
 
 private enum ClubHubGroup: CaseIterable {
-    case guest
+    case user
     case club
     case connect
 
     var title: String {
         switch self {
-        case .guest: return "Для гостя"
+        case .user: return "Профиль"
         case .club: return "Клуб"
-        case .connect: return "Как нас найти"
+        case .connect: return "Контакты"
         }
     }
 
     var routes: [ClubNavigationRouter.Route] {
         switch self {
-        case .guest:
+        case .user:
             return [.favorites]
         case .club:
             return [.about, .musicians, .menu, .giftShop]
@@ -147,7 +150,7 @@ private struct ClubHubRow: View {
             HStack(spacing: 14) {
                 Image(systemName: route.symbolName)
                     .font(.title3)
-                    .foregroundStyle(Color(uiColor: Colors.text))
+                    .foregroundStyle(Color(uiColor: Colors.accentSheet))
                     .frame(width: 28, alignment: .center)
 
                 VStack(alignment: .leading, spacing: 2) {

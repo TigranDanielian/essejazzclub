@@ -99,6 +99,7 @@ public struct ClubMusiciansScreen: View {
                 .padding(.horizontal, ClubMusiciansGridLayout.screenEdgeInset)
                 .padding(.vertical, 12)
             }
+            .appScrollContentBackgroundHidden()
             .scrollDismissesKeyboard(.immediately)
         }
         .background(Color(uiColor: Colors.mainBackground).ignoresSafeArea())
@@ -145,12 +146,8 @@ private struct MusicianGridItemView: View {
                     .frame(width: w, height: h)
                     .clipped()
             } else if musician.isLoadingImage {
-                ZStack {
-                    Color(uiColor: Colors.cardBackground)
-                    ProgressView()
-                        .tint(Color(uiColor: Colors.secondaryText))
-                }
-                .frame(width: w, height: h)
+                SkeletonView()
+                    .frame(width: w, height: h)
             } else {
                 ZStack {
                     Color(uiColor: Colors.cardBackground)

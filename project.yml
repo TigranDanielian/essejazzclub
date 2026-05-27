@@ -169,3 +169,33 @@ targets:
         - application_prod
 #      - target: FavoritesFeature
 
+#schemes:
+#  Develop:
+#    build:
+#      targets:
+#        Develop: all
+#        Core: all
+#        API: all
+#        Services: all
+#        SharedInfrastructure: all
+#        HomeFeature: all
+#        ScheduleFeature: all
+#        ClubFeature: all
+#    run:
+#      config: Debug
+#    test:
+#      targets: [Tests]
+#  Appstore:
+#    build:
+#      targets:
+#        Appstore: all
+#        Core: all
+#        API: all
+#        Services: all
+#        SharedInfrastructure: all
+#        HomeFeature: all
+#        ScheduleFeature: all
+#        ClubFeature: all
+#    run:
+#      config: Debug
+#

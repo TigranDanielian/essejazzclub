@@ -56,10 +56,15 @@
 		<string>UIInterfaceOrientationPortrait</string>
 	</array>
 	<key>UIUserInterfaceStyle</key>
-	<string>Light</string>
+	<string>Dark</string>
 	<key>NSCalendarsUsageDescription</key>
 	<string>To be able to add events to your calendar</string>
 	<key>NSLocalNetworkUsageDescription</key>
 	<string>Приложение подключается к серверу разработки в вашей сети (API и изображения).</string>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>comgooglemaps</string>
+		<string>yandexmaps</string>
+	</array>
 </dict>
 </plist>

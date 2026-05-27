@@ -46,6 +46,7 @@ public struct ClubAboutScreen: View {
             }
             .padding(16)
         }
+        .appScrollContentBackgroundHidden()
         .background(Color(uiColor: Colors.mainBackground).ignoresSafeArea())
         .navigationTitle("О клубе")
         .navigationBarTitleDisplayMode(.inline)
