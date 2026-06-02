@@ -58,7 +58,16 @@ struct ClubRouteDestinationView: View {
             )
         case .contacts:
             AnyView(ClubContactsScreen())
-        case .menu, .giftShop:
+        case .giftShop:
+            AnyView(
+                ClubShopScreen(
+                    dependencies: ClubShopScreenDependencies(
+                        shopService: dependencies.shopService,
+                        imageLoader: dependencies.imageLoader
+                    )
+                )
+            )
+        case .menu:
             AnyView(ClubSectionPlaceholderView(route: route))
         }
     }

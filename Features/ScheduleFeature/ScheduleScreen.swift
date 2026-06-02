@@ -73,6 +73,7 @@ public struct ScheduleScreen: View {
                 .offset(y: 36)
             }
             .appScrollContentBackgroundHidden()
+            .scrollIndicators(.hidden)
             
             HStack {
                 AnyView(

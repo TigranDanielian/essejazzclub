@@ -42,6 +42,6 @@ public struct GroupedEventSection: Identifiable {
 }
 
 public enum EventType: String {
-    case mainStage = "Main Stage"
-    case jazzLab = "Jazz Lab"
+    case mainStage = "Главная сцена, 2 этаж"
+    case jazzLab = "Jazz Lab, 1 этаж"
 }

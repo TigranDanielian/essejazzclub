@@ -17,6 +17,7 @@ public final class AppContainer: ObservableObject {
     public let eventsService: EventsService
     public let musiciansService: MusiciansService
     public let contentService: ContentService
+    public let shopService: ShopService
     public let favoritesStorage: FavoritesStorage<String> = .init()
     public let calendarEventsManager: CalendarEventsManager = CalendarEventsManager()
     public let viewModelFactory: ViewModelFactory
@@ -29,6 +30,7 @@ public final class AppContainer: ObservableObject {
         self.eventsService = EventsServiceImpl(apiClient: apiClient)
         self.musiciansService = MusiciansServiceImpl(apiClient: apiClient)
         self.contentService = ContentServiceImpl(apiClient: apiClient)
+        self.shopService = ShopServiceImpl(apiClient: apiClient)
         
         self.viewModelFactory = SharedViewModelFactory(
             musiaciansService: musiciansService,
@@ -48,13 +50,14 @@ public final class AppContainer: ObservableObject {
                 .combineLatest(contentService.load())
         )
             .receive(on: DispatchQueue.main)
-            .handleEvents(receiveCompletion: { _ in print("✅ Completed essential data loading")})
             .sink(
                 receiveCompletion: { result in
                     switch result {
                     case .finished:
+                        print("✅ Completed essential data loading")
                         onComplete(.success(()))
                     case .failure(let error):
+                        print("❌ Essential data loading failed: \(error.localizedDescription)")
                         onComplete(.failure(error))
                     }
                 },

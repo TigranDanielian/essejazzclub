@@ -47,7 +47,7 @@ struct LaunchView: View {
                     }
                 }
             case .failure(let error):
-                alertInfo = AlertInfo(title: "Ошибка", message: (error as? ApiError)?.localizedDescription ?? "Неизвестная ошибка")
+                alertInfo = AlertInfo(title: "Не удалось загрузить данные", message: error.localizedDescription)
             }
         }
     }
@@ -90,7 +90,7 @@ struct ShimmeringImage: View {
 
     private var shimmer: some View {
         LinearGradient(
-            gradient: Gradient(colors: [Color.clear, Color.appText.opacity(0.45), Color.clear]),
+            gradient: Gradient(colors: [Color.clear, Color.black.opacity(0.45), Color.clear]),
             startPoint: .leading,
             endPoint: .trailing
         )

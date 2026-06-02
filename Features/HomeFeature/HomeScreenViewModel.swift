@@ -47,7 +47,7 @@ public final class HomeScreenViewModel: ObservableObject {
                 }
 
                 let todayViewModels = viewModels.filter {
-                    Calendar.current.date($0.date, matchesComponents: .init(day: 9))
+                    Calendar.current.isDateInToday($0.date)
                 }
 
                 let todaySections = [

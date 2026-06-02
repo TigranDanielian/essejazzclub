@@ -44,7 +44,11 @@ public final class ConsoleLogger: Logger {
         }
         
         if let error = error {
-            print("❌ Error: \(error.localizedDescription)")
+            if let apiError = error as? ApiError {
+                print("❌ Error: \(apiError.localizedDescription)")
+            } else {
+                print("❌ Error: \(error.localizedDescription)")
+            }
         }
     }
 }

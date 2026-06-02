@@ -67,4 +67,21 @@ public extension ApiEndpoint {
             )
         }
     }
+    
+    enum Shop {
+        public static func categories(id: Int? = nil) -> ApiEndpoint {
+            ApiEndpoint(
+                method: .get,
+                path: "shopCategories"
+            )
+        }
+        
+        public static func products(categoryId: Int? = nil) -> ApiEndpoint {
+            ApiEndpoint(
+                method: .get,
+                path: "shopProducts",
+                task: .query(["categoryId": categoryId])
+            )
+        }
+    }
 }

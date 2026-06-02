@@ -1,7 +1,7 @@
 name: EsseJazzClub
 
 options:
-  bundleIdPrefix: com.unity.essejazz
+  bundleIdPrefix: com.unity.jazzesse
   deploymentTarget:
     iOS: "17.0"
   developmentRegion: en
@@ -23,7 +23,7 @@ settingGroups:
     SWIFT_VERSION: "5.3"
     TARGETED_DEVICE_FAMILY: "1"
     DEVELOPMENT_TEAM: UBJG79G298
-    PRODUCT_BUNDLE_IDENTIFIER: com.unity.essejazz
+    PRODUCT_BUNDLE_IDENTIFIER: com.unity.jazzesse
     OTHER_LDFLAGS: $(inherited) "-ObjC"
   application_prod:
     FRAMEWORK_SEARCH_PATHS: $(inherited)
@@ -36,7 +36,7 @@ settingGroups:
     SWIFT_VERSION: "5.3"
     TARGETED_DEVICE_FAMILY: "1"
     DEVELOPMENT_TEAM: UBJG79G298
-    PRODUCT_BUNDLE_IDENTIFIER: com.unity.essejazz
+    PRODUCT_BUNDLE_IDENTIFIER: com.unity.jazzesse
     OTHER_LDFLAGS: $(inherited) "-ObjC"
 
   common:

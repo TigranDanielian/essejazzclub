@@ -17,28 +17,33 @@ class MockAPIClient: ApiClient {
         if let error {
             return Fail(error: error).eraseToAnyPublisher()
         }
-        
+
         guard let data = responseData else {
-            return Fail(error: ApiError.invalidResponse).eraseToAnyPublisher()
+            return Fail(error: ApiError.invalidResponse(statusCode: nil, message: "No mock data")).eraseToAnyPublisher()
         }
-        
+
         return Just(data)
-            .mapError { _ in ApiError.decodingError }
+            .setFailureType(to: Error.self)
             .eraseToAnyPublisher()
     }
-    
-    func requestModel<Model>(endpoint: ApiEndpoint) -> ModelResponse<Model> where Model : Decodable {
+
+    func requestModel<Model>(endpoint: ApiEndpoint) -> ModelResponse<Model> where Model: Decodable {
         if let error {
             return Fail(error: error).eraseToAnyPublisher()
         }
-        
+
         guard let data = responseData else {
-            return Fail(error: ApiError.invalidResponse).eraseToAnyPublisher()
+            return Fail(error: ApiError.invalidResponse(statusCode: nil, message: "No mock data")).eraseToAnyPublisher()
         }
-        
+
         return Just(data)
             .decode(type: Model.self, decoder: JSONDecoder())
-            .mapError { _ in ApiError.decodingError }
+            .mapError { error in
+                if let decodingError = error as? DecodingError {
+                    return ApiError.from(decodingError: decodingError)
+                }
+                return ApiError.requestFailed(message: error.localizedDescription)
+            }
             .eraseToAnyPublisher()
     }
 }

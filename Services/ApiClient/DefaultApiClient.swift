@@ -19,61 +19,55 @@ public final class DefaultApiClient: ApiClient {
         /// `retry(n)` в Combine — ещё n попыток после первой неудачи → всего `n + 1` запрос.
         static let retryCount = 2
     }
-    
+
     public init(baseURL: URL, logger: ConsoleLogger = ConsoleLogger()) {
         self.baseURL = baseURL
         self.logger = logger
     }
-    
+
     public func request(endpoint: ApiEndpoint) -> DataResponse {
         guard let url = URL(string: endpoint.path, relativeTo: baseURL) else {
-            logger.log(response: nil, data: nil, error: ApiError.invalidURL)
-            return Fail(error: ApiError.invalidURL).eraseToAnyPublisher()
+            let error = ApiError.invalidURL(url: "\(baseURL.absoluteString)/\(endpoint.path)")
+            logger.log(response: nil, data: nil, error: error)
+            return Fail(error: error).eraseToAnyPublisher()
         }
-        
+
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
         request.timeoutInterval = 20
-        
+
         logger.log(request: request)
-        
+
         return URLSession.shared.dataTaskPublisher(for: request)
-            .handleEvents(
-                receiveOutput: { [weak self] data, response in
-                    self?.logger.log(response: response, data: data, error: nil)
-                },
-                receiveCompletion: { [weak self] completion in
-                    if case .failure(let error) = completion {
-                        self?.logger.log(response: nil, data: nil, error: error)
-                    }
-                })
+            .handleEvents(receiveOutput: { [weak self] data, response in
+                self?.logger.log(response: response, data: data, error: nil)
+            })
             .tryMap { data, response in
-                guard let httpResponse = response as? HTTPURLResponse, 200..<300 ~= httpResponse.statusCode else {
-                    throw ApiError.invalidResponse
-                }
-                return data
+                try Self.validateHTTPResponse(data: data, response: response)
             }
-            .mapError { error in
-                if error is URLError {
-                    return ApiError.invalidURL
-                } else {
-                    return ApiError.requestFailed
+            .mapError(Self.mapTransportError)
+            .handleEvents(receiveCompletion: { [weak self] completion in
+                if case .failure(let error) = completion {
+                    self?.logger.log(response: nil, data: nil, error: error)
                 }
-            }
+            })
             .eraseToAnyPublisher()
     }
-    
+
     public func requestModel<Model>(endpoint: ApiEndpoint) -> ModelResponse<Model> where Model: Decodable {
-        guard var urlComponents = URLComponents(url: baseURL.appendingPathComponent(endpoint.path), resolvingAgainstBaseURL: true) else {
-            logger.log(response: nil, data: nil, error: ApiError.invalidURL)
-            return Fail(error: ApiError.invalidURL).eraseToAnyPublisher()
+        let targetPath = baseURL.appendingPathComponent(endpoint.path).absoluteString
+
+        guard var urlComponents = URLComponents(url: baseURL.appendingPathComponent(endpoint.path), resolvingAgainstBaseURL: true),
+              let initialURL = urlComponents.url else {
+            let error = ApiError.invalidURL(url: targetPath)
+            logger.log(response: nil, data: nil, error: error)
+            return Fail(error: error).eraseToAnyPublisher()
         }
-        
-        var request = URLRequest(url: urlComponents.url!)
+
+        var request = URLRequest(url: initialURL)
         request.httpMethod = endpoint.method.rawValue.uppercased()
         request.timeoutInterval = ModelRequestPolicy.timeoutInterval
-        
-        // Обработка параметров
+
         if let task = endpoint.task {
             switch task {
             case .query(let parameters):
@@ -82,65 +76,94 @@ public final class DefaultApiClient: ApiClient {
                     return URLQueryItem(name: key, value: String(describing: value))
                 }
                 urlComponents.queryItems = queryItems
-                request.url = urlComponents.url
-                
+                guard let urlWithQuery = urlComponents.url else {
+                    let error = ApiError.invalidURL(url: targetPath)
+                    logger.log(response: nil, data: nil, error: error)
+                    return Fail(error: error).eraseToAnyPublisher()
+                }
+                request.url = urlWithQuery
+
             case .json(let parameters):
                 request.setValue("application/json", forHTTPHeaderField: "Content-Type")
                 let body = parameters.compactMapValues { $0 }
                 request.httpBody = try? JSONSerialization.data(withJSONObject: body)
-                
+
             case .data(let data):
                 request.httpBody = data
-                
-            case .formData(let fields):
-                // Можно реализовать multipart при необходимости
-                break
-                
-            case .download:
-                // Пропускаем — другой метод
+
+            case .formData, .download:
                 break
             }
         }
-        
-        
+
         logger.log(request: request)
-        
+
         return URLSession.shared.dataTaskPublisher(for: request)
-            .handleEvents(
-                receiveOutput: { [weak self] data, response in
-                    self?.logger.log(response: response, data: data, error: nil)
-                },
-                receiveCompletion: { [weak self] completion in
-                    if case .failure(let error) = completion {
-                        self?.logger.log(response: nil, data: nil, error: error)
-                    }
-                })
+            .handleEvents(receiveOutput: { [weak self] data, response in
+                self?.logger.log(response: response, data: data, error: nil)
+            })
             .tryMap { data, response in
-                guard let httpResponse = response as? HTTPURLResponse, 200..<300 ~= httpResponse.statusCode else {
-                    throw ApiError.invalidResponse
-                }
-                return data
+                try Self.validateHTTPResponse(data: data, response: response)
             }
-            .mapError { error -> Error in
-                if error is URLError {
-                    return ApiError.invalidURL
-                } else if let api = error as? ApiError {
-                    return api
-                } else {
-                    return ApiError.requestFailed
-                }
-            }
+            .mapError(Self.mapTransportError)
             .retry(ModelRequestPolicy.retryCount)
             .decode(type: Model.self, decoder: JSONDecoder())
-            .mapError { error in
-                if error is URLError {
-                    return ApiError.invalidURL
-                } else if error is DecodingError {
-                    return ApiError.decodingError
-                } else {
-                    return ApiError.requestFailed
+            .mapError(Self.mapDecodingError)
+            .handleEvents(receiveCompletion: { [weak self] completion in
+                if case .failure(let error) = completion {
+                    self?.logger.log(response: nil, data: nil, error: error)
                 }
-            }
+            })
             .eraseToAnyPublisher()
+    }
+}
+
+// MARK: - Error mapping
+
+private extension DefaultApiClient {
+    static func validateHTTPResponse(data: Data, response: URLResponse) throws -> Data {
+        guard let httpResponse = response as? HTTPURLResponse else {
+            throw ApiError.invalidResponse(
+                statusCode: nil,
+                message: "Ответ не является HTTPURLResponse"
+            )
+        }
+
+        guard (200..<300).contains(httpResponse.statusCode) else {
+            throw ApiError.httpError(
+                statusCode: httpResponse.statusCode,
+                bodyPreview: bodyPreview(from: data)
+            )
+        }
+
+        return data
+    }
+
+    static func bodyPreview(from data: Data, limit: Int = 500) -> String? {
+        guard !data.isEmpty else { return nil }
+        if let text = String(data: data, encoding: .utf8) {
+            if text.count > limit {
+                return String(text.prefix(limit)) + "…"
+            }
+            return text
+        }
+        return "[\(data.count) bytes, not UTF-8]"
+    }
+
+    static func mapTransportError(_ error: Error) -> ApiError {
+        if let apiError = error as? ApiError {
+            return apiError
+        }
+        if let urlError = error as? URLError {
+            return .network(code: urlError.errorCode, message: urlError.localizedDescription)
+        }
+        return .requestFailed(message: error.localizedDescription)
+    }
+
+    static func mapDecodingError(_ error: Error) -> ApiError {
+        if let decodingError = error as? DecodingError {
+            return ApiError.from(decodingError: decodingError)
+        }
+        return mapTransportError(error)
     }
 }

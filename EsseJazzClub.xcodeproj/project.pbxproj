@@ -3,13 +3,14 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 54;
+	objectVersion = 63;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		01743E771CB1234D98872F89 /* AppNavigationRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3A19D997F9A40F7D150FC76 /* AppNavigationRouter.swift */; };
 		026205E5BD61CC375CCD475F /* EventModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 323742A410BE0F463AE94F77 /* EventModel.swift */; };
 		0454D100E3611C79E8C3A452 /* API.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 48BA7EEC6C75DEF58EE0D4B8 /* API.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		05ADE063D0CCD835AD8C5B90 /* ShopService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F0AB9291696FFAEA9B5A37B /* ShopService.swift */; };
 		063C4C5055C693772825529F /* HomeFeature.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 269F751622560AE3FD937B96 /* HomeFeature.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		07AA9764F631BA40A9CAB052 /* HTMLContentBlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A2A82B7A790DE7413DB72E1 /* HTMLContentBlock.swift */; };
 		0BC77F2F82EA486D4D3FE1D1 /* HomeFeature.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 269F751622560AE3FD937B96 /* HomeFeature.framework */; };
@@ -37,6 +38,7 @@
 		30B61A134B704E9BC772B8EB /* FavoriteConcertRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = D15CD1F26C5B2906F96428E0 /* FavoriteConcertRow.swift */; };
 		31B94E2FFC5ABFEF6691C03A /* HomeScreenViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57B318AABEB71846F00FD1EA /* HomeScreenViewModel.swift */; };
 		321E248E922003E4F83AB70C /* ClubFavoriteEventDetailHost.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BAAF16278B722A1E66544B3 /* ClubFavoriteEventDetailHost.swift */; };
+		35662FA691C6A99831697E73 /* ShopCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CD9B5BB2FBBA5D8E895F528 /* ShopCategory.swift */; };
 		38C5C465FFBB328AC22FE9CE /* MusicianViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B4201D1CD4815612ACDC1BC /* MusicianViewModel.swift */; };
 		390606F6D35F239226A695F0 /* ClubContactsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77E4E30544255861A2D3CDB0 /* ClubContactsScreen.swift */; };
 		3BA0DA788C9CAD53DEF1F53D /* ClubFeature.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 099848F1843F299280385ED3 /* ClubFeature.framework */; };
@@ -65,6 +67,7 @@
 		56F2DC0FC39B5F24EC662DC8 /* ScheduleScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = A765291C7B33841FA000DBE9 /* ScheduleScreen.swift */; };
 		58FF8EE9A7925CFD91369837 /* Services.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 7AC7774ED32ECC57C344CE2C /* Services.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		5A4B62E2BD68E9A2DA44BC6B /* Services.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7AC7774ED32ECC57C344CE2C /* Services.framework */; };
+		5A6EF8B3B71D0AAD17E55DAB /* ClubShopViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0AE45182FCE290C9456C527 /* ClubShopViewModel.swift */; };
 		5B5B50E1DCD1FCDD922BA976 /* EventTimeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E027C5B97FC5F033283EF1D1 /* EventTimeView.swift */; };
 		5B72B33802A0086D4725A8F6 /* CalendarEventsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA27D04164F7439F8AA3BB86 /* CalendarEventsManager.swift */; };
 		5BA7A97A16573B601CE0A222 /* SharedViewModelFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = D14C7D551FB04D8BF0A3A906 /* SharedViewModelFactory.swift */; };
@@ -127,6 +130,7 @@
 		B3037271F332F9D39A91816D /* ClubNavigationRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AEB26D2DE114D29BF5069B5 /* ClubNavigationRouter.swift */; };
 		B38DDEE495D3FCA9A69C6032 /* ClubScreenViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AB2D3E69C037ED8713A2261 /* ClubScreenViewModel.swift */; };
 		B43BC67D5E561F81C86410E9 /* EventViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAFF31908A3165ABF76313CD /* EventViewModel.swift */; };
+		B8A0A9129C776F1578CA0251 /* ClubShopProductDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFDDF85A14F75DBFFC1AB2C7 /* ClubShopProductDetailView.swift */; };
 		B8DB72D8FCF2A0E9D47D8096 /* EventDetailDisplayOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4A792A9F8DBEF95B30024BA /* EventDetailDisplayOptions.swift */; };
 		BD479C60C85B6E4BD8F0FF75 /* Core.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A1059EAB8C03AF412D52227E /* Core.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C0658E31248B419E4CD88288 /* ApiEndpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D9EFFB6AA0B0D1D9DF73F5D /* ApiEndpoint.swift */; };
@@ -138,6 +142,7 @@
 		CED6FAE3A109A6D00FAF0F58 /* Core.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A1059EAB8C03AF412D52227E /* Core.framework */; };
 		D563B7CDEB3FC7D0C22D19AB /* EventDetailUpcomingOccurrence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 091AC7304A3F954D2A45CAC4 /* EventDetailUpcomingOccurrence.swift */; };
 		D5A7FC299F330DB607BF92B8 /* MusiciansService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E69713271E56B37A8353B22 /* MusiciansService.swift */; };
+		D8877090A742ADD05A1E14BE /* ShopProduct.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25F179BDB28427C00F495784 /* ShopProduct.swift */; };
 		D97D16C6CF837A7430F1535E /* ContentService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B74E6C957A5A2C77594BAE49 /* ContentService.swift */; };
 		D987A5A9FAA81B99D78ADBB8 /* Core.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A1059EAB8C03AF412D52227E /* Core.framework */; };
 		DA698EA86FD8CF199C273996 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 633682FC446C691876A451F9 /* String.swift */; };
@@ -148,6 +153,7 @@
 		E0538588A78B819E3031FC27 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CDF1605888301165977862B5 /* Preview Assets.xcassets */; };
 		E157468CDA804C8772936C45 /* API.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 48BA7EEC6C75DEF58EE0D4B8 /* API.framework */; };
 		E390DBFEE691486744F9F115 /* ScheduleFeature.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C15233379F19110A4AD2A4D6 /* ScheduleFeature.framework */; };
+		E478AE0DC1F1EAB6ADF2BAF9 /* ClubShopScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73FDB5D03EB9EB883C028EF0 /* ClubShopScreen.swift */; };
 		E47B142A990FD35476D7664C /* ClubFeaturesSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C530DD5F05AE5BDB6CE6DB3 /* ClubFeaturesSlider.swift */; };
 		E5013427F5013F9D4B666D4B /* MusicianAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9A4D19C591C4AB0B1B5C69F /* MusicianAction.swift */; };
 		E7EB78FD56FA2766E0BC76CA /* AppTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 163DA58A5A60AFBC280DC906 /* AppTheme.swift */; };
@@ -443,12 +449,14 @@
 		091AC7304A3F954D2A45CAC4 /* EventDetailUpcomingOccurrence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventDetailUpcomingOccurrence.swift; sourceTree = "<group>"; };
 		099848F1843F299280385ED3 /* ClubFeature.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ClubFeature.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		0A3EDDBC5529E406701C8DF5 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
+		0CD9B5BB2FBBA5D8E895F528 /* ShopCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShopCategory.swift; sourceTree = "<group>"; };
 		0D702ADB7F2A118F8AD9A0D8 /* Core_Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Core_Info.plist; sourceTree = "<group>"; };
 		0D9EFFB6AA0B0D1D9DF73F5D /* ApiEndpoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiEndpoint.swift; sourceTree = "<group>"; };
 		163DA58A5A60AFBC280DC906 /* AppTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppTheme.swift; sourceTree = "<group>"; };
 		165D5232E194C553D04DF3FB /* Media.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Media.xcassets; sourceTree = "<group>"; };
 		1C530DD5F05AE5BDB6CE6DB3 /* ClubFeaturesSlider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClubFeaturesSlider.swift; sourceTree = "<group>"; };
 		246C0095DAE977ABEDBFDA76 /* HomeScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeScreen.swift; sourceTree = "<group>"; };
+		25F179BDB28427C00F495784 /* ShopProduct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShopProduct.swift; sourceTree = "<group>"; };
 		267A4E3F447272BAB362E32B /* ScheduleScreenViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleScreenViewModel.swift; sourceTree = "<group>"; };
 		269F751622560AE3FD937B96 /* HomeFeature.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = HomeFeature.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		26F5315A47E44DA78FEF345D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -490,11 +498,13 @@
 		70CBE7DEED37FDD08A9AE139 /* ApiClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiClient.swift; sourceTree = "<group>"; };
 		71FC149340012E03D49B5629 /* Tests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		727F09476B051A0A9962AEC1 /* HomeFeature_Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = HomeFeature_Info.plist; sourceTree = "<group>"; };
+		73FDB5D03EB9EB883C028EF0 /* ClubShopScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClubShopScreen.swift; sourceTree = "<group>"; };
 		75293FAF798CAF048BF32B44 /* SkeletonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkeletonView.swift; sourceTree = "<group>"; };
 		77E4E30544255861A2D3CDB0 /* ClubContactsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClubContactsScreen.swift; sourceTree = "<group>"; };
 		7A1F4CB2F4F44C2A60A0FB35 /* AppContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppContainer.swift; sourceTree = "<group>"; };
 		7AB2D3E69C037ED8713A2261 /* ClubScreenViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClubScreenViewModel.swift; sourceTree = "<group>"; };
 		7AC7774ED32ECC57C344CE2C /* Services.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Services.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		7F0AB9291696FFAEA9B5A37B /* ShopService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShopService.swift; sourceTree = "<group>"; };
 		7F3152A8E4222887926B4CB4 /* HomeFavoriteEventDetailHost.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeFavoriteEventDetailHost.swift; sourceTree = "<group>"; };
 		84581F0249DFBC1833469F68 /* ClubFavoriteEventSchedule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClubFavoriteEventSchedule.swift; sourceTree = "<group>"; };
 		8731D18EFC904EB20AAE469F /* TopLeftCutoutShape.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopLeftCutoutShape.swift; sourceTree = "<group>"; };
@@ -526,9 +536,10 @@
 		C4A792A9F8DBEF95B30024BA /* EventDetailDisplayOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventDetailDisplayOptions.swift; sourceTree = "<group>"; };
 		C597C5D176F36E4A579BD016 /* Endpoints.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Endpoints.swift; sourceTree = "<group>"; };
 		CBBF91BF10D874B1AA7F36FB /* ClubFeature_Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = ClubFeature_Info.plist; sourceTree = "<group>"; };
-		CBF8EFDCD1779D4F5B700785 /* Appstore.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Appstore.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		CBF8EFDCD1779D4F5B700785 /* Appstore.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Appstore.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CDF1605888301165977862B5 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		CE3C4006BB47F0D1DF420A94 /* ClubFavoritesScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClubFavoritesScreen.swift; sourceTree = "<group>"; };
+		D0AE45182FCE290C9456C527 /* ClubShopViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClubShopViewModel.swift; sourceTree = "<group>"; };
 		D14C7D551FB04D8BF0A3A906 /* SharedViewModelFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedViewModelFactory.swift; sourceTree = "<group>"; };
 		D15CD1F26C5B2906F96428E0 /* FavoriteConcertRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteConcertRow.swift; sourceTree = "<group>"; };
 		D397A0558C66AD13E449C3E8 /* ExpandableText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpandableText.swift; sourceTree = "<group>"; };
@@ -542,6 +553,7 @@
 		E9A4D19C591C4AB0B1B5C69F /* MusicianAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicianAction.swift; sourceTree = "<group>"; };
 		EB96C7BE7EC52450BE0970EE /* ClubMusiciansViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClubMusiciansViewModel.swift; sourceTree = "<group>"; };
 		EF1EB45E39312CEEE4C08BE5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		EFDDF85A14F75DBFFC1AB2C7 /* ClubShopProductDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClubShopProductDetailView.swift; sourceTree = "<group>"; };
 		F0BDA29A0121533AB0A40858 /* DayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayView.swift; sourceTree = "<group>"; };
 		F0D09436A070004D68E99573 /* SearchTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchTextField.swift; sourceTree = "<group>"; };
 		F0E773FE5DD5822532DE470F /* ClubScreenDependencies.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClubScreenDependencies.swift; sourceTree = "<group>"; };
@@ -697,6 +709,9 @@
 				B74E6C957A5A2C77594BAE49 /* ContentService.swift */,
 				8F3D9EFA19BBA4754BA40D44 /* ImageLoader.swift */,
 				5E69713271E56B37A8353B22 /* MusiciansService.swift */,
+				0CD9B5BB2FBBA5D8E895F528 /* ShopCategory.swift */,
+				25F179BDB28427C00F495784 /* ShopProduct.swift */,
+				7F0AB9291696FFAEA9B5A37B /* ShopService.swift */,
 				AAF57DC447E82243469F3AD0 /* ApiClient */,
 				ADD79E6328A4BE837D83B06F /* AuthService */,
 				687E2FA89D35C822412ECE89 /* EventsService */,
@@ -721,6 +736,16 @@
 				CE3C4006BB47F0D1DF420A94 /* ClubFavoritesScreen.swift */,
 			);
 			path = Favorites;
+			sourceTree = "<group>";
+		};
+		40DE563555435228E8216928 /* Shop */ = {
+			isa = PBXGroup;
+			children = (
+				EFDDF85A14F75DBFFC1AB2C7 /* ClubShopProductDetailView.swift */,
+				73FDB5D03EB9EB883C028EF0 /* ClubShopScreen.swift */,
+				D0AE45182FCE290C9456C527 /* ClubShopViewModel.swift */,
+			);
+			path = Shop;
 			sourceTree = "<group>";
 		};
 		642DBC5AA852CA3420B860A6 /* API */ = {
@@ -789,6 +814,7 @@
 				7AB2D3E69C037ED8713A2261 /* ClubScreenViewModel.swift */,
 				36ABF25FEA69A7374B5F3BA5 /* Favorites */,
 				0FC2BD572DEABCF1F9B642D1 /* Musicians */,
+				40DE563555435228E8216928 /* Shop */,
 				EDF5BB23CB55BF9BA99459DE /* Views */,
 			);
 			path = ClubFeature;
@@ -1192,9 +1218,6 @@
 					5329541C90CE202BE3402912 = {
 						DevelopmentTeam = UBJG79G298;
 					};
-					9A8AA340B046EF13AB15AB9D = {
-						DevelopmentTeam = UBJG79G298;
-					};
 				};
 			};
 			buildConfigurationList = 5218EEC986A74AA5F47FD344 /* Build configuration list for PBXProject "EsseJazzClub" */;
@@ -1207,7 +1230,6 @@
 			);
 			mainGroup = C2BFA200395F1D4417660D73;
 			minimizedProjectReferenceProxies = 1;
-			preferredProjectObjectVersion = 54;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
@@ -1278,6 +1300,9 @@
 				90778EE75222E548DC5FEC51 /* ImageLoader.swift in Sources */,
 				478C998A1FA597BBFA9A8EF3 /* MusicianModel.swift in Sources */,
 				D5A7FC299F330DB607BF92B8 /* MusiciansService.swift in Sources */,
+				35662FA691C6A99831697E73 /* ShopCategory.swift in Sources */,
+				D8877090A742ADD05A1E14BE /* ShopProduct.swift in Sources */,
+				05ADE063D0CCD835AD8C5B90 /* ShopService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1347,6 +1372,9 @@
 				90EC6327CECC4ADC8F48C5DC /* ClubScreenDependencies.swift in Sources */,
 				B38DDEE495D3FCA9A69C6032 /* ClubScreenViewModel.swift in Sources */,
 				25E76CDE180FDD7C915F72C0 /* ClubSectionPlaceholderView.swift in Sources */,
+				B8A0A9129C776F1578CA0251 /* ClubShopProductDetailView.swift in Sources */,
+				E478AE0DC1F1EAB6ADF2BAF9 /* ClubShopScreen.swift in Sources */,
+				5A6EF8B3B71D0AAD17E55DAB /* ClubShopViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1614,7 +1642,7 @@
 					"@executable_path/Frameworks",
 				);
 				OTHER_SWIFT_FLAGS = "$(inherited) -Xfrontend -warn-long-expression-type-checking=300 -Xfrontend -warn-long-function-bodies=200 -Xfrontend -debug-time-function-bodies";
-				PRODUCT_BUNDLE_IDENTIFIER = com.unity.essejazz.Core;
+				PRODUCT_BUNDLE_IDENTIFIER = com.unity.jazzesse.Core;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 5.3;
@@ -1641,8 +1669,11 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0.0;
-				OTHER_LDFLAGS = "$(inherited) \"-ObjC\"";
-				PRODUCT_BUNDLE_IDENTIFIER = com.unity.essejazz;
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"\"-ObjC\"",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.unity.jazzesse;
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) DEVELOP";
 				SWIFT_VERSION = 5.3;
@@ -1667,7 +1698,7 @@
 					"@executable_path/Frameworks",
 				);
 				OTHER_SWIFT_FLAGS = "$(inherited) -Xfrontend -warn-long-expression-type-checking=300 -Xfrontend -warn-long-function-bodies=200 -Xfrontend -debug-time-function-bodies";
-				PRODUCT_BUNDLE_IDENTIFIER = com.unity.essejazz.API;
+				PRODUCT_BUNDLE_IDENTIFIER = com.unity.jazzesse.API;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 5.3;
@@ -1756,7 +1787,7 @@
 					"@executable_path/Frameworks",
 				);
 				OTHER_SWIFT_FLAGS = "$(inherited) -Xfrontend -warn-long-expression-type-checking=300 -Xfrontend -warn-long-function-bodies=200 -Xfrontend -debug-time-function-bodies";
-				PRODUCT_BUNDLE_IDENTIFIER = com.unity.essejazz.SharedInfrastructure;
+				PRODUCT_BUNDLE_IDENTIFIER = com.unity.jazzesse.SharedInfrastructure;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 5.3;
@@ -1776,7 +1807,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.unity.essejazz.Tests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.unity.jazzesse.Tests;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Develop.app/Develop";
@@ -1801,8 +1832,11 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0.0;
-				OTHER_LDFLAGS = "$(inherited) \"-ObjC\"";
-				PRODUCT_BUNDLE_IDENTIFIER = com.unity.essejazz;
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"\"-ObjC\"",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.unity.jazzesse;
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) DEVELOP";
 				SWIFT_VERSION = 5.3;
@@ -1827,7 +1861,7 @@
 					"@executable_path/Frameworks",
 				);
 				OTHER_SWIFT_FLAGS = "$(inherited) -Xfrontend -warn-long-expression-type-checking=300 -Xfrontend -warn-long-function-bodies=200 -Xfrontend -debug-time-function-bodies";
-				PRODUCT_BUNDLE_IDENTIFIER = com.unity.essejazz.ScheduleFeature;
+				PRODUCT_BUNDLE_IDENTIFIER = com.unity.jazzesse.ScheduleFeature;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 5.3;
@@ -1909,7 +1943,7 @@
 					"@executable_path/Frameworks",
 				);
 				OTHER_SWIFT_FLAGS = "$(inherited) -Xfrontend -warn-long-expression-type-checking=300 -Xfrontend -warn-long-function-bodies=200 -Xfrontend -debug-time-function-bodies";
-				PRODUCT_BUNDLE_IDENTIFIER = com.unity.essejazz.ClubFeature;
+				PRODUCT_BUNDLE_IDENTIFIER = com.unity.jazzesse.ClubFeature;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 5.3;
@@ -1935,7 +1969,7 @@
 					"@executable_path/Frameworks",
 				);
 				OTHER_SWIFT_FLAGS = "$(inherited) -Xfrontend -warn-long-expression-type-checking=300 -Xfrontend -warn-long-function-bodies=200 -Xfrontend -debug-time-function-bodies";
-				PRODUCT_BUNDLE_IDENTIFIER = com.unity.essejazz.HomeFeature;
+				PRODUCT_BUNDLE_IDENTIFIER = com.unity.jazzesse.HomeFeature;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 5.3;
@@ -1949,7 +1983,8 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = UBJG79G298;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
@@ -1962,8 +1997,12 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0.0;
-				OTHER_LDFLAGS = "$(inherited) \"-ObjC\"";
-				PRODUCT_BUNDLE_IDENTIFIER = com.unity.essejazz;
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"\"-ObjC\"",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.unity.jazzesse;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) APPSTORE";
 				SWIFT_VERSION = 5.3;
@@ -1976,7 +2015,8 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = UBJG79G298;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
@@ -1989,8 +2029,12 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0.0;
-				OTHER_LDFLAGS = "$(inherited) \"-ObjC\"";
-				PRODUCT_BUNDLE_IDENTIFIER = com.unity.essejazz;
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"\"-ObjC\"",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.unity.jazzesse;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) APPSTORE";
 				SWIFT_VERSION = 5.3;
@@ -2015,7 +2059,7 @@
 					"@executable_path/Frameworks",
 				);
 				OTHER_SWIFT_FLAGS = "$(inherited) -Xfrontend -warn-long-expression-type-checking=300 -Xfrontend -warn-long-function-bodies=200 -Xfrontend -debug-time-function-bodies";
-				PRODUCT_BUNDLE_IDENTIFIER = com.unity.essejazz.ScheduleFeature;
+				PRODUCT_BUNDLE_IDENTIFIER = com.unity.jazzesse.ScheduleFeature;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 5.3;
@@ -2041,7 +2085,7 @@
 					"@executable_path/Frameworks",
 				);
 				OTHER_SWIFT_FLAGS = "$(inherited) -Xfrontend -warn-long-expression-type-checking=300 -Xfrontend -warn-long-function-bodies=200 -Xfrontend -debug-time-function-bodies";
-				PRODUCT_BUNDLE_IDENTIFIER = com.unity.essejazz.Core;
+				PRODUCT_BUNDLE_IDENTIFIER = com.unity.jazzesse.Core;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 5.3;
@@ -2067,7 +2111,7 @@
 					"@executable_path/Frameworks",
 				);
 				OTHER_SWIFT_FLAGS = "$(inherited) -Xfrontend -warn-long-expression-type-checking=300 -Xfrontend -warn-long-function-bodies=200 -Xfrontend -debug-time-function-bodies";
-				PRODUCT_BUNDLE_IDENTIFIER = com.unity.essejazz.API;
+				PRODUCT_BUNDLE_IDENTIFIER = com.unity.jazzesse.API;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 5.3;
@@ -2093,7 +2137,7 @@
 					"@executable_path/Frameworks",
 				);
 				OTHER_SWIFT_FLAGS = "$(inherited) -Xfrontend -warn-long-expression-type-checking=300 -Xfrontend -warn-long-function-bodies=200 -Xfrontend -debug-time-function-bodies";
-				PRODUCT_BUNDLE_IDENTIFIER = com.unity.essejazz.ClubFeature;
+				PRODUCT_BUNDLE_IDENTIFIER = com.unity.jazzesse.ClubFeature;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 5.3;
@@ -2119,7 +2163,7 @@
 					"@executable_path/Frameworks",
 				);
 				OTHER_SWIFT_FLAGS = "$(inherited) -Xfrontend -warn-long-expression-type-checking=300 -Xfrontend -warn-long-function-bodies=200 -Xfrontend -debug-time-function-bodies";
-				PRODUCT_BUNDLE_IDENTIFIER = com.unity.essejazz.Services;
+				PRODUCT_BUNDLE_IDENTIFIER = com.unity.jazzesse.Services;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 5.3;
@@ -2139,7 +2183,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.unity.essejazz.Tests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.unity.jazzesse.Tests;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Develop.app/Develop";
@@ -2163,7 +2207,7 @@
 					"@executable_path/Frameworks",
 				);
 				OTHER_SWIFT_FLAGS = "$(inherited) -Xfrontend -warn-long-expression-type-checking=300 -Xfrontend -warn-long-function-bodies=200 -Xfrontend -debug-time-function-bodies";
-				PRODUCT_BUNDLE_IDENTIFIER = com.unity.essejazz.Services;
+				PRODUCT_BUNDLE_IDENTIFIER = com.unity.jazzesse.Services;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 5.3;
@@ -2189,7 +2233,7 @@
 					"@executable_path/Frameworks",
 				);
 				OTHER_SWIFT_FLAGS = "$(inherited) -Xfrontend -warn-long-expression-type-checking=300 -Xfrontend -warn-long-function-bodies=200 -Xfrontend -debug-time-function-bodies";
-				PRODUCT_BUNDLE_IDENTIFIER = com.unity.essejazz.SharedInfrastructure;
+				PRODUCT_BUNDLE_IDENTIFIER = com.unity.jazzesse.SharedInfrastructure;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 5.3;
@@ -2215,7 +2259,7 @@
 					"@executable_path/Frameworks",
 				);
 				OTHER_SWIFT_FLAGS = "$(inherited) -Xfrontend -warn-long-expression-type-checking=300 -Xfrontend -warn-long-function-bodies=200 -Xfrontend -debug-time-function-bodies";
-				PRODUCT_BUNDLE_IDENTIFIER = com.unity.essejazz.HomeFeature;
+				PRODUCT_BUNDLE_IDENTIFIER = com.unity.jazzesse.HomeFeature;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 5.3;

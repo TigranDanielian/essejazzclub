@@ -70,7 +70,7 @@ final class APITests: XCTestCase {
     }
 
     func testRequest_Error() {
-        mockClient.error = .invalidURL
+        mockClient.error = .invalidURL(url: "/user")
 
         struct User: Decodable { let name: String }
         let endpoint = ApiEndpoint(method: .get, path: "/user")
@@ -83,8 +83,11 @@ final class APITests: XCTestCase {
                     switch completion
                     {
                     case .failure(let error as ApiError):
-                        XCTAssertTrue(error == .invalidURL)
-                        expectation.fulfill()
+                        if case .invalidURL = error {
+                            expectation.fulfill()
+                        } else {
+                            XCTFail("Expected invalidURL, got \(error)")
+                        }
                     default:
                         XCTFail("Expected error, got success instead")
                     }

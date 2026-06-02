@@ -53,6 +53,7 @@ struct RootView: View {
                     eventsService: container.eventsService,
                     musiciansService: container.musiciansService,
                     contentService: container.contentService,
+                    shopService: container.shopService,
                     favoritesStorage: container.favoritesStorage,
                     imageLoader: container.imageLoader,
                     viewModelFactory: container.viewModelFactory,

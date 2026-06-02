@@ -22,6 +22,11 @@
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>comgooglemaps</string>
+		<string>yandexmaps</string>
+	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
@@ -30,17 +35,19 @@
 		<true/>
 		<key>NSAllowsLocalNetworking</key>
 		<true/>
-        <key>NSExceptionDomains</key>
-            <dict>
-                <key>193.168.3.162</key>
-                <dict>
-                    <key>NSIncludesSubdomains</key>
-                    <true/>
-                    <key>NSExceptionAllowsInsecureHTTPLoads</key>
-                    <true/>
-                </dict>
-            </dict>
+		<key>NSExceptionDomains</key>
+		<dict>
+			<key>193.168.3.162</key>
+			<dict>
+				<key>NSExceptionAllowsInsecureHTTPLoads</key>
+				<true/>
+				<key>NSIncludesSubdomains</key>
+				<true/>
+			</dict>
+		</dict>
 	</dict>
+	<key>NSCalendarsUsageDescription</key>
+	<string>To be able to add events to your calendar</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen.storyboard</string>
 	<key>UIRequiredDeviceCapabilities</key>
@@ -57,14 +64,5 @@
 	</array>
 	<key>UIUserInterfaceStyle</key>
 	<string>Dark</string>
-	<key>NSCalendarsUsageDescription</key>
-	<string>To be able to add events to your calendar</string>
-	<key>NSLocalNetworkUsageDescription</key>
-	<string>Приложение подключается к серверу разработки в вашей сети (API и изображения).</string>
-	<key>LSApplicationQueriesSchemes</key>
-	<array>
-		<string>comgooglemaps</string>
-		<string>yandexmaps</string>
-	</array>
 </dict>
 </plist>
