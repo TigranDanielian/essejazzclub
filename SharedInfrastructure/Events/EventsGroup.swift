@@ -32,16 +32,16 @@ public struct GroupedEventsByDay: Identifiable {
 public struct GroupedEventSection: Identifiable {
     /// Стабильный идентификатор внутри дня (не более одной секции каждого типа на дату).
     public var id: String { type.rawValue }
-    public let type: EventType // .mainStage или .jazzLab
+    public let type: EventStageSection
     public let events: [EventViewModel]
-    
-    public init(type: EventType, events: [EventViewModel]) {
+
+    public init(type: EventStageSection, events: [EventViewModel]) {
         self.type = type
         self.events = events
     }
 }
 
-public enum EventType: String {
+public enum EventStageSection: String {
     case mainStage = "Главная сцена, 2 этаж"
     case jazzLab = "Jazz Lab, 1 этаж"
 }

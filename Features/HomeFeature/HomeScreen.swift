@@ -129,16 +129,6 @@ public struct HomeScreen: View {
     }
 }
 
-struct SeparatorView: View {
-    var body: some View {
-        Rectangle()
-            .frame(height: 5)
-            .cornerRadius(5)
-            .foregroundColor(Color(uiColor: Colors.separator))
-            .padding(.horizontal, 20)
-    }
-}
-
 struct HomeScreenSection: View {
     var title: String
     var content: () -> any View

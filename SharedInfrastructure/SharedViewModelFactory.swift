@@ -18,8 +18,8 @@ private struct EventViewModelCacheKey: Hashable {
 }
 
 public final class SharedViewModelFactory: @preconcurrency ViewModelFactory {
-    private let musiaciansService: MusiciansService
-    private let favoriteStorage: FavoritesStorage<String>
+    private let musiciansService: MusiciansService
+    private let favoritesStorage: FavoritesStorage<String>
     private let calendarEventsManager: CalendarEventsManager
     private let imageLoader: AsyncImageLoader
     private var musiciansProvider: MusiciansProvider?
@@ -28,13 +28,13 @@ public final class SharedViewModelFactory: @preconcurrency ViewModelFactory {
     private var musicianViewModels: [Int: MusicianViewModel] = [:]
     
     public init(
-        musiaciansService: MusiciansService,
-        favoriteStorage: FavoritesStorage<String>,
+        musiciansService: MusiciansService,
+        favoritesStorage: FavoritesStorage<String>,
         calendarEventsManager: CalendarEventsManager,
         imageLoader: @escaping AsyncImageLoader
     ) {
-        self.musiaciansService = musiaciansService
-        self.favoriteStorage = favoriteStorage
+        self.musiciansService = musiciansService
+        self.favoritesStorage = favoritesStorage
         self.calendarEventsManager = calendarEventsManager
         self.imageLoader = imageLoader
         self.musiciansProvider = makeMusiciansProvider()
@@ -58,7 +58,7 @@ public final class SharedViewModelFactory: @preconcurrency ViewModelFactory {
                 hasContextMenu: hasContextMenu,
                 withDate: hasDate,
                 imageLoader: imageLoader,
-                favoritesStorage: favoriteStorage,
+                favoritesStorage: favoritesStorage,
                 calendarEventsManager: calendarEventsManager,
                 musiciansProvider: musiciansProvider
             )
@@ -70,7 +70,7 @@ public final class SharedViewModelFactory: @preconcurrency ViewModelFactory {
                 return cachedViewModel
             }
             
-            let viewModel = MusicianViewModel(model: musician, imageLoader: imageLoader, favoritesStorage: favoriteStorage)
+            let viewModel = MusicianViewModel(model: musician, imageLoader: imageLoader, favoritesStorage: favoritesStorage)
             musicianViewModels[musician.id] = viewModel
             
             return viewModel
@@ -82,7 +82,7 @@ public final class SharedViewModelFactory: @preconcurrency ViewModelFactory {
             guard let self else {
                 return Just([]).eraseToAnyPublisher()
             }
-            return self.musiaciansService.forEvent(id: eventId)
+            return self.musiciansService.forEvent(id: eventId)
                 .receive(on: DispatchQueue.main)
                 .flatMap { [weak self] musicians -> AnyPublisher<[MusicianViewModel], Never> in
                     guard let self else {

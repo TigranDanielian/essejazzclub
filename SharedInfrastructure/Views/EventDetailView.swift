@@ -332,36 +332,6 @@ struct MusicianRowView: View {
     }
 }
 
-struct RoundedCorner: Shape {
-    var radius: CGFloat = .infinity
-    var corners: UIRectCorner = .allCorners
-
-    func path(in rect: CGRect) -> Path {
-        let path = UIBezierPath(
-            roundedRect: rect,
-            byRoundingCorners: corners,
-            cornerRadii: CGSize(width: radius, height: radius)
-        )
-        return Path(path.cgPath)
-    }
-}
-
-extension View {
-    func cornerRadius(_ radius: CGFloat, corners: UIRectCorner) -> some View {
-        clipShape(RoundedCorner(radius: radius, corners: corners))
-    }
-}
-
-struct SeparatorView: View {
-    var body: some View {
-        Rectangle()
-            .frame(height: 5)
-            .cornerRadius(5)
-            .foregroundColor(Color(uiColor: Colors.separator))
-            .padding(.horizontal, 20)
-    }
-}
-
 struct BuyButton: View {
     let title: String
     let action: () -> Void

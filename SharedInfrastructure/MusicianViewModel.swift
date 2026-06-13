@@ -12,23 +12,15 @@ import Services
 import Core
 
 @MainActor
-public final class MusicianViewModel: ObservableObject, Identifiable, Hashable {
+public final class MusicianViewModel: ObservableObject {
     /// Стабильный id для навигации (`Route.id`) и `Hashable` вне MainActor.
     public nonisolated let musicianId: Int
-    public nonisolated var id: String { "\(musicianId)" }
 
-    public nonisolated static func == (lhs: MusicianViewModel, rhs: MusicianViewModel) -> Bool {
-        lhs.musicianId == rhs.musicianId
-    }
-
-    public nonisolated func hash(into hasher: inout Hasher) {
-        hasher.combine(musicianId)
-    }
     public var name: String { model.name }
     public var description: String { model.description }
     public var text: String { model.text }
     public var profession: String { model.profession }
-    
+
     @Published public var image: UIImage? = nil
     @Published public var isLoadingImage: Bool = false
 
@@ -97,5 +89,23 @@ public final class MusicianViewModel: ObservableObject, Identifiable, Hashable {
             guard !Task.isCancelled else { return }
             self.image = UIImage(systemName: "person.crop.circle")
         }
+    }
+}
+
+// MARK: - Identifiable
+
+extension MusicianViewModel: Identifiable {
+    public nonisolated var id: String { "\(musicianId)" }
+}
+
+// MARK: - Hashable
+
+extension MusicianViewModel: Hashable {
+    public nonisolated static func == (lhs: MusicianViewModel, rhs: MusicianViewModel) -> Bool {
+        lhs.musicianId == rhs.musicianId
+    }
+
+    public nonisolated func hash(into hasher: inout Hasher) {
+        hasher.combine(musicianId)
     }
 }

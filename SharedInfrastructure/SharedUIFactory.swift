@@ -12,11 +12,6 @@ import Core
 
 public typealias AsyncImageLoader = (String) async throws -> UIImage?
 
-enum SharedUnitFactory {
-    case viewModels
-    case ui
-}
-
 public enum UIUnit {
     case event(EventViewModel)
     case eventDetails(

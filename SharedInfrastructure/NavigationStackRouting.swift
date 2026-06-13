@@ -55,18 +55,4 @@ open class StackNavigationRouter<Route: Hashable & Identifiable>: Router {
         guard !path.isEmpty else { return }
         path.removeLast()
     }
-
-    public func popToRoot() {
-        dismissModals()
-        path.removeAll()
-    }
-
-    private func dismissModals() {
-        sheetDestination = nil
-        fullScreenDestination = nil
-    }
-
-    public var modalRoutes: [Route] {
-        [sheetDestination, fullScreenDestination].compactMap(\.self)
-    }
 }

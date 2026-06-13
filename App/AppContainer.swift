@@ -33,8 +33,8 @@ public final class AppContainer: ObservableObject {
         self.shopService = ShopServiceImpl(apiClient: apiClient)
         
         self.viewModelFactory = SharedViewModelFactory(
-            musiaciansService: musiciansService,
-            favoriteStorage: favoritesStorage,
+            musiciansService: musiciansService,
+            favoritesStorage: favoritesStorage,
             calendarEventsManager: calendarEventsManager,
             imageLoader: imageLoader.loadImage(path:)
         )
