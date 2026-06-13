@@ -36,7 +36,11 @@ public final class MusicianViewModel: ObservableObject, Identifiable, Hashable {
     public var favoriteStorageId: String { id }
 
     public lazy var favoriteButtonViewModel: EventContextButtonViewModel = EventContextButtonViewModel(
-        imagePublisher: favoriteHeartImagePublisher()
+        imagePublisher: EventContextButtonPublishers.favoriteHeart(
+            favoritesStorage: favoritesStorage,
+            value: favoriteStorageId,
+            key: .musicians
+        )
     )
 
     private let imageLoader: AsyncImageLoader
@@ -73,15 +77,6 @@ public final class MusicianViewModel: ObservableObject, Identifiable, Hashable {
         isLoadingImage = false
     }
 
-    private func favoriteHeartImagePublisher() -> AnyPublisher<UIImage?, Never> {
-        favoritesStorage
-            .isFavoritePublisher(for: favoriteStorageId, key: .musicians)
-            .map { isFavorite in
-                UIImage(systemName: isFavorite ? "heart.fill" : "heart")
-            }
-            .eraseToAnyPublisher()
-    }
-    
     private func loadImage() async {
         defer {
             imageLoadTask = nil

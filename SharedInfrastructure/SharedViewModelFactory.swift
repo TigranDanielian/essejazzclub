@@ -50,6 +50,7 @@ public final class SharedViewModelFactory: @preconcurrency ViewModelFactory {
                 hasDate: hasDate
             )
             if let cached = eventViewModels[key] {
+                cached.replaceModel(model)
                 return cached
             }
             let created = EventViewModel(

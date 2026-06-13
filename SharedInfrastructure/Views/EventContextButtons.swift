@@ -8,6 +8,48 @@
 import SwiftUI
 import Combine
 import Core
+import UIKit
+
+enum EventContextButtonPublishers {
+    static func favoriteHeart(
+        favoritesStorage: FavoritesStorage<String>,
+        value: String,
+        key: FavoritesStorageKey
+    ) -> AnyPublisher<UIImage?, Never> {
+        favoritesStorage
+            .isFavoritePublisher(for: value, key: key)
+            .map { isFavorite in
+                UIImage(systemName: isFavorite ? "heart.fill" : "heart")
+            }
+            .eraseToAnyPublisher()
+    }
+
+    static func staticIcon(named imageName: String) -> AnyPublisher<UIImage?, Never> {
+        Just(UIImage(systemName: imageName)).eraseToAnyPublisher()
+    }
+
+    static func calendar(
+        manager: CalendarEventsManager,
+        url: URL,
+        startDates: [Date],
+        occurrenceIdentifier: String
+    ) -> AnyPublisher<UIImage?, Never> {
+        let storeChanges = NotificationCenter.default.publisher(for: .EKEventStoreChanged).map { _ in () }
+        let appChanges = NotificationCenter.default.publisher(for: .esseEventCalendarStateDidChange)
+            .compactMap { $0.object as? String }
+            .filter { $0 == occurrenceIdentifier }
+            .map { _ in () }
+
+        return Publishers.Merge(storeChanges, appChanges)
+            .prepend(())
+            .receive(on: DispatchQueue.main)
+            .map { _ in
+                let inCalendar = manager.isOccurrenceInCalendar(url: url, startDates: startDates)
+                return UIImage(systemName: inCalendar ? "calendar.badge.checkmark" : "calendar")
+            }
+            .eraseToAnyPublisher()
+    }
+}
 
 public struct EventContextButtons: View {
     @ObservedObject public var viewModel: EventViewModel

@@ -175,9 +175,15 @@ public struct EventDetailView: View {
         .appScrollContentBackgroundHidden()
         .background(Color(uiColor: Colors.mainBackground))
         .onAppear {
+            viewModel.loadImageIfNeeded()
+            viewModel.loadMusiciansIfNeeded()
             if let text = viewModel.text.htmlAttributed(font: .systemFont(ofSize: 14, weight: .medium), color: Colors.text) {
                 attributedText = text
             }
+        }
+        .onDisappear {
+            viewModel.cancelImageLoad()
+            viewModel.cancelMusiciansLoad()
         }
         .sheet(item: $bookingPresentation) { presentation in
             TicketBookingSheet(url: presentation.url, title: presentation.title)

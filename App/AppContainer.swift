@@ -45,11 +45,15 @@ public final class AppContainer: ObservableObject {
     }
     
     public func loadEssentialData(onComplete: @escaping (Result<Void, Error>) -> Void) {
-        Publishers.CombineLatest(
-            eventsService.load(),
-            musiciansService.load()
-                .combineLatest(contentService.load(), shopService.load())
-        )
+        Publishers
+            .CombineLatest(
+                eventsService.load(),
+                musiciansService.load()
+            )
+            .combineLatest(
+                contentService.load(),
+                shopService.load()
+            )
             .receive(on: DispatchQueue.main)
             .sink(
                 receiveCompletion: { result in

@@ -8,9 +8,21 @@
 import SwiftUI
 import Core
 
+public struct EventSwipeToggleKey: EnvironmentKey {
+    public static let defaultValue: (() -> Void)? = nil
+}
+
+public extension EnvironmentValues {
+    var eventSwipeToggle: (() -> Void)? {
+        get { self[EventSwipeToggleKey.self] }
+        set { self[EventSwipeToggleKey.self] = newValue }
+    }
+}
+
 public struct EventView: View {
     @ObservedObject public var viewModel: EventViewModel
-    
+    @Environment(\.eventSwipeToggle) private var eventSwipeToggle
+
     public init(viewModel: EventViewModel) {
         self.viewModel = viewModel
     }
@@ -33,6 +45,8 @@ public struct EventView: View {
                     }
                 }
                 .frame(width: 100, height: 100)
+                .onAppear { viewModel.loadImageIfNeeded() }
+                .onDisappear { viewModel.cancelImageLoad() }
 
                 EventInfoView(viewModel: viewModel)
                     .frame(maxHeight: .infinity, alignment: .top)
@@ -44,12 +58,8 @@ public struct EventView: View {
             .frame(maxWidth: .infinity, maxHeight: 100, alignment: .leading)
             .shadow(radius: 8)
             
-            if viewModel.hasContextMenu {
-                Button(action: {
-                    withAnimation {
-                        viewModel.toggleOffset()
-                    }
-                }) {
+            if viewModel.hasContextMenu, let eventSwipeToggle {
+                Button(action: eventSwipeToggle) {
                     Image(uiImage: UIImage(resource: .options).withRenderingMode(.alwaysTemplate))
                         .resizable()
                         .scaledToFit()

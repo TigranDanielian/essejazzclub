@@ -9,19 +9,33 @@ import SwiftUI
 import Core
 import SharedInfrastructure
 
+private enum EventSwipeMetrics {
+    static let revealWidth: CGFloat = 80
+}
+
 struct ScheduleEventView: View {
     @ObservedObject var viewModel: EventViewModel
     var onSelect: EventActionHandler = { _ in }
     var uiFactory: any UIFactory
-    
+    @State private var dragOffset: CGFloat = 0
+    @State private var startDragOffset: CGFloat = 0
+
     var body: some View {
-        SwipableView(offsetX: $viewModel.dragOffset, startOffsetX: $viewModel.startDragOffset) {
+        SwipableView(offsetX: $dragOffset, startOffsetX: $startDragOffset) {
             EventContextButtons(viewModel: viewModel) { onSelect(.contextAction($0)) }
         } content: {
             AnyView(uiFactory.produce(unit: .event(viewModel)))
         }
+        .environment(\.eventSwipeToggle, toggleSwipeOffset)
         .onTapGesture {
             onSelect(.navigation(.onEventDetails(viewModel)))
+        }
+    }
+
+    private func toggleSwipeOffset() {
+        withAnimation {
+            dragOffset = dragOffset == 0 ? -EventSwipeMetrics.revealWidth : 0
+            startDragOffset = dragOffset
         }
     }
 }
@@ -31,7 +45,7 @@ struct SwipableView<Content: View, SwipeContent: View>: View {
     @Binding private var startOffsetX: CGFloat
     @GestureState private var isDragging = false
 
-    private let swipeThreshold: CGFloat = 80
+    private let swipeThreshold = EventSwipeMetrics.revealWidth
 
     let swipeContent: () -> SwipeContent
     let content: () -> Content
@@ -52,7 +66,7 @@ struct SwipableView<Content: View, SwipeContent: View>: View {
                 Spacer()
                 swipeContent()
                     .rotationEffect(.degrees(180))
-                    .scaleEffect(offsetX / 80, anchor: .center)
+                    .scaleEffect(offsetX / EventSwipeMetrics.revealWidth, anchor: .center)
             }
 
             content()
