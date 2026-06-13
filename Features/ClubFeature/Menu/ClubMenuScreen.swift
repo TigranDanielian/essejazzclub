@@ -1,5 +1,5 @@
 //
-//  ClubShopScreen.swift
+//  ClubMenuScreen.swift
 //  ClubFeature
 //
 
@@ -8,7 +8,7 @@ import Core
 import Services
 import SharedInfrastructure
 
-private enum ClubShopGridLayout {
+private enum ClubMenuGridLayout {
     static let screenEdgeInset: CGFloat = 12
     static let columnSpacing: CGFloat = 12
 
@@ -18,80 +18,78 @@ private enum ClubShopGridLayout {
     }
 }
 
-private enum ShopGridItemLayout {
+private enum MenuGridItemLayout {
     static let cardHeight: CGFloat = 240
     static let infoBarHeight: CGFloat = 80
     static var imageSlotHeight: CGFloat { cardHeight - infoBarHeight }
 }
 
-private enum ClubShopLayout {
+private enum ClubMenuLayout {
     static let sectionSpacing: CGFloat = 28
 }
 
-private enum ShopCategoryChipID {
-    static let all = "shop-category-all"
+private enum MenuCategoryChipID {
+    static let all = "menu-category-all"
 
-    static func category(_ id: Int) -> String {
-        "shop-category-\(id)"
+    static func category(_ name: String) -> String {
+        "menu-category-\(name)"
     }
 }
 
-public struct ClubShopScreen: View {
-    @StateObject private var viewModel: ClubShopScreenViewModel
+public struct ClubMenuScreen: View {
+    @StateObject private var viewModel: ClubMenuScreenViewModel
     private let imageLoader: ImageLoader
-    @State private var selectedProduct: ShopProduct?
+    @State private var selectedItem: MenuItem?
 
-    public init(dependencies: ClubShopScreenDependencies) {
-        _viewModel = StateObject(
-            wrappedValue: ClubShopScreenViewModel(dependencies: dependencies)
-        )
+    public init(dependencies: ClubMenuScreenDependencies) {
+        _viewModel = StateObject(wrappedValue: ClubMenuScreenViewModel(dependencies: dependencies))
         self.imageLoader = dependencies.imageLoader
     }
 
     public var body: some View {
         Group {
-            if viewModel.isLoadingProducts && viewModel.sections.isEmpty {
+            if viewModel.isLoading && viewModel.sections.isEmpty {
                 ProgressView()
                     .tint(Color(uiColor: Colors.secondaryText))
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
             } else if let message = viewModel.loadErrorMessage, viewModel.sections.isEmpty {
-                shopEmptyState(
+                menuEmptyState(
                     symbol: "exclamationmark.triangle",
                     title: "Не удалось загрузить",
                     subtitle: message
                 )
             } else if viewModel.sections.isEmpty {
-                shopEmptyState(
-                    symbol: "bag",
-                    title: "Пока пусто",
-                    subtitle: "Товары появятся здесь, когда каталог будет доступен."
+                menuEmptyState(
+                    symbol: "fork.knife",
+                    title: "Меню пусто",
+                    subtitle: "Блюда появятся здесь, когда каталог будет доступен."
                 )
             } else {
-                shopContent
+                menuContent
             }
         }
         .background(Color(uiColor: Colors.mainBackground).ignoresSafeArea())
-        .navigationTitle("Гифт-шоп")
+        .navigationTitle("Меню")
         .navigationBarTitleDisplayMode(.inline)
-        .sheet(item: $selectedProduct) { product in
-            ClubShopProductDetailView(product: product, imageLoader: imageLoader)
+        .sheet(item: $selectedItem) { item in
+            ClubMenuItemDetailView(item: item, imageLoader: imageLoader)
         }
     }
 
-    private var shopContent: some View {
+    private var menuContent: some View {
         VStack(spacing: 0) {
             categoryFilterBar
                 .background(Color(uiColor: Colors.mainBackground))
 
             ScrollView(.vertical, showsIndicators: false) {
-                VStack(alignment: .leading, spacing: ClubShopLayout.sectionSpacing) {
+                VStack(alignment: .leading, spacing: ClubMenuLayout.sectionSpacing) {
                     ForEach(viewModel.visibleSections) { section in
-                        shopSection(section)
+                        menuSection(section)
                     }
                 }
                 .padding(.top, 8)
                 .padding(.bottom, 28)
-                .id(shopScrollContentID)
+                .id(menuScrollContentID)
             }
             .scrollBounceBehavior(.basedOnSize, axes: .vertical)
             .appScrollContentBackgroundHidden()
@@ -104,33 +102,33 @@ public struct ClubShopScreen: View {
                 HStack(spacing: 8) {
                     categoryChip(
                         title: "Все",
-                        isSelected: viewModel.selectedCategoryID == nil,
-                        id: ShopCategoryChipID.all
+                        isSelected: viewModel.selectedCategory == nil,
+                        id: MenuCategoryChipID.all
                     ) {
-                        viewModel.selectCategory(id: nil)
-                        centerCategoryTab(ShopCategoryChipID.all, proxy: proxy)
+                        viewModel.selectCategory(nil)
+                        centerCategoryTab(MenuCategoryChipID.all, proxy: proxy)
                     }
 
-                    ForEach(viewModel.sections) { section in
-                        let chipID = ShopCategoryChipID.category(section.category.id)
+                    ForEach(viewModel.categoryNames, id: \.self) { name in
+                        let chipID = MenuCategoryChipID.category(name)
                         categoryChip(
-                            title: section.category.name,
-                            isSelected: viewModel.selectedCategoryID == section.category.id,
+                            title: name,
+                            isSelected: viewModel.selectedCategory == name,
                             id: chipID
                         ) {
-                            viewModel.selectCategory(id: section.category.id)
+                            viewModel.selectCategory(name)
                             centerCategoryTab(chipID, proxy: proxy)
                         }
                     }
                 }
-                .padding(.horizontal, ClubShopGridLayout.screenEdgeInset)
+                .padding(.horizontal, ClubMenuGridLayout.screenEdgeInset)
                 .padding(.vertical, 10)
             }
         }
     }
 
-    private var shopScrollContentID: String {
-        viewModel.selectedCategoryID.map(String.init) ?? ShopCategoryChipID.all
+    private var menuScrollContentID: String {
+        viewModel.selectedCategory ?? MenuCategoryChipID.all
     }
 
     private func centerCategoryTab(_ id: String, proxy: ScrollViewProxy) {
@@ -170,45 +168,45 @@ public struct ClubShopScreen: View {
         .id(id)
     }
 
-    private func shopSection(_ section: ShopSection) -> some View {
-        let cellWidth = ClubShopGridLayout.cellWidth
+    private func menuSection(_ section: MenuSection) -> some View {
+        let cellWidth = ClubMenuGridLayout.cellWidth
 
         return VStack(alignment: .leading, spacing: 12) {
-            if viewModel.selectedCategoryID == nil {
-                Text(section.category.name)
+            if viewModel.selectedCategory == nil {
+                Text(section.categoryName)
                     .font(.footnote.weight(.semibold))
                     .foregroundStyle(Color(uiColor: Colors.secondaryText))
                     .textCase(.uppercase)
-                    .padding(.horizontal, ClubShopGridLayout.screenEdgeInset)
+                    .padding(.horizontal, ClubMenuGridLayout.screenEdgeInset)
             }
 
             LazyVGrid(
                 columns: [
-                    GridItem(.fixed(cellWidth), spacing: ClubShopGridLayout.columnSpacing),
+                    GridItem(.fixed(cellWidth), spacing: ClubMenuGridLayout.columnSpacing),
                     GridItem(.fixed(cellWidth)),
                 ],
                 spacing: 16
             ) {
-                ForEach(section.products) { product in
+                ForEach(section.items) { item in
                     Button {
-                        selectedProduct = product
+                        selectedItem = item
                     } label: {
-                        ShopProductCardView(
-                            product: product,
+                        MenuItemCardView(
+                            item: item,
                             imageLoader: imageLoader,
                             cellWidth: cellWidth
                         )
-                        .frame(width: cellWidth, height: ShopGridItemLayout.cardHeight)
+                        .frame(width: cellWidth, height: MenuGridItemLayout.cardHeight)
                         .contentShape(Rectangle())
                     }
                     .buttonStyle(.plain)
                 }
             }
-            .padding(.horizontal, ClubShopGridLayout.screenEdgeInset)
+            .padding(.horizontal, ClubMenuGridLayout.screenEdgeInset)
         }
     }
 
-    private func shopEmptyState(symbol: String, title: String, subtitle: String) -> some View {
+    private func menuEmptyState(symbol: String, title: String, subtitle: String) -> some View {
         VStack(spacing: 14) {
             Image(systemName: symbol)
                 .font(.system(size: 44))
@@ -226,10 +224,10 @@ public struct ClubShopScreen: View {
     }
 }
 
-// MARK: - Product card
+// MARK: - Card
 
-private struct ShopProductCardView: View {
-    let product: ShopProduct
+private struct MenuItemCardView: View {
+    let item: MenuItem
     let imageLoader: ImageLoader
     let cellWidth: CGFloat
 
@@ -237,15 +235,7 @@ private struct ShopProductCardView: View {
     @State private var isLoadingImage = false
 
     private var imageSlotSize: CGSize {
-        CGSize(width: cellWidth, height: ShopGridItemLayout.imageSlotHeight)
-    }
-
-    private var displayName: String {
-        ShopProductDisplay.name(for: product)
-    }
-
-    private var displayPrice: String? {
-        ShopProductDisplay.price(for: product)
+        CGSize(width: cellWidth, height: MenuGridItemLayout.imageSlotHeight)
     }
 
     var body: some View {
@@ -255,12 +245,12 @@ private struct ShopProductCardView: View {
                 .clipped()
 
             infoBar
-                .frame(width: cellWidth, height: ShopGridItemLayout.infoBarHeight)
+                .frame(width: cellWidth, height: MenuGridItemLayout.infoBarHeight)
         }
-        .frame(width: cellWidth, height: ShopGridItemLayout.cardHeight)
+        .frame(width: cellWidth, height: MenuGridItemLayout.cardHeight)
         .clipShape(RoundedRectangle(cornerRadius: 14))
         .shadow(color: .black.opacity(0.08), radius: 6, y: 2)
-        .task(id: product.id) {
+        .task(id: item.id) {
             await loadImageIfNeeded()
         }
     }
@@ -282,7 +272,7 @@ private struct ShopProductCardView: View {
             } else {
                 ZStack {
                     Color(uiColor: Colors.cardBackground)
-                    Image(systemName: "bag.fill")
+                    Image(systemName: "fork.knife")
                         .resizable()
                         .scaledToFit()
                         .frame(maxWidth: w * 0.45, maxHeight: h * 0.45)
@@ -295,19 +285,17 @@ private struct ShopProductCardView: View {
 
     private var infoBar: some View {
         VStack(alignment: .leading, spacing: 4) {
-            Text(displayName)
+            Text(item.name)
                 .font(.headline.weight(.semibold))
                 .foregroundStyle(Color(uiColor: Colors.text))
                 .multilineTextAlignment(.leading)
                 .lineLimit(2)
                 .minimumScaleFactor(0.85)
 
-            if let displayPrice {
-                Text(displayPrice)
-                    .font(.caption)
-                    .foregroundStyle(Color(uiColor: Colors.accentSheet))
-                    .lineLimit(1)
-            }
+            Text(item.formattedPrice)
+                .font(.caption)
+                .foregroundStyle(Color(uiColor: Colors.accentSheet))
+                .lineLimit(1)
 
             Spacer(minLength: 0)
         }
@@ -319,9 +307,7 @@ private struct ShopProductCardView: View {
 
     private func loadImageIfNeeded() async {
         guard image == nil else { return }
-        guard let path = product.image?.trimmingCharacters(in: .whitespacesAndNewlines), !path.isEmpty else {
-            return
-        }
+        guard let path = item.pictureURL, !path.isEmpty else { return }
         isLoadingImage = true
         defer { isLoadingImage = false }
         if let loaded = try? await imageLoader.loadImage(path: path) {

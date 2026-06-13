@@ -26,7 +26,7 @@ public struct EventContextButtons: View {
             }
             
             HStack(alignment: .top) {
-                EventContextButton(viewModel: viewModel.shareButtonViewModel, onTap: { onTap(.share) })
+                EventContextButton(viewModel: viewModel.shareButtonViewModel, onTap: { onTap(.share(viewModel)) })
                 EventContextButton(viewModel: viewModel.detailsButtonViewModel, onTap: { onTap(.details(viewModel)) })
             }
         }
@@ -48,8 +48,8 @@ public enum EventContextButtonType {
     case favorite(String)
     case calendar(EventViewModel)
     case details(EventViewModel)
-    case share
-    
+    case share(EventViewModel)
+
     var imageName: String {
         switch self {
         case .favorite:

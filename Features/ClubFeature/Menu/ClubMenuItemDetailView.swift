@@ -1,5 +1,5 @@
 //
-//  ClubShopProductDetailView.swift
+//  ClubMenuItemDetailView.swift
 //  ClubFeature
 //
 
@@ -8,8 +8,8 @@ import Core
 import Services
 import SharedInfrastructure
 
-struct ClubShopProductDetailView: View {
-    let product: ShopProduct
+struct ClubMenuItemDetailView: View {
+    let item: MenuItem
     let imageLoader: ImageLoader
 
     @Environment(\.dismiss) private var dismiss
@@ -43,7 +43,7 @@ struct ClubShopProductDetailView: View {
                             } else {
                                 ZStack {
                                     Color(uiColor: Colors.cardBackground)
-                                    Image(systemName: "bag.fill")
+                                    Image(systemName: "fork.knife")
                                         .font(.system(size: 48))
                                         .foregroundStyle(Color(uiColor: Colors.secondaryText))
                                 }
@@ -62,22 +62,20 @@ struct ClubShopProductDetailView: View {
                     .clipped()
                     .ignoresSafeArea(.container, edges: .horizontal)
 
-                    Text(displayName)
+                    Text(item.name)
                         .bold()
                         .padding(.horizontal, Layout.textHorizontalPadding)
                         .padding(.top, 12)
                         .font(.system(size: 28, weight: .bold))
                         .foregroundColor(Color(uiColor: Colors.text))
 
-                    if let displayPrice {
-                        Text(displayPrice)
-                            .padding(.horizontal, Layout.textHorizontalPadding)
-                            .font(.title3)
-                            .foregroundStyle(Color(uiColor: Colors.accentSheet))
-                    }
+                    Text(item.formattedPrice)
+                        .padding(.horizontal, Layout.textHorizontalPadding)
+                        .font(.title3)
+                        .foregroundStyle(Color(uiColor: Colors.accentSheet))
 
                     if !plainDescription.isEmpty || !attributedDescription.characters.isEmpty {
-                        shopDescriptionSeparator()
+                        menuDescriptionSeparator()
 
                         if !attributedDescription.characters.isEmpty {
                             ExpandableText(text: $attributedDescription, limit: 160)
@@ -97,7 +95,7 @@ struct ClubShopProductDetailView: View {
             }
             .appScrollContentBackgroundHidden()
             .background(Color(uiColor: Colors.mainBackground))
-            .navigationTitle(displayName)
+            .navigationTitle(item.name)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
@@ -107,13 +105,13 @@ struct ClubShopProductDetailView: View {
             }
         }
         .presentationDragIndicator(.visible)
-        .task(id: product.id) {
+        .task(id: item.id) {
             await loadImageIfNeeded()
             await loadDescription()
         }
     }
 
-    private func shopDescriptionSeparator() -> some View {
+    private func menuDescriptionSeparator() -> some View {
         Rectangle()
             .frame(height: 5)
             .cornerRadius(5)
@@ -121,23 +119,15 @@ struct ClubShopProductDetailView: View {
             .padding(.horizontal, 20)
     }
 
-    private var displayName: String {
-        ShopProductDisplay.name(for: product)
-    }
-
-    private var displayPrice: String? {
-        ShopProductDisplay.price(for: product)
-    }
-
     private var plainDescription: String {
-        ShopProductDisplay.plainContent(for: product)
+        let content = item.descriptionHTML?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        guard !content.contains("<") else { return "" }
+        return content
     }
 
     private func loadImageIfNeeded() async {
         guard image == nil else { return }
-        guard let path = product.image?.trimmingCharacters(in: .whitespacesAndNewlines), !path.isEmpty else {
-            return
-        }
+        guard let path = item.pictureURL, !path.isEmpty else { return }
         isLoadingImage = true
         defer { isLoadingImage = false }
         if let loaded = try? await imageLoader.loadImage(path: path) {
@@ -146,7 +136,7 @@ struct ClubShopProductDetailView: View {
     }
 
     private func loadDescription() async {
-        let raw = product.content?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        let raw = item.descriptionHTML?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
         guard !raw.isEmpty else { return }
 
         let font = UIFont.systemFont(ofSize: 14, weight: .medium)
@@ -158,27 +148,5 @@ struct ClubShopProductDetailView: View {
         if let parsed {
             attributedDescription = parsed
         }
-    }
-}
-
-// MARK: - Display helpers
-
-enum ShopProductDisplay {
-    static func name(for product: ShopProduct) -> String {
-        let name = product.name?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
-        return name.isEmpty ? "Товар" : name
-    }
-
-    static func price(for product: ShopProduct) -> String? {
-        guard let price = product.price?.trimmingCharacters(in: .whitespacesAndNewlines), !price.isEmpty else {
-            return nil
-        }
-        return price
-    }
-
-    static func plainContent(for product: ShopProduct) -> String {
-        let content = product.content?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
-        guard content.contains("<") == false else { return "" }
-        return content
     }
 }

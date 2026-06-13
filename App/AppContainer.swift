@@ -35,6 +35,7 @@ public final class AppContainer: ObservableObject {
         self.viewModelFactory = SharedViewModelFactory(
             musiaciansService: musiciansService,
             favoriteStorage: favoritesStorage,
+            calendarEventsManager: calendarEventsManager,
             imageLoader: imageLoader.loadImage(path:)
         )
         
@@ -47,7 +48,7 @@ public final class AppContainer: ObservableObject {
         Publishers.CombineLatest(
             eventsService.load(),
             musiciansService.load()
-                .combineLatest(contentService.load())
+                .combineLatest(contentService.load(), shopService.load())
         )
             .receive(on: DispatchQueue.main)
             .sink(

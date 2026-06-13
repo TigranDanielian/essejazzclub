@@ -114,8 +114,8 @@ final class ClubFavoriteEventDetailViewModel: ObservableObject {
             dependencies.calendarCoordinator.handleAction(with: viewModel)
         case .favorite(let id):
             dependencies.favoritesStorage.toggleState(forValue: id, forKey: .events)
-        case .share:
-            break
+        case .share(let viewModel):
+            EventShareCoordinator.share(viewModel)
         case .details(_):
             break
         }

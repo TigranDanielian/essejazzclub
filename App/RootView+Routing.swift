@@ -13,8 +13,8 @@ extension RootView {
             container.calendarCoordinator.handleAction(with: viewModel)
         case .favorite(let id):
             container.favoritesStorage.toggleState(forValue: id, forKey: .events)
-        case .share:
-            break
+        case .share(let viewModel):
+            EventShareCoordinator.share(viewModel)
         case .details(_):
             break
         }

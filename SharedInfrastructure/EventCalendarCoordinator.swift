@@ -10,6 +10,9 @@ import Core
 import UIKit
 
 public final class EventCalendarCoordinator: ObservableObject {
+    private static let calendarNotes = "Концерт в ESSE Jazz Club"
+    private static let eventDuration: TimeInterval = 2 * 60 * 60
+
     private let calendarManager: CalendarEventsManager
 
     public init(calendarManager: CalendarEventsManager) {
@@ -18,24 +21,35 @@ public final class EventCalendarCoordinator: ObservableObject {
 
     @MainActor
     public func handleAction(with viewModel: EventViewModel) {
-        if viewModel.times.count > 1 {
+        if viewModel.calendarStartDates.count > 1 {
             presentTimeSelection(for: viewModel)
-        } else {
-            addEventToCalendar(event: viewModel, time: viewModel.times.first ?? "19:00")
+        } else if let startDate = viewModel.calendarStartDates.first {
+            toggleEventInCalendar(event: viewModel, startDate: startDate)
         }
     }
 
     @MainActor
-    public func addEventToCalendar(event: EventViewModel, time: String) {
+    public func toggleEventInCalendar(event: EventViewModel, startDate: Date) {
         Task {
             do {
-                let timeComponents = time.split(separator: ":").compactMap { Int(String($0)) }
-                let hour = timeComponents.first ?? 20
-                let minute = timeComponents.count > 1 ? timeComponents[1] : 0
-                let date = Calendar.current.date(bySettingHour: hour, minute: minute, second: 0, of: event.date)
-                try await calendarManager.addEvent(title: event.title, date: date ?? event.date)
+                let endDate = startDate.addingTimeInterval(Self.eventDuration)
+                let added = try await calendarManager.toggleEvent(
+                    title: event.title,
+                    notes: Self.calendarNotes,
+                    startDate: startDate,
+                    endDate: endDate,
+                    url: event.websiteURL
+                )
                 await MainActor.run {
-                    Self.presentSuccessAlert()
+                    NotificationCenter.default.post(
+                        name: .esseEventCalendarStateDidChange,
+                        object: event.occurrenceIdentifier
+                    )
+                    if added {
+                        Self.presentSuccessAlert(title: "Добавлено в календарь")
+                    } else {
+                        Self.presentSuccessAlert(title: "Удалено из календаря")
+                    }
                 }
             } catch {
                 await MainActor.run {
@@ -47,59 +61,33 @@ public final class EventCalendarCoordinator: ObservableObject {
 
     @MainActor
     private func presentTimeSelection(for event: EventViewModel) {
-        guard let presenter = Self.topViewController() else { return }
-        let alert = UIAlertController(title: "Select time", message: nil, preferredStyle: .actionSheet)
-        for item in event.times {
-            alert.addAction(UIAlertAction(title: item, style: .default) { [weak self] _ in
-                self?.addEventToCalendar(event: event, time: item)
+        guard let presenter = TopPresenter.topViewController() else { return }
+        let alert = UIAlertController(title: "Выберите время", message: nil, preferredStyle: .actionSheet)
+        for (index, label) in event.times.enumerated() {
+            guard index < event.calendarStartDates.count else { continue }
+            let startDate = event.calendarStartDates[index]
+            let isInCalendar = calendarManager.isEventInCalendar(url: event.websiteURL, startDate: startDate)
+            let title = isInCalendar ? "Удалить \(label)" : "Добавить \(label)"
+            alert.addAction(UIAlertAction(title: title, style: .default) { [weak self] _ in
+                self?.toggleEventInCalendar(event: event, startDate: startDate)
             })
         }
-        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
-        Self.configurePopover(for: alert, presenter: presenter)
+        alert.addAction(UIAlertAction(title: "Отмена", style: .cancel))
+        TopPresenter.configurePopover(for: alert, presenter: presenter)
         presenter.present(alert, animated: true)
     }
 
-    private static func configurePopover(for alert: UIAlertController, presenter: UIViewController) {
-        guard let popover = alert.popoverPresentationController else { return }
-        popover.sourceView = presenter.view
-        popover.sourceRect = CGRect(x: presenter.view.bounds.midX, y: presenter.view.bounds.midY, width: 1, height: 1)
-        popover.permittedArrowDirections = []
-    }
-
-    private static func presentSuccessAlert() {
-        guard let presenter = topViewController() else { return }
-        let alert = UIAlertController(title: "Event added", message: nil, preferredStyle: .alert)
+    private static func presentSuccessAlert(title: String) {
+        guard let presenter = TopPresenter.topViewController() else { return }
+        let alert = UIAlertController(title: title, message: nil, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .default))
         presenter.present(alert, animated: true)
     }
 
     private static func presentErrorAlert(message: String) {
-        guard let presenter = topViewController() else { return }
-        let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
+        guard let presenter = TopPresenter.topViewController() else { return }
+        let alert = UIAlertController(title: "Ошибка", message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .default))
         presenter.present(alert, animated: true)
-    }
-
-    private static func topViewController(from root: UIViewController?) -> UIViewController? {
-        guard let root = root else { return nil }
-        if let presented = root.presentedViewController {
-            return topViewController(from: presented)
-        }
-        if let nav = root as? UINavigationController {
-            return topViewController(from: nav.visibleViewController)
-        }
-        if let tab = root as? UITabBarController {
-            return topViewController(from: tab.selectedViewController)
-        }
-        return root
-    }
-
-    private static func topViewController() -> UIViewController? {
-        let scenes = UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }
-        let scene = scenes.first(where: { $0.activationState == .foregroundActive }) ?? scenes.first
-        guard let windowScene = scene else { return nil }
-        let root = windowScene.windows.first(where: \.isKeyWindow)?.rootViewController
-            ?? windowScene.windows.first?.rootViewController
-        return topViewController(from: root)
     }
 }

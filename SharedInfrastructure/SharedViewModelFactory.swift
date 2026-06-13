@@ -20,6 +20,7 @@ private struct EventViewModelCacheKey: Hashable {
 public final class SharedViewModelFactory: @preconcurrency ViewModelFactory {
     private let musiaciansService: MusiciansService
     private let favoriteStorage: FavoritesStorage<String>
+    private let calendarEventsManager: CalendarEventsManager
     private let imageLoader: AsyncImageLoader
     private var musiciansProvider: MusiciansProvider?
 
@@ -29,10 +30,12 @@ public final class SharedViewModelFactory: @preconcurrency ViewModelFactory {
     public init(
         musiaciansService: MusiciansService,
         favoriteStorage: FavoritesStorage<String>,
+        calendarEventsManager: CalendarEventsManager,
         imageLoader: @escaping AsyncImageLoader
     ) {
         self.musiaciansService = musiaciansService
         self.favoriteStorage = favoriteStorage
+        self.calendarEventsManager = calendarEventsManager
         self.imageLoader = imageLoader
         self.musiciansProvider = makeMusiciansProvider()
     }
@@ -55,6 +58,7 @@ public final class SharedViewModelFactory: @preconcurrency ViewModelFactory {
                 withDate: hasDate,
                 imageLoader: imageLoader,
                 favoritesStorage: favoriteStorage,
+                calendarEventsManager: calendarEventsManager,
                 musiciansProvider: musiciansProvider
             )
             eventViewModels[key] = created

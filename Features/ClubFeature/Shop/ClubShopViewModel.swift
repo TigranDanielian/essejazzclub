@@ -37,8 +37,14 @@ public final class ClubShopScreenViewModel: ObservableObject {
     private var productsCancellable: AnyCancellable?
 
     @Published private(set) var sections: [ShopSection] = []
+    @Published var selectedCategoryID: Int?
     @Published private(set) var isLoadingProducts = false
     @Published private(set) var loadErrorMessage: String?
+
+    var visibleSections: [ShopSection] {
+        guard let selectedCategoryID else { return sections }
+        return sections.filter { $0.category.id == selectedCategoryID }
+    }
 
     public init(dependencies: ClubShopScreenDependencies) {
         self.dependencies = dependencies
@@ -77,6 +83,10 @@ public final class ClubShopScreenViewModel: ObservableObject {
                 isLoadingProducts = false
                 loadErrorMessage = nil
             }
+    }
+
+    func selectCategory(id: Int?) {
+        selectedCategoryID = id
     }
 
     private static func makeSections(

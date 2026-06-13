@@ -286,8 +286,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "29"
             endingLineNumber = "29"
-            landmarkName = "init(eventsService:viewModelFactory:tabNavigation:contextHandler:)"
-            landmarkType = "7">
+            landmarkName = "ScheduleScreenViewModel"
+            landmarkType = "3">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -442,7 +442,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "46"
             endingLineNumber = "46"
-            landmarkName = "eventMusicians(eventId:)"
+            landmarkName = "schedule(page:per:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -552,8 +552,8 @@
             filePath = "SharedInfrastructure/Views/EventDetailView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "222"
-            endingLineNumber = "222"
+            startingLineNumber = "224"
+            endingLineNumber = "224"
             landmarkName = "upcomingDatesSection(_:)"
             landmarkType = "7">
          </BreakpointContent>

@@ -16,6 +16,7 @@ public struct EventDetailView: View {
     private let displayOptions: EventDetailDisplayOptions
     private let onSelectUpcomingOccurrence: ((String) -> Void)?
     @State private var attributedText: AttributedString = .init()
+    @State private var bookingPresentation: BookingPresentation?
 
     public init(
         viewModel: EventViewModel,
@@ -36,19 +37,8 @@ public struct EventDetailView: View {
             ScrollView {
                 VStack(alignment: .leading) {
                     VStack(alignment: .leading) {
-                        ZStack {
-                            Image(uiImage: viewModel.image ?? UIImage())
-                                .resizable()
-                                .scaledToFit()
-                                .clipped()
-                                .cornerRadius(12)
-
-                            if viewModel.isLoadingImage {
-                                SkeletonView()
-                                    .cornerRadius(12)
-                            }
-                        }
-                        .shadow(radius: 12)
+                        EventDetailHeroSlider(viewModel: viewModel)
+                            .shadow(radius: 12)
                         
                         ZStack {
                             // 1️⃣ Основной контент
@@ -101,7 +91,7 @@ public struct EventDetailView: View {
                                     )
                                     EventContextButton(
                                         viewModel: viewModel.shareButtonViewModel,
-                                        onTap: { actionHandler(.contextAction(.share)) }
+                                        onTap: { actionHandler(.contextAction(.share(viewModel))) }
                                     )
                                 }
                                 .padding(.horizontal, 12)
@@ -111,13 +101,16 @@ public struct EventDetailView: View {
                                 Spacer()
                             }
 
-                            if displayOptions.showsBuyTicketButton {
+                            if displayOptions.showsBuyTicketButton, let bookingURL = viewModel.bookingURL {
                                 VStack {
                                     Spacer()
                                     HStack {
                                         Spacer()
-                                        BuyButton {
-                                            actionHandler(.navigation(.onBuy))
+                                        BuyButton(title: viewModel.bookingButtonTitle) {
+                                            bookingPresentation = BookingPresentation(
+                                                url: bookingURL,
+                                                title: viewModel.bookingButtonTitle
+                                            )
                                         }
                                     }
                                     .padding(12)
@@ -186,6 +179,15 @@ public struct EventDetailView: View {
                 attributedText = text
             }
         }
+        .sheet(item: $bookingPresentation) { presentation in
+            TicketBookingSheet(url: presentation.url, title: presentation.title)
+        }
+    }
+
+    private struct BookingPresentation: Identifiable {
+        let id = UUID()
+        let url: URL
+        let title: String
     }
 
     private static let upcomingSectionDayFormatter: DateFormatter = {
@@ -255,7 +257,14 @@ struct MyView_Previews: PreviewProvider {
     
     static var previews: some View {
         EventDetailView(
-            viewModel: EventViewModel(model: .preview, hasContextMenu: false, imageLoader: ImageLoaderImpl(host: URL(string: "https://www.jazzesse.ru/upload/")!).loadImage, favoritesStorage: .init(), musiciansProvider: nil),
+            viewModel: EventViewModel(
+                model: .preview,
+                hasContextMenu: false,
+                imageLoader: ImageLoaderImpl(host: URL(string: "https://www.jazzesse.ru/upload/")!).loadImage,
+                favoritesStorage: .init(),
+                calendarEventsManager: CalendarEventsManager(),
+                musiciansProvider: nil
+            ),
             actionHandler: { _ in },
             upcomingOccurrences: nil,
             displayOptions: .default,
@@ -348,11 +357,12 @@ struct SeparatorView: View {
 }
 
 struct BuyButton: View {
+    let title: String
     let action: () -> Void
 
     var body: some View {
         Button(action: action) {
-            Text("Купить билет")
+            Text(title)
                 .font(.caption)
                 .foregroundColor(Color(uiColor: Colors.textInverted))
                 .padding(.horizontal, 12)
