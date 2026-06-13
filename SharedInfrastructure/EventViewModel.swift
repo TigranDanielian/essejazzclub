@@ -38,7 +38,7 @@ public final class EventViewModel: ObservableObject, Identifiable, Hashable {
     @Published public var startDragOffset: CGFloat = 0
     @Published public var isFavorite: Bool = false
     @Published public var musicians: [MusicianViewModel] = []
-    
+
     public var title: String
     public var description: String
     public var text: String
@@ -69,37 +69,67 @@ public final class EventViewModel: ObservableObject, Identifiable, Hashable {
             $0 > 0 ? "от \($0) ₽" : ""
         }
     }
+
+    public var isFreeEvent: Bool {
+        guard let minPrice = prices.map(\.price).min() else { return false }
+        return minPrice == 0
+    }
+
+    public var bookingButtonTitle: String {
+        isFreeEvent ? "Забронировать" : "Купить билет"
+    }
+
+    public var bookingURL: URL? {
+        EventWebsiteLink.resolveBookingURL(from: model.bookLink)
+    }
+
+    public var apiEventId: Int { model.eventId }
+    public var occurrenceSlotId: Int { model.dateWithTimes.id }
+    public var websiteURL: URL {
+        EventWebsiteLink.url(eventId: apiEventId, occurrenceId: occurrenceSlotId)
+    }
+
+    public var youTubeVideoIDs: [String] {
+        model.youTubeLinks.compactMap { YouTubeVideoID.extract(from: $0) }
+    }
+
+    /// Дата и время начала каждого слота для календаря (таймзона Москва).
+    public let calendarStartDates: [Date]
     
     @MainActor
     public lazy var favoriteButtonViewModel: EventContextButtonViewModel = EventContextButtonViewModel(imagePublisher: contextButtonImagePublisher(for: .favorite(eventId)))
     
     @MainActor
-    public lazy var shareButtonViewModel: EventContextButtonViewModel = EventContextButtonViewModel(imagePublisher: contextButtonImagePublisher(for: .share))
+    public lazy var shareButtonViewModel: EventContextButtonViewModel = EventContextButtonViewModel(imagePublisher: contextButtonImagePublisher(for: .share(self)))
     
     @MainActor
-    public lazy var calendarButtonViewModel: EventContextButtonViewModel = EventContextButtonViewModel(imagePublisher: contextButtonImagePublisher(for: .calendar(self)))
-    
+    public let calendarButtonViewModel: EventContextButtonViewModel
+
     @MainActor
     public lazy var detailsButtonViewModel: EventContextButtonViewModel = EventContextButtonViewModel(imagePublisher: contextButtonImagePublisher(for: .details(self)))
 
     private var prices: [Price]
     private let imageLoader: AsyncImageLoader
     private let favoritesStorage: FavoritesStorage<String>
+    private let calendarEventsManager: CalendarEventsManager
     private var model: EventModel
     
     public var onSelect: (() -> Void)?
 
+    @MainActor
     public init(
         model: EventModel,
         hasContextMenu: Bool,
         withDate: Bool = false,
         imageLoader: @escaping AsyncImageLoader,
         favoritesStorage: FavoritesStorage<String>,
+        calendarEventsManager: CalendarEventsManager,
         musiciansProvider: MusiciansProvider?
     ) {
         self.model = model
         self.imageLoader = imageLoader
         self.favoritesStorage = favoritesStorage
+        self.calendarEventsManager = calendarEventsManager
         self.hasContextMenu = hasContextMenu
         self.hasDate = withDate
 
@@ -113,11 +143,24 @@ public final class EventViewModel: ObservableObject, Identifiable, Hashable {
         self.prices = model.prices ?? []
         self.isTop = model.isTop
         self.text = model.text
-        
+        self.calendarStartDates = model.dateWithTimes.times.map {
+            Self.calendarStartDate(day: model.dateWithTimes.date, time: $0.time)
+        }
+
+        let websiteURL = EventWebsiteLink.url(eventId: model.eventId, occurrenceId: model.dateWithTimes.id)
+        self.calendarButtonViewModel = EventContextButtonViewModel(
+            imagePublisher: Self.calendarImagePublisher(
+                manager: calendarEventsManager,
+                url: websiteURL,
+                startDates: calendarStartDates,
+                occurrenceIdentifier: eventOccurrenceIdentifier(for: model)
+            )
+        )
+
         Task {
             await loadImage()
         }
-        
+
         Task {
             try await musiciansProvider?(model.id)
                 .receive(on: DispatchQueue.main)
@@ -140,21 +183,30 @@ public final class EventViewModel: ObservableObject, Identifiable, Hashable {
             isLoadingImage = false
         }
     }
-    
+
     func handleTap(type: EventContextButtonType) {
         switch type {
         case .favorite:
             favoritesStorage.toggleState(forValue: eventId, forKey: .events)
-            
-            print("favorite")
-        case .calendar:
-            print("calendar")
-        case .details:
-            print("details")
-            onSelect?()
-        case .share:
-            print("share")
+        case .calendar, .share, .details:
+            break
         }
+    }
+
+    private static let moscowCalendar: Calendar = {
+        var calendar = Calendar(identifier: .gregorian)
+        calendar.timeZone = TimeZone(identifier: "Europe/Moscow")!
+        return calendar
+    }()
+
+    private static func calendarStartDate(day: Date, time: Date) -> Date {
+        let parts = moscowCalendar.dateComponents([.hour, .minute], from: time)
+        return moscowCalendar.date(
+            bySettingHour: parts.hour ?? 20,
+            minute: parts.minute ?? 0,
+            second: 0,
+            of: day
+        ) ?? day
     }
     
     private func contextButtonImagePublisher(for type: EventContextButtonType) -> AnyPublisher<UIImage?, Never> {
@@ -166,9 +218,39 @@ public final class EventViewModel: ObservableObject, Identifiable, Hashable {
                     UIImage(systemName: isFavorite ? "heart.fill" : "heart")
                 }
                 .eraseToAnyPublisher()
-            
+
+        case .calendar:
+            Self.calendarImagePublisher(
+                manager: calendarEventsManager,
+                url: websiteURL,
+                startDates: calendarStartDates,
+                occurrenceIdentifier: occurrenceIdentifier
+            )
+
         default:
             Just(UIImage(systemName: type.imageName)).eraseToAnyPublisher()
         }
+    }
+
+    private static func calendarImagePublisher(
+        manager: CalendarEventsManager,
+        url: URL,
+        startDates: [Date],
+        occurrenceIdentifier: String
+    ) -> AnyPublisher<UIImage?, Never> {
+        let storeChanges = NotificationCenter.default.publisher(for: .EKEventStoreChanged).map { _ in () }
+        let appChanges = NotificationCenter.default.publisher(for: .esseEventCalendarStateDidChange)
+            .compactMap { $0.object as? String }
+            .filter { $0 == occurrenceIdentifier }
+            .map { _ in () }
+
+        return Publishers.Merge(storeChanges, appChanges)
+            .prepend(())
+            .receive(on: DispatchQueue.main)
+            .map { _ in
+                let inCalendar = manager.isOccurrenceInCalendar(url: url, startDates: startDates)
+                return UIImage(systemName: inCalendar ? "calendar.badge.checkmark" : "calendar")
+            }
+            .eraseToAnyPublisher()
     }
 }

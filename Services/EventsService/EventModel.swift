@@ -20,8 +20,9 @@ public struct EventModel {
     public var isTop: Bool
     public var youTubeLinks: [String]
     public var eventId: Int
-    
-    public init(id: String, title: String, description: String, text: String, dateWithTimes: DateWithTimes, thumbnailUrl: String?, bannerUrl: String?, type: Services.EventType, prices: [Price]?, isTop: Bool, youTubeLinks: [String], eventId: Int) {
+    public var bookLink: String?
+
+    public init(id: String, title: String, description: String, text: String, dateWithTimes: DateWithTimes, thumbnailUrl: String?, bannerUrl: String?, type: Services.EventType, prices: [Price]?, isTop: Bool, youTubeLinks: [String], eventId: Int, bookLink: String? = nil) {
         self.id = id
         self.title = title
         self.description = description
@@ -34,6 +35,7 @@ public struct EventModel {
         self.isTop = isTop
         self.youTubeLinks = youTubeLinks
         self.eventId = eventId
+        self.bookLink = bookLink
     }
 }
 
@@ -102,7 +104,8 @@ public struct RemoteEventDate: Decodable {
     let eventId: Int
     let date: Date
     let time: Date
-    
+    let bookLink: String?
+
     private let _prices: String // db gives an encoded and serialized array as string
     private let jazzlab: Int?
     
@@ -121,6 +124,7 @@ public struct RemoteEventDate: Decodable {
         case time
         case _prices = "prices"
         case jazzlab
+        case bookLink
     }
     
     public init(from decoder: any Decoder) throws {
@@ -130,6 +134,7 @@ public struct RemoteEventDate: Decodable {
         self.eventId = try container.decode(Int.self, forKey: .eventId)
         self._prices = try container.decode(String.self, forKey: ._prices)
         self.jazzlab = try container.decodeIfPresent(Int.self, forKey: .jazzlab)
+        self.bookLink = try container.decodeIfPresent(String.self, forKey: .bookLink)
 
         let dateString = try container.decode(String.self, forKey: .date)
         let timeString = try container.decode(String.self, forKey: .time)
@@ -155,7 +160,7 @@ public struct RemoteEventDate: Decodable {
     }
 }
 
-private func getPricesArray(from string: String) -> [Price] {
+func getPricesArray(from string: String) -> [Price] {
     let array = string.replacingOccurrences(of: "{", with: "")
             .replacingOccurrences(of: "}", with: "")
             .split(separator: ";")
@@ -221,10 +226,28 @@ public struct Price: Codable, Identifiable {
 }
 
 
-private extension String {
+extension String {
     func extractLinks() -> [String] {
-        self.split(separator: "\"").map(String.init).map({ $0.replacingOccurrences(of: " ", with: "") }).filter({ $0.contains("http") })
-//        self.split(separator: "\"")
+        let pattern = #"https?://[^\s"'<>]+"#
+        guard let regex = try? NSRegularExpression(pattern: pattern) else {
+            return legacyExtractLinks()
+        }
+        let range = NSRange(startIndex..., in: self)
+        let matches = regex.matches(in: self, range: range)
+        let links = matches.compactMap { match -> String? in
+            guard let linkRange = Range(match.range, in: self) else { return nil }
+            return String(self[linkRange])
+                .replacingOccurrences(of: "&amp;", with: "&")
+                .trimmingCharacters(in: CharacterSet(charactersIn: "\"'<>"))
+        }
+        return links.isEmpty ? legacyExtractLinks() : links
+    }
+
+    private func legacyExtractLinks() -> [String] {
+        split(separator: "\"")
+            .map(String.init)
+            .map { $0.replacingOccurrences(of: " ", with: "") }
+            .filter { $0.contains("http") }
     }
     func base64Decoded() -> String? {
         if let data = Data(base64Encoded: self, options: .ignoreUnknownCharacters) {

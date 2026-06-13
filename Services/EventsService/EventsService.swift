@@ -17,6 +17,9 @@ public protocol EventsService {
     /// Loads all events from current date
     func load() -> AnyPublisher<Void, Error>
 
+    /// Одна страница расписания (`GET event-schedule`).
+    func fetchEventSchedule(page: Int, per: Int) -> AnyPublisher<PaginatedEventSchedule, Error>
+
     var state: AnyPublisher<EventsState, Never> { get }
 
     /// Модель из текущего кэша по идентификатору слота расписания (`eventOccurrenceIdentifier`).
@@ -54,6 +57,14 @@ public final class EventsServiceImpl: EventsService {
             })
             .map { _ in () }
             .eraseToAnyPublisher()
+    }
+
+    public func fetchEventSchedule(
+        page: Int = 1,
+        per: Int = PaginatedEventScheduleRequest.defaultPer
+    ) -> AnyPublisher<PaginatedEventSchedule, Error> {
+        let request = PaginatedEventScheduleRequest(page: page, per: per)
+        return apiClient.requestModel(endpoint: .Events.schedule(page: request.page, per: request.per))
     }
 
     private func loadEvents() -> AnyPublisher<[EventModel], Error> {
@@ -141,5 +152,6 @@ public extension EventModel {
         self.isTop = remoteEvent.inTop
         self.youTubeLinks = remoteEvent.youTubeLinks
         self.eventId = remoteEvent.id
+        self.bookLink = currentDate.bookLink
     }
 }

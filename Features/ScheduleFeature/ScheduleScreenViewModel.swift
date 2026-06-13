@@ -15,14 +15,23 @@ import SharedInfrastructure
 @MainActor
 public final class ScheduleScreenViewModel: ObservableObject {
     @Published var grouped: [GroupedEventsByDay] = []
-    private var cancellables: Set<AnyCancellable> = []
-    @Published var selectedEvent: EventViewModel?
     @Published var searchInputText: String = ""
-    
+    @Published private(set) var isLoading = false
+    @Published private(set) var isLoadingMore = false
+    @Published private(set) var hasMore = false
+
+    @Published var selectedEvent: EventViewModel?
+
+    private var cancellables: Set<AnyCancellable> = []
+    private var loadedEvents: [EventViewModel] = []
+    private var currentPage = 0
+    private var isFetchingPage = false
+
     private let eventsService: EventsService
+    private let viewModelFactory: ViewModelFactory
     private let tabNavigation: ScheduleTabNavigating
     private let contextHandler: (EventContextButtonType) -> Void
-    
+
     public init(
         eventsService: EventsService,
         viewModelFactory: ViewModelFactory,
@@ -30,68 +39,130 @@ public final class ScheduleScreenViewModel: ObservableObject {
         contextHandler: @escaping (EventContextButtonType) -> Void
     ) {
         self.eventsService = eventsService
+        self.viewModelFactory = viewModelFactory
         self.tabNavigation = tabNavigation
         self.contextHandler = contextHandler
-        eventsService.state
-            .receive(on: DispatchQueue.main)
-            .combineLatest($searchInputText.removeDuplicates())
-            .tryMap { state, searchInput in
-                state.events.map { model -> EventViewModel in
-                    viewModelFactory.produce(
-                        unit: .event(hasContextMenu: true, hasDate: false, model)
-                    ) as! EventViewModel
-                }
-                .filter { viewModel in
-                    guard !searchInput.isEmpty else { return true }
-                 
-                    return viewModel.title.lowercased().contains(searchInput.lowercased())
-                }
+
+        $searchInputText
+            .removeDuplicates()
+            .sink { [weak self] _ in
+                self?.applyFilterAndGroup()
             }
-            .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] in
-                self?.groupEvents($0)
-            })
             .store(in: &cancellables)
     }
-    
-    func refresh() async {
+
+    func loadInitialIfNeeded() async {
+        guard loadedEvents.isEmpty, !isFetchingPage else { return }
+        await reload()
+    }
+
+    func reload() async {
+        guard !isFetchingPage else { return }
+        isFetchingPage = true
+        isLoading = true
+        defer {
+            isLoading = false
+            isFetchingPage = false
+        }
+
+        currentPage = 0
+        hasMore = false
+        loadedEvents = []
+
         do {
-            try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
-                var cancellable: AnyCancellable?
-                cancellable = eventsService.load()
-                    .sink(
-                        receiveCompletion: { completion in
-                            switch completion {
-                            case .finished:
-                                continuation.resume()
-                            case .failure(let error):
-                                continuation.resume(throwing: error)
-                            }
-                            cancellable?.cancel()
-                        },
-                        receiveValue: { _ in }
-                    )
-            }
+            try await appendPage(1)
         } catch {
-            // Ошибка обрабатывается через state publisher
+            grouped = []
         }
     }
-    
-    func groupEvents(_ viewModels: [EventViewModel]) {
+
+    func refresh() async {
+        await reload()
+    }
+
+    func loadMore() async {
+        guard hasMore, !isFetchingPage, !isLoading else { return }
+        isFetchingPage = true
+        isLoadingMore = true
+        defer {
+            isLoadingMore = false
+            isFetchingPage = false
+        }
+
+        do {
+            try await appendPage(currentPage + 1)
+        } catch {
+            // сохраняем уже загруженный список
+        }
+    }
+
+    private func appendPage(_ page: Int) async throws {
+        let response = try await fetchSchedule(
+            page: page,
+            per: PaginatedEventScheduleRequest.schedulePageSize
+        )
+
+        let newViewModels = response.items.map { item -> EventViewModel in
+            let model = EventModel(scheduleItem: item)
+            return viewModelFactory.produce(
+                unit: .event(hasContextMenu: true, hasDate: false, model)
+            ) as! EventViewModel
+        }
+
+        if page == 1 {
+            loadedEvents = newViewModels
+        } else {
+            loadedEvents.append(contentsOf: newViewModels)
+        }
+
+        currentPage = response.page
+        hasMore = response.hasMore
+        applyFilterAndGroup()
+    }
+
+    private func fetchSchedule(page: Int, per: Int) async throws -> PaginatedEventSchedule {
+        try await withCheckedThrowingContinuation { continuation in
+            var cancellable: AnyCancellable?
+            cancellable = eventsService.fetchEventSchedule(page: page, per: per)
+                .sink(
+                    receiveCompletion: { completion in
+                        if case .failure(let error) = completion {
+                            continuation.resume(throwing: error)
+                        }
+                        cancellable?.cancel()
+                    },
+                    receiveValue: { value in
+                        continuation.resume(returning: value)
+                        cancellable?.cancel()
+                    }
+                )
+        }
+    }
+
+    private func applyFilterAndGroup() {
+        let filtered = loadedEvents.filter { viewModel in
+            guard !searchInputText.isEmpty else { return true }
+            return viewModel.title.lowercased().contains(searchInputText.lowercased())
+        }
+        groupEvents(filtered)
+    }
+
+    private func groupEvents(_ viewModels: [EventViewModel]) {
         let groupedByDate = Dictionary(grouping: viewModels) { $0.date }
-        
-        self.grouped = groupedByDate.map { (date, events) in
+
+        grouped = groupedByDate.map { (date, events) in
             let main = events.filter { !$0.isJazzLab }
             let jazzLab = events.filter { $0.isJazzLab }
-            
+
             var sections: [GroupedEventSection] = []
-            
+
             if !main.isEmpty {
                 sections.append(GroupedEventSection(type: .mainStage, events: main))
             }
             if !jazzLab.isEmpty {
                 sections.append(GroupedEventSection(type: .jazzLab, events: jazzLab))
             }
-            
+
             return GroupedEventsByDay(date: date, sections: sections)
         }
         .sorted { $0.date < $1.date }

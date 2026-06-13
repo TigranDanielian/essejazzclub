@@ -61,12 +61,22 @@ public struct ScheduleScreen: View {
                 }
                 
                 LazyVStack(alignment: .leading, spacing: 16) {
-                    ForEach(viewModel.grouped) { day in
-                        ScheduleDayView(
-                            eventsDay: day,
-                            actionHandler: { viewModel.handleAction(.event($0)) },
-                            uiFactory: uiFactory
-                        )
+                    if viewModel.isLoading, viewModel.grouped.isEmpty {
+                        ProgressView()
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 48)
+                    } else {
+                        ForEach(viewModel.grouped) { day in
+                            ScheduleDayView(
+                                eventsDay: day,
+                                actionHandler: { viewModel.handleAction(.event($0)) },
+                                uiFactory: uiFactory
+                            )
+                        }
+
+                        if viewModel.hasMore {
+                            paginationFooter
+                        }
                     }
                 }
                 .padding(.top, 20)
@@ -74,6 +84,12 @@ public struct ScheduleScreen: View {
             }
             .appScrollContentBackgroundHidden()
             .scrollIndicators(.hidden)
+            .refreshable {
+                await viewModel.refresh()
+            }
+            .task {
+                await viewModel.loadInitialIfNeeded()
+            }
             
             HStack {
                 AnyView(
@@ -104,6 +120,20 @@ public struct ScheduleScreen: View {
             
         }
         .background(Color(uiColor: Colors.mainBackground))
+    }
+
+    private var paginationFooter: some View {
+        HStack {
+            Spacer()
+            if viewModel.isLoadingMore {
+                ProgressView()
+            }
+            Spacer()
+        }
+        .frame(height: 44)
+        .onAppear {
+            Task { await viewModel.loadMore() }
+        }
     }
 }
 

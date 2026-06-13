@@ -32,6 +32,19 @@ public extension ApiEndpoint {
                 path: "events"
             )
         }
+
+        /// Query: `page` (default 1), `per` or `perPage` (default 20, max 100).
+        public static func schedule(page: Int = 1, per: Int = 20) -> ApiEndpoint {
+            ApiEndpoint(
+                method: .get,
+                path: "event-schedule",
+                isAuthorizationRequired: false,
+                task: .query([
+                    "page": page,
+                    "per": per,
+                ])
+            )
+        }
     }
     
     enum Musicians {
