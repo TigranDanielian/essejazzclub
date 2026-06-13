@@ -17,7 +17,8 @@ private struct EventViewModelCacheKey: Hashable {
     let hasDate: Bool
 }
 
-public final class SharedViewModelFactory: @preconcurrency ViewModelFactory {
+@MainActor
+public final class SharedViewModelFactory: ViewModelFactory {
     private let musiciansService: MusiciansService
     private let favoritesStorage: FavoritesStorage<String>
     private let calendarEventsManager: CalendarEventsManager
@@ -26,8 +27,8 @@ public final class SharedViewModelFactory: @preconcurrency ViewModelFactory {
 
     private var eventViewModels: [EventViewModelCacheKey: EventViewModel] = [:]
     private var musicianViewModels: [Int: MusicianViewModel] = [:]
-    
-    public init(
+
+    public nonisolated init(
         musiciansService: MusiciansService,
         favoritesStorage: FavoritesStorage<String>,
         calendarEventsManager: CalendarEventsManager,
@@ -37,10 +38,14 @@ public final class SharedViewModelFactory: @preconcurrency ViewModelFactory {
         self.favoritesStorage = favoritesStorage
         self.calendarEventsManager = calendarEventsManager
         self.imageLoader = imageLoader
-        self.musiciansProvider = makeMusiciansProvider()
+        self.musiciansProvider = Self.makeMusiciansProvider(
+            musiciansService: musiciansService,
+            makeViewModel: { [weak self] musician in
+                self?.produce(unit: .musician(musician)) as? MusicianViewModel
+            }
+        )
     }
-    
-    @MainActor
+
     public func produce(unit: ViewModelUnit) -> any ObservableObject {
         switch unit {
         case .event(let hasContextMenu, let hasDate, let model):
@@ -64,35 +69,34 @@ public final class SharedViewModelFactory: @preconcurrency ViewModelFactory {
             )
             eventViewModels[key] = created
             return created
-            
+
         case .musician(let musician):
             if let cachedViewModel = musicianViewModels[musician.id] {
+                cachedViewModel.replaceModel(musician)
                 return cachedViewModel
             }
-            
-            let viewModel = MusicianViewModel(model: musician, imageLoader: imageLoader, favoritesStorage: favoritesStorage)
+
+            let viewModel = MusicianViewModel(
+                model: musician,
+                imageLoader: imageLoader,
+                favoritesStorage: favoritesStorage
+            )
             musicianViewModels[musician.id] = viewModel
-            
+
             return viewModel
         }
     }
-    
-    private func makeMusiciansProvider() -> MusiciansProvider {
-        { [weak self] eventId in
-            guard let self else {
-                return Just([]).eraseToAnyPublisher()
-            }
-            return self.musiciansService.forEvent(id: eventId)
-                .receive(on: DispatchQueue.main)
-                .flatMap { [weak self] musicians -> AnyPublisher<[MusicianViewModel], Never> in
-                    guard let self else {
-                        return Just([]).eraseToAnyPublisher()
-                    }
-                    return Future { promise in
+
+    private nonisolated static func makeMusiciansProvider(
+        musiciansService: MusiciansService,
+        makeViewModel: @escaping @MainActor (Musician) -> MusicianViewModel?
+    ) -> MusiciansProvider {
+        { eventId in
+            musiciansService.forEvent(id: eventId)
+                .flatMap { musicians -> AnyPublisher<[MusicianViewModel], Never> in
+                    Future { promise in
                         Task { @MainActor in
-                            let viewModels = musicians.map { musician in
-                                self.produce(unit: .musician(musician)) as! MusicianViewModel
-                            }
+                            let viewModels = musicians.compactMap { makeViewModel($0) }
                             promise(.success(viewModels))
                         }
                     }

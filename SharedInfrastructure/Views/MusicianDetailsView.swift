@@ -101,15 +101,8 @@ public struct MusicianDetailsView: View {
     }
 
     private func loadAttributedBio() async {
-        let html = viewModel.text
-        let font = UIFont.systemFont(ofSize: 14, weight: .medium)
-        let color = Colors.text
-        let parsed = await Task.detached(priority: .userInitiated) {
-            html.htmlAttributed(font: font, color: color)
-        }.value
+        guard let parsed = await HTMLBioFormatting.attributedString(from: viewModel.text) else { return }
         guard !Task.isCancelled else { return }
-        if let parsed {
-            attributedText = parsed
-        }
+        attributedText = parsed
     }
 }

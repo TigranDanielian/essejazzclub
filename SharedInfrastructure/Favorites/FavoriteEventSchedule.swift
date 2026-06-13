@@ -8,13 +8,6 @@ import Services
 
 /// Общая логика слотов события по `eventId` для избранного и карточек.
 public enum FavoriteEventSchedule {
-    private static let shortDayMonthFormatter: DateFormatter = {
-        let f = DateFormatter()
-        f.locale = Locale(identifier: "ru_RU")
-        f.dateFormat = "dd.MM"
-        return f
-    }()
-
     /// Ближайшие слоты для чипов дат в списке избранного (`dd.MM`), в порядке афиши.
     public static func upcomingDateChips(
         fromOccurrences sortedOccurrences: [EventModel],
@@ -24,7 +17,7 @@ public enum FavoriteEventSchedule {
         return subset.prefix(maxCount).map { model in
             (
                 occurrenceId: eventOccurrenceIdentifier(for: model),
-                label: shortDayMonthFormatter.string(from: model.dateWithTimes.date)
+                label: EventDateFormatting.formatShortDayMonth(model.dateWithTimes.date)
             )
         }
     }
@@ -57,12 +50,7 @@ public enum FavoriteEventSchedule {
     }
 
     public static func timesSummary(for model: EventModel) -> String {
-        let formatter = DateFormatter()
-        formatter.locale = Locale(identifier: "ru_RU")
-        formatter.timeStyle = .short
-        formatter.dateStyle = .none
-        let parts = model.dateWithTimes.times.map { formatter.string(from: $0.time) }
-        return parts.isEmpty ? "—" : parts.joined(separator: ", ")
+        EventDateFormatting.timesSummary(for: model)
     }
 
     /// Все ближайшие слоты для блока «Ближайшие даты» на деталке избранного.

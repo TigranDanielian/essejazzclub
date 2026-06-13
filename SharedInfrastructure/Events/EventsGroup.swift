@@ -16,11 +16,7 @@ public struct GroupedEventsByDay: Identifiable {
     public let sections: [GroupedEventSection]
     
     public var dateString: String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "d MMMM"
-        formatter.locale = Locale(identifier: "ru_RU")
-        
-        return formatter.string(from: date)
+        EventDateFormatting.formatDayMonth(date)
     }
     
     public init(date: Date, sections: [GroupedEventSection]) {

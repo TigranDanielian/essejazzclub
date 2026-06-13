@@ -5,21 +5,20 @@
 //  Created by Tigran Danielian on 08.07.2025.
 //
 
-import Combine
 import Core
 import UIKit
 
-public final class EventCalendarCoordinator: ObservableObject {
+@MainActor
+public final class EventCalendarCoordinator {
     private static let calendarNotes = "Концерт в ESSE Jazz Club"
     private static let eventDuration: TimeInterval = 2 * 60 * 60
 
     private let calendarManager: CalendarEventsManager
 
-    public init(calendarManager: CalendarEventsManager) {
+    public nonisolated init(calendarManager: CalendarEventsManager) {
         self.calendarManager = calendarManager
     }
 
-    @MainActor
     public func handleAction(with viewModel: EventViewModel) {
         if viewModel.calendarStartDates.count > 1 {
             presentTimeSelection(for: viewModel)
@@ -28,7 +27,6 @@ public final class EventCalendarCoordinator: ObservableObject {
         }
     }
 
-    @MainActor
     public func toggleEventInCalendar(event: EventViewModel, startDate: Date) {
         Task {
             do {
@@ -40,26 +38,21 @@ public final class EventCalendarCoordinator: ObservableObject {
                     endDate: endDate,
                     url: event.websiteURL
                 )
-                await MainActor.run {
-                    NotificationCenter.default.post(
-                        name: .esseEventCalendarStateDidChange,
-                        object: event.occurrenceIdentifier
-                    )
-                    if added {
-                        Self.presentSuccessAlert(title: "Добавлено в календарь")
-                    } else {
-                        Self.presentSuccessAlert(title: "Удалено из календаря")
-                    }
+                NotificationCenter.default.post(
+                    name: .esseEventCalendarStateDidChange,
+                    object: event.occurrenceIdentifier
+                )
+                if added {
+                    Self.presentSuccessAlert(title: "Добавлено в календарь")
+                } else {
+                    Self.presentSuccessAlert(title: "Удалено из календаря")
                 }
             } catch {
-                await MainActor.run {
-                    Self.presentErrorAlert(message: error.localizedDescription)
-                }
+                Self.presentErrorAlert(message: error.localizedDescription)
             }
         }
     }
 
-    @MainActor
     private func presentTimeSelection(for event: EventViewModel) {
         guard let presenter = TopPresenter.topViewController() else { return }
         let alert = UIAlertController(title: "Выберите время", message: nil, preferredStyle: .actionSheet)

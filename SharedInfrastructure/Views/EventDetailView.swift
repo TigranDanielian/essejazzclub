@@ -174,12 +174,10 @@ public struct EventDetailView: View {
         .navigationBarTitleDisplayMode(.automatic)
         .appScrollContentBackgroundHidden()
         .background(Color(uiColor: Colors.mainBackground))
-        .onAppear {
+        .task(id: viewModel.occurrenceIdentifier) {
             viewModel.loadImageIfNeeded()
             viewModel.loadMusiciansIfNeeded()
-            if let text = viewModel.text.htmlAttributed(font: .systemFont(ofSize: 14, weight: .medium), color: Colors.text) {
-                attributedText = text
-            }
+            await loadAttributedBio()
         }
         .onDisappear {
             viewModel.cancelImageLoad()
@@ -195,13 +193,6 @@ public struct EventDetailView: View {
         let url: URL
         let title: String
     }
-
-    private static let upcomingSectionDayFormatter: DateFormatter = {
-        let f = DateFormatter()
-        f.locale = Locale(identifier: "ru_RU")
-        f.dateFormat = "d MMMM, EEEE"
-        return f
-    }()
 
     @ViewBuilder
     private func upcomingDatesSection(_ items: [EventDetailUpcomingOccurrence]) -> some View {
@@ -235,7 +226,7 @@ public struct EventDetailView: View {
     private func upcomingOccurrenceRow(_ item: EventDetailUpcomingOccurrence) -> some View {
         HStack(alignment: .center, spacing: 10) {
             VStack(alignment: .leading, spacing: 4) {
-                Text(Self.upcomingSectionDayFormatter.string(from: item.date))
+                Text(EventDateFormatting.formatDayMonthWeekday(item.date))
                     .font(.subheadline.weight(.medium))
                     .foregroundColor(Color(uiColor: Colors.text))
                     .multilineTextAlignment(.leading)
@@ -257,10 +248,16 @@ public struct EventDetailView: View {
         .background(Color(uiColor: Colors.cardBackground))
         .cornerRadius(10)
     }
+
+    private func loadAttributedBio() async {
+        guard let parsed = await HTMLBioFormatting.attributedString(from: viewModel.text) else { return }
+        guard !Task.isCancelled else { return }
+        attributedText = parsed
+    }
 }
 
-struct MyView_Previews: PreviewProvider {
-    
+#if DEBUG
+struct EventDetailView_Previews: PreviewProvider {
     static var previews: some View {
         EventDetailView(
             viewModel: EventViewModel(
@@ -276,75 +273,7 @@ struct MyView_Previews: PreviewProvider {
             displayOptions: .default,
             onSelectUpcomingOccurrence: nil
         )
-            .previewDisplayName("Mock preview")
+        .previewDisplayName("Mock preview")
     }
 }
-
-extension EventModel {
-    static let preview: EventModel = .init(
-        id: "",
-        title: "Some title",
-        description: "Some Description",
-        text: "Some Text",
-        dateWithTimes: DateWithTimes(id: 0, date: Date(), times: []),
-        thumbnailUrl: "17115530506739scale_1200.png",
-        bannerUrl: nil,
-        type: .main,
-        prices: [],
-        isTop: false,
-        youTubeLinks: [],
-        eventId: 123
-    )
-}
-
-struct MusicianRowView: View {
-    @ObservedObject var musician: MusicianViewModel
-    var onSelect: () -> Void = { }
-
-    var body: some View {
-        VStack {
-            ZStack {
-                Image(uiImage: musician.image ?? UIImage())
-                    .resizable()
-                    .scaledToFill()
-                    .frame(width: 72, height: 72)
-                    .clipShape(Circle())
-
-                if musician.isLoadingImage {
-                    SkeletonView()
-                        .frame(width: 72, height: 72)
-                        .cornerRadius(36)
-                }
-            }
-            .onAppear { musician.loadImageIfNeeded() }
-            .onDisappear { musician.cancelImageLoad() }
-            .onTapGesture {
-                onSelect()
-            }
-            
-            Text(musician.name)
-                .frame(maxWidth: 100)
-                .font(.caption)
-                .lineLimit(2)
-                .multilineTextAlignment(.center)
-                .foregroundColor(Color(uiColor: Colors.text))
-        }
-    }
-}
-
-struct BuyButton: View {
-    let title: String
-    let action: () -> Void
-
-    var body: some View {
-        Button(action: action) {
-            Text(title)
-                .font(.caption)
-                .foregroundColor(Color(uiColor: Colors.textInverted))
-                .padding(.horizontal, 12)
-                .padding(.vertical, 6)
-                .background(Color(uiColor: Colors.freetag))
-                .cornerRadius(8)
-        }
-    }
-}
+#endif

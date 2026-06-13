@@ -35,7 +35,7 @@ struct ClubRouteDestinationView: View {
                         case .dismiss:
                             clubViewModel.popNavigation()
                         case .favorite(let id):
-                            dependencies.favoritesStorage.toggleState(forValue: id, forKey: .musicians)
+                            dependencies.favoritesStorage.applyFavoriteContext(.musician(musicianId: id))
                         }
                     })
                 )

@@ -92,7 +92,7 @@ public final class EventViewModel: ObservableObject {
     private let favoritesStorage: FavoritesStorage<String>
     private let calendarEventsManager: CalendarEventsManager
     private let musiciansProvider: MusiciansProvider?
-    private var imageLoadTask: Task<Void, Never>?
+    public var imageLoadTask: Task<Void, Never>?
     private var musiciansLoadTask: Task<Void, Never>?
     private var musiciansSubscription: AnyCancellable?
 
@@ -122,24 +122,6 @@ public final class EventViewModel: ObservableObject {
         self.model = model
     }
 
-    /// Запускает загрузку фото, если ещё нет картинки и нет активной задачи.
-    public func loadImageIfNeeded() {
-        guard image == nil, imageUrlString != nil else { return }
-        guard imageLoadTask == nil else { return }
-
-        imageLoadTask = Task { [weak self] in
-            await self?.loadImage()
-        }
-    }
-
-    /// Отменяет незавершённую загрузку (например, ячейка ушла с экрана). Уже загруженное фото сохраняется.
-    public func cancelImageLoad() {
-        guard image == nil else { return }
-        imageLoadTask?.cancel()
-        imageLoadTask = nil
-        isLoadingImage = false
-    }
-
     /// Загружает музыкантов события — только для экрана деталей.
     public func loadMusiciansIfNeeded() {
         guard musicians.isEmpty else { return }
@@ -157,27 +139,6 @@ public final class EventViewModel: ObservableObject {
         musiciansLoadTask = nil
         musiciansSubscription?.cancel()
         musiciansSubscription = nil
-    }
-
-    private func loadImage() async {
-        defer {
-            imageLoadTask = nil
-            if !Task.isCancelled {
-                isLoadingImage = false
-            }
-        }
-
-        guard !Task.isCancelled else { return }
-        guard let imageUrlString else { return }
-
-        isLoadingImage = true
-        do {
-            let loadedImage = try await imageLoader(imageUrlString)
-            guard !Task.isCancelled else { return }
-            self.image = loadedImage
-        } catch {
-            guard !Task.isCancelled else { return }
-        }
     }
 
     private func loadMusicians() async {
@@ -200,6 +161,13 @@ public final class EventViewModel: ObservableObject {
             guard !Task.isCancelled else { return }
         }
     }
+}
+
+// MARK: - RemoteImageLoadable
+
+extension EventViewModel: RemoteImageLoadable {
+    public var asyncImageLoader: AsyncImageLoader { imageLoader }
+    public var remoteImageURL: String? { imageUrlString }
 }
 
 // MARK: - Identifiable

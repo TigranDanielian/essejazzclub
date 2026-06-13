@@ -3,6 +3,7 @@
 //  ScheduleFeature
 //
 
+import Core
 import SharedInfrastructure
 
 /// Абстракция навигации вкладки «Афиша»: слой UI опирается на протокол, а не на конкретный роутер.
@@ -24,6 +25,17 @@ public extension ScheduleTabNavigating {
                 applyNavigation: { self.applyEventNavigation($0) },
                 handleContextButton: contextHandler
             )
+        }
+    }
+
+    func makeMusicianDetailActionHandler(favoritesStorage: FavoritesStorage<String>) -> MusicianActionHandler {
+        { action in
+            switch action {
+            case .dismiss:
+                self.dismissPresentedOrPop()
+            case .favorite(let id):
+                favoritesStorage.applyFavoriteContext(.musician(musicianId: id))
+            }
         }
     }
 

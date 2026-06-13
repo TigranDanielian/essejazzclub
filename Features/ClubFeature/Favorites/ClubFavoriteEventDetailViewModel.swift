@@ -109,15 +109,10 @@ final class ClubFavoriteEventDetailViewModel: ObservableObject {
     }
 
     private func handleContext(_ type: EventContextButtonType) {
-        switch type {
-        case .calendar(let viewModel):
-            dependencies.calendarCoordinator.handleAction(with: viewModel)
-        case .favorite(let id):
-            dependencies.favoritesStorage.toggleState(forValue: id, forKey: .events)
-        case .share(let viewModel):
-            EventShareCoordinator.share(viewModel)
-        case .details(_):
-            break
-        }
+        EventContextActionHandler.handle(
+            type,
+            favoritesStorage: dependencies.favoritesStorage,
+            calendarCoordinator: dependencies.calendarCoordinator
+        )
     }
 }

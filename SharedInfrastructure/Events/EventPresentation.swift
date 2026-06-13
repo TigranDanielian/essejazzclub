@@ -2,12 +2,9 @@
 //  EventPresentation.swift
 //  SharedInfrastructure
 //
-//  Created by Tigran Danielian on 13.06.2026.
-//
 
 import Foundation
 import Services
-
 
 /// Форматирование полей события для UI (даты, цены, слоты календаря).
 struct EventPresentation {
@@ -32,11 +29,11 @@ struct EventPresentation {
     }
 
     var dateString: String {
-        Self.displayDateFormatter.string(from: date)
+        EventDateFormatting.formatDayMonth(date)
     }
 
     func dateString(format: String) -> String {
-        Self.makeDisplayDateFormatter(format: format).string(from: date)
+        EventDateFormatting.formatter(format: format).string(from: date)
     }
 
     var priceString: String? {
@@ -55,37 +52,7 @@ struct EventPresentation {
 
     var calendarStartDates: [Date] {
         model.dateWithTimes.times.map {
-            Self.calendarStartDate(day: model.dateWithTimes.date, time: $0.time)
+            EventDateFormatting.calendarStartDate(day: model.dateWithTimes.date, time: $0.time)
         }
-    }
-
-    private static let displayDateFormatter: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "d MMMM"
-        formatter.locale = Locale(identifier: "ru_RU")
-        return formatter
-    }()
-
-    private static func makeDisplayDateFormatter(format: String) -> DateFormatter {
-        let formatter = DateFormatter()
-        formatter.dateFormat = format
-        formatter.locale = Locale(identifier: "ru_RU")
-        return formatter
-    }
-
-    private static let moscowCalendar: Calendar = {
-        var calendar = Calendar(identifier: .gregorian)
-        calendar.timeZone = TimeZone(identifier: "Europe/Moscow")!
-        return calendar
-    }()
-
-    private static func calendarStartDate(day: Date, time: Date) -> Date {
-        let parts = moscowCalendar.dateComponents([.hour, .minute], from: time)
-        return moscowCalendar.date(
-            bySettingHour: parts.hour ?? 20,
-            minute: parts.minute ?? 0,
-            second: 0,
-            of: day
-        ) ?? day
     }
 }

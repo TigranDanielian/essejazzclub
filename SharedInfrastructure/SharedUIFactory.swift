@@ -33,12 +33,14 @@ public enum ViewModelUnit {
     case musician(Musician)
 }
 
-public protocol UIFactory: ObservableObject {
+public protocol UIFactory {
     associatedtype Content: View
-    
+
+    @ViewBuilder
     func produce(unit: UIUnit) -> Content
 }
 
+@MainActor
 public protocol ViewModelFactory: AnyObject {
     func produce(unit: ViewModelUnit) -> any ObservableObject
 }

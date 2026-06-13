@@ -20,12 +20,6 @@ struct RootView: View {
     private var homeTabNavigation: HomeTabNavigating { homeNavigationRouter }
     private var scheduleTabNavigation: ScheduleTabNavigating { scheduleNavigationRouter }
 
-    private var musicianFavoritesToggle: (String) -> Void {
-        { id in
-            container.favoritesStorage.toggleState(forValue: id, forKey: .musicians)
-        }
-    }
-
     var body: some View {
         TabView(selection: $appNavigationRouter.selectedTab) {
             HomeTabRoot(
@@ -81,7 +75,7 @@ struct RootView: View {
             musicianDetailView(
                 viewModel: viewModel,
                 actionHandler: homeTabNavigation.makeMusicianDetailActionHandler(
-                    favoritesHandler: musicianFavoritesToggle
+                    favoritesStorage: container.favoritesStorage
                 )
             )
         case .bookmarkedEventDetail(let occurrenceIdentifier, let mode):
@@ -112,7 +106,7 @@ struct RootView: View {
             musicianDetailView(
                 viewModel: viewModel,
                 actionHandler: scheduleTabNavigation.makeMusicianDetailActionHandler(
-                    favoritesHandler: musicianFavoritesToggle
+                    favoritesStorage: container.favoritesStorage
                 )
             )
         case .filter:

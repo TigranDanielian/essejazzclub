@@ -2,8 +2,6 @@
 //  MusicianViewModel.swift
 //  SharedInfrastructure
 //
-//  Created by Tigran Danielian on 04.12.2025.
-//
 
 import Foundation
 import SwiftUI
@@ -16,10 +14,10 @@ public final class MusicianViewModel: ObservableObject {
     /// Стабильный id для навигации (`Route.id`) и `Hashable` вне MainActor.
     public nonisolated let musicianId: Int
 
-    public var name: String { model.name }
-    public var description: String { model.description }
-    public var text: String { model.text }
-    public var profession: String { model.profession }
+    public var name: String { presentation.name }
+    public var description: String { presentation.description }
+    public var text: String { presentation.text }
+    public var profession: String { presentation.profession }
 
     @Published public var image: UIImage? = nil
     @Published public var isLoadingImage: Bool = false
@@ -35,10 +33,12 @@ public final class MusicianViewModel: ObservableObject {
         )
     )
 
+    public var imageLoadTask: Task<Void, Never>?
+
+    private var model: Musician
+    private var presentation: MusicianPresentation { MusicianPresentation(model: model) }
     private let imageLoader: AsyncImageLoader
     private let favoritesStorage: FavoritesStorage<String>
-    private let model: Musician
-    private var imageLoadTask: Task<Void, Never>?
 
     public init(
         model: Musician,
@@ -51,45 +51,19 @@ public final class MusicianViewModel: ObservableObject {
         self.favoritesStorage = favoritesStorage
     }
 
-    /// Запускает загрузку фото, если ещё нет картинки и нет активной задачи.
-    public func loadImageIfNeeded() {
-        guard image == nil, model.imageUrl != nil else { return }
-        guard imageLoadTask == nil else { return }
-
-        imageLoadTask = Task { [weak self] in
-            await self?.loadImage()
-        }
+    /// Обновляет данные музыканта при повторном `produce` из фабрики с актуальной моделью API.
+    func replaceModel(_ model: Musician) {
+        guard model.id == musicianId else { return }
+        self.model = model
     }
+}
 
-    /// Отменяет незавершённую загрузку (например, ячейка ушла с экрана). Уже загруженное фото сохраняется.
-    public func cancelImageLoad() {
-        guard image == nil else { return }
-        imageLoadTask?.cancel()
-        imageLoadTask = nil
-        isLoadingImage = false
-    }
+// MARK: - RemoteImageLoadable
 
-    private func loadImage() async {
-        defer {
-            imageLoadTask = nil
-            if !Task.isCancelled {
-                isLoadingImage = false
-            }
-        }
-
-        guard !Task.isCancelled else { return }
-        guard let imageUrlString = model.imageUrl else { return }
-
-        isLoadingImage = true
-        do {
-            let loadedImage = try await imageLoader(imageUrlString)
-            guard !Task.isCancelled else { return }
-            self.image = loadedImage
-        } catch {
-            guard !Task.isCancelled else { return }
-            self.image = UIImage(systemName: "person.crop.circle")
-        }
-    }
+extension MusicianViewModel: RemoteImageLoadable {
+    public var asyncImageLoader: AsyncImageLoader { imageLoader }
+    public var remoteImageURL: String? { presentation.imageUrlString }
+    public var remoteImageFailurePlaceholder: UIImage? { UIImage(systemName: "person.crop.circle") }
 }
 
 // MARK: - Identifiable

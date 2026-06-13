@@ -2,8 +2,6 @@
 //  MusicianAction.swift
 //  SharedInfrastructure
 //
-//  Created by Tigran Danielian on 10.05.2026.
-//
 
 import Foundation
 
