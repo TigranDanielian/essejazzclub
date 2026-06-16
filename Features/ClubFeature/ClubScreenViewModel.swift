@@ -49,6 +49,18 @@ public final class ClubScreenViewModel: ObservableObject {
         router.pop()
     }
 
+    public func makeMusicianDetailActionHandler() -> MusicianActionHandler {
+        { [weak self] action in
+            guard let self else { return }
+            switch action {
+            case .dismiss:
+                self.popNavigation()
+            case .favorite(let id):
+                self.dependencies.favoritesStorage.applyFavoriteContext(.musician(musicianId: id))
+            }
+        }
+    }
+
     private func bindFavorites() {
         let favorites = dependencies.favoritesStorage
         let events = dependencies.eventsService
@@ -60,12 +72,14 @@ public final class ClubScreenViewModel: ObservableObject {
         )
         .receive(on: DispatchQueue.main)
         .map { favoriteIds, state -> [ConcertRow] in
-            let rows: [ConcertRow] = favoriteIds.compactMap { eventId in
-                let occ = ClubFavoriteEventSchedule.occurrencesSorted(forEventId: eventId, in: state.events)
+            var seen = Set<String>()
+            let rows: [ConcertRow] = favoriteIds.compactMap { eventId -> ConcertRow? in
+                guard seen.insert(eventId).inserted else { return nil }
+                let occ = FavoriteEventSchedule.sortedOccurrences(forEventId: eventId, in: state.events)
                 guard let primary = FavoriteEventSchedule.primaryOccurrence(forEventId: eventId, in: state.events) else {
                     return nil
                 }
-                let chips = ClubFavoriteEventSchedule.upcomingDateChips(for: occ).map {
+                let chips = FavoriteEventSchedule.upcomingDateChips(fromOccurrences: occ).map {
                     FavoriteConcertDateChip(occurrenceIdentifier: $0.occurrenceId, label: $0.label)
                 }
                 return FavoriteConcertRow(

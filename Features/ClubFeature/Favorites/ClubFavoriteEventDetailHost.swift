@@ -4,54 +4,55 @@
 //
 
 import SwiftUI
-import Services
-import Core
 import SharedInfrastructure
 
-/// Оболочка над `ClubFavoriteEventDetailViewModel` + `eventDetails` из фабрики.
+/// Оболочка над общим `FavoriteEventDetailHost` с навигацией через `ClubScreenViewModel`.
 struct ClubFavoriteEventDetailHost: View {
+    let occurrenceIdentifier: String
+    let mode: FavoriteEventDetailMode
     @ObservedObject var clubScreen: ClubScreenViewModel
 
-    @StateObject private var detail: ClubFavoriteEventDetailViewModel
-
-    init(occurrenceIdentifier: String, mode: ClubNavigationRouter.FavoriteEventDetailMode, clubScreen: ClubScreenViewModel) {
+    init(occurrenceIdentifier: String, mode: FavoriteEventDetailMode, clubScreen: ClubScreenViewModel) {
+        self.occurrenceIdentifier = occurrenceIdentifier
+        self.mode = mode
         self.clubScreen = clubScreen
-        _detail = StateObject(
-            wrappedValue: ClubFavoriteEventDetailViewModel(
-                dependencies: clubScreen.dependencies,
-                clubScreen: clubScreen,
-                occurrenceIdentifier: occurrenceIdentifier,
-                mode: mode
-            )
-        )
     }
 
     var body: some View {
-        if let eventVM = detail.eventViewModel {
-            AnyView(
-                detail.dependencies.uiFactory.produce(
-                    unit: .eventDetails(
-                        eventVM,
-                        detail.makeEventActionHandler(),
-                        detail.upcomingOccurrences,
-                        detail.detailDisplayOptions,
-                        onSelectUpcomingOccurrence: detail.onSelectUpcomingOccurrence
-                    )
-                )
-            )
-        } else {
-            loadingPlaceholder
-        }
+        FavoriteEventDetailHost(
+            occurrenceIdentifier: occurrenceIdentifier,
+            mode: mode,
+            dependencies: clubScreen.dependencies.favoriteEventDetailDependencies,
+            navigation: clubScreen
+        )
+    }
+}
+
+extension ClubScreenDependencies {
+    var favoriteEventDetailDependencies: FavoriteEventDetailDependencies {
+        FavoriteEventDetailDependencies(
+            eventsService: eventsService,
+            favoritesStorage: favoritesStorage,
+            viewModelFactory: viewModelFactory,
+            uiFactory: uiFactory,
+            calendarCoordinator: calendarCoordinator
+        )
+    }
+}
+
+extension ClubScreenViewModel: FavoriteEventDetailNavigating {
+    public func dismissFavoriteEventDetail() {
+        popNavigation()
     }
 
-    private var loadingPlaceholder: some View {
-        VStack(spacing: 16) {
-            ProgressView()
-            Text("Загрузка мероприятия…")
-                .font(.subheadline)
-                .foregroundStyle(Color(uiColor: Colors.secondaryText))
-        }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Color(uiColor: Colors.mainBackground).ignoresSafeArea())
+    public func presentMusicianDetail(_ musician: MusicianViewModel) {
+        presentRoute(.musicianDetail(musician), presentation: .push)
+    }
+
+    public func presentFavoriteEventSlotDetail(occurrenceIdentifier: String) {
+        presentRoute(
+            .favoriteEventDetail(occurrenceIdentifier: occurrenceIdentifier, mode: .slot),
+            presentation: .push
+        )
     }
 }

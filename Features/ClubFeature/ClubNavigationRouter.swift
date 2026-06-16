@@ -9,12 +9,6 @@ import SharedInfrastructure
 /// Локальная навигация вкладки «Клуб»: стек и модальные ветки.
 @MainActor
 public final class ClubNavigationRouter: StackNavigationRouter<ClubNavigationRouter.Route> {
-    /// Режим деталки избранного концерта: обзор по событию или конкретный слот с датой и покупкой.
-    public enum FavoriteEventDetailMode: String, Hashable {
-        case overview
-        case slot
-    }
-
     public enum Route: Hashable, Identifiable {
         case about
         case menu

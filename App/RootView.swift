@@ -199,7 +199,11 @@ private struct HomeTabShell<RouteContent: View>: View {
 
     var body: some View {
         NavigationStack(path: $router.path) {
-            HomeScreen(viewModel: viewModel, uiFactory: container.uiFactory)
+            HomeScreen(
+                viewModel: viewModel,
+                uiFactory: container.uiFactory,
+                imageLoader: container.imageLoader
+            )
                 .navigationDestination(for: HomeNavigationRouter.Route.self) { route in
                     routeView(route)
                 }

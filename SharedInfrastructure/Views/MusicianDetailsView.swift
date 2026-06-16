@@ -15,7 +15,6 @@ public struct MusicianDetailsView: View {
     @State private var attributedText: AttributedString = .init()
 
     private enum Layout {
-        static let photoHeight: CGFloat = 240
         static let textHorizontalPadding: CGFloat = 12
     }
     
@@ -31,32 +30,11 @@ public struct MusicianDetailsView: View {
         ZStack(alignment: .topTrailing) {
             ScrollView {
                 VStack(alignment: .leading, spacing: 8) {
-                    ZStack {
-                        Group {
-                            if let image = viewModel.image {
-                                GeometryReader { geo in
-                                    Image(uiImage: image)
-                                        .resizable()
-                                        .scaledToFill()
-                                        .frame(width: geo.size.width, height: geo.size.height, alignment: .top)
-                                        .clipped()
-                                }
-                            } else {
-                                Color(uiColor: Colors.cardBackground)
-                            }
-                        }
-
-                        if viewModel.isLoadingImage {
-                            SkeletonView()
-                                .cornerRadius(12)
-                        }
-                    }
-                    .shadow(radius: 12)
-                    .frame(maxWidth: .infinity)
-                    .frame(height: Layout.photoHeight)
-                    .cornerRadius(12)
-                    .clipped()
-                    .ignoresSafeArea(.container, edges: .horizontal)
+                    DetailHeroImageView(
+                        image: viewModel.image,
+                        isLoading: viewModel.isLoadingImage,
+                        placeholderSystemName: "person.crop.circle"
+                    )
 
                     Text(viewModel.name)
                         .bold()

@@ -49,9 +49,16 @@ public final class ClubMusiciansScreenViewModel: ObservableObject {
     }
 
     private func makeMusicianViewModel(_ musician: Musician) -> MusicianViewModel {
-        dependencies.viewModelFactory.produce(
+        guard let viewModel = dependencies.viewModelFactory.produce(
             unit: .musician(musician)
-        ) as! MusicianViewModel
+        ) as? MusicianViewModel else {
+            return MusicianViewModel(
+                model: musician,
+                imageLoader: dependencies.imageLoader.loadImage(path:),
+                favoritesStorage: dependencies.favoritesStorage
+            )
+        }
+        return viewModel
     }
 
     /// Поиск по подстроке в полном имени или по любому из слов (имя / фамилия).

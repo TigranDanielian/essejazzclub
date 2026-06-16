@@ -30,8 +30,8 @@ public struct EventDetailDisplayOptions: Equatable {
         linksUpcomingOccurrences: false
     )
 
-    /// Обзор по `eventId` из избранного клуба: без даты/времени и покупки в шапке; список слотов ведёт на выбранную дату.
-    public static let clubFavoriteEventOverview = EventDetailDisplayOptions(
+    /// Обзор по `eventId` из избранного: без даты/времени и покупки в шапке; список слотов ведёт на выбранную дату.
+    public static let favoriteEventOverview = EventDetailDisplayOptions(
         showsHeroDateAndTimes: false,
         showsBuyTicketButton: false,
         linksUpcomingOccurrences: true

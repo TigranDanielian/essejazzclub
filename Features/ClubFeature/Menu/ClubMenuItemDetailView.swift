@@ -19,48 +19,17 @@ struct ClubMenuItemDetailView: View {
 
     private enum Layout {
         static let textHorizontalPadding: CGFloat = 12
-        static let placeholderAspectRatio: CGFloat = 9 / 16
-    }
-
-    private var photoHeight: CGFloat {
-        guard let image, image.size.width > 0 else {
-            return UIScreen.screenWidth * Layout.placeholderAspectRatio
-        }
-        return UIScreen.screenWidth * image.size.height / image.size.width
     }
 
     var body: some View {
         NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 8) {
-                    ZStack {
-                        Group {
-                            if let image {
-                                Image(uiImage: image)
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(maxWidth: .infinity)
-                            } else {
-                                ZStack {
-                                    Color(uiColor: Colors.cardBackground)
-                                    Image(systemName: "fork.knife")
-                                        .font(.system(size: 48))
-                                        .foregroundStyle(Color(uiColor: Colors.secondaryText))
-                                }
-                            }
-                        }
-
-                        if isLoadingImage {
-                            SkeletonView()
-                                .cornerRadius(12)
-                        }
-                    }
-                    .shadow(radius: 12)
-                    .frame(maxWidth: .infinity)
-                    .frame(height: photoHeight)
-                    .cornerRadius(12)
-                    .clipped()
-                    .ignoresSafeArea(.container, edges: .horizontal)
+                    DetailHeroImageView(
+                        image: image,
+                        isLoading: isLoadingImage,
+                        placeholderSystemName: "fork.knife"
+                    )
 
                     Text(item.name)
                         .bold()
@@ -75,7 +44,7 @@ struct ClubMenuItemDetailView: View {
                         .foregroundStyle(Color(uiColor: Colors.accentSheet))
 
                     if !plainDescription.isEmpty || !attributedDescription.characters.isEmpty {
-                        menuDescriptionSeparator()
+                        SeparatorView()
 
                         if !attributedDescription.characters.isEmpty {
                             ExpandableText(text: $attributedDescription, limit: 160)
@@ -111,14 +80,6 @@ struct ClubMenuItemDetailView: View {
         }
     }
 
-    private func menuDescriptionSeparator() -> some View {
-        Rectangle()
-            .frame(height: 5)
-            .cornerRadius(5)
-            .foregroundStyle(Color(uiColor: Colors.separator))
-            .padding(.horizontal, 20)
-    }
-
     private var plainDescription: String {
         let content = item.descriptionHTML?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
         guard !content.contains("<") else { return "" }
@@ -127,26 +88,17 @@ struct ClubMenuItemDetailView: View {
 
     private func loadImageIfNeeded() async {
         guard image == nil else { return }
-        guard let path = item.pictureURL, !path.isEmpty else { return }
         isLoadingImage = true
         defer { isLoadingImage = false }
-        if let loaded = try? await imageLoader.loadImage(path: path) {
-            image = loaded
-        }
+        guard !Task.isCancelled else { return }
+        image = await PathImageLoading.load(imageLoader: imageLoader, path: item.pictureURL)
     }
 
     private func loadDescription() async {
         let raw = item.descriptionHTML?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
         guard !raw.isEmpty else { return }
-
-        let font = UIFont.systemFont(ofSize: 14, weight: .medium)
-        let parsed = await Task.detached(priority: .userInitiated) {
-            raw.htmlAttributed(font: font, color: Colors.text)
-        }.value
-
+        guard let parsed = await HTMLBioFormatting.attributedString(from: raw) else { return }
         guard !Task.isCancelled else { return }
-        if let parsed {
-            attributedDescription = parsed
-        }
+        attributedDescription = parsed
     }
 }

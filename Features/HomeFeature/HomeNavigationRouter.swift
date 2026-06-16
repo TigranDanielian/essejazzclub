@@ -9,12 +9,6 @@ import SharedInfrastructure
 /// Навигация только для вкладки «Главная»: локальный стек и модалки модуля Home.
 @MainActor
 public final class HomeNavigationRouter: StackNavigationRouter<HomeNavigationRouter.Route> {
-    /// Режим деталки избранного с главной: обзор по событию или конкретный слот с датой и покупкой.
-    public enum FavoriteEventDetailMode: String, Hashable {
-        case overview
-        case slot
-    }
-
     public enum Route: Hashable, Identifiable {
         case eventDetail(EventViewModel)
         case musicianDetail(MusicianViewModel)

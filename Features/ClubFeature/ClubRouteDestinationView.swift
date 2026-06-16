@@ -30,18 +30,16 @@ struct ClubRouteDestinationView: View {
         case .musicianDetail(let musicianVM):
             AnyView(
                 dependencies.uiFactory.produce(
-                    unit: .musician(musicianVM, { action in
-                        switch action {
-                        case .dismiss:
-                            clubViewModel.popNavigation()
-                        case .favorite(let id):
-                            dependencies.favoritesStorage.applyFavoriteContext(.musician(musicianId: id))
-                        }
-                    })
+                    unit: .musician(musicianVM, clubViewModel.makeMusicianDetailActionHandler())
                 )
             )
         case .about:
-            AnyView(ClubAboutDestinationView(contentService: dependencies.contentService))
+            AnyView(
+                ClubAboutDestinationView(
+                    contentService: dependencies.contentService,
+                    imageLoader: dependencies.imageLoader
+                )
+            )
 
         case .musicians:
             AnyView(

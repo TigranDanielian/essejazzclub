@@ -1,51 +1,41 @@
 //
-//  ClubFavoriteEventDetailViewModel.swift
-//  ClubFeature
+//  FavoriteEventDetailViewModel.swift
+//  SharedInfrastructure
 //
 
 import Combine
 import Foundation
 import Services
 import Core
-import SharedInfrastructure
 
-/// Состояние и побочные эффекты деталки избранного концерта (обзор по слотам или конкретный слот).
 @MainActor
-final class ClubFavoriteEventDetailViewModel: ObservableObject {
-    let dependencies: ClubScreenDependencies
-    private let clubScreen: ClubScreenViewModel
-    let occurrenceIdentifier: String
-    let mode: ClubNavigationRouter.FavoriteEventDetailMode
+public final class FavoriteEventDetailViewModel: ObservableObject {
+    public let dependencies: FavoriteEventDetailDependencies
+    private weak var navigation: FavoriteEventDetailNavigating?
+    public let occurrenceIdentifier: String
+    public let mode: FavoriteEventDetailMode
 
-    /// `nil`, пока нет модели в кэше по `occurrenceIdentifier`.
-    @Published private(set) var eventViewModel: EventViewModel?
-
-    /// Тап по строке «Ближайшие даты» в режиме обзора; в режиме слота — `nil`.
-    var onSelectUpcomingOccurrence: ((String) -> Void)? = nil
+    @Published public private(set) var eventViewModel: EventViewModel?
+    public var onSelectUpcomingOccurrence: ((String) -> Void)?
 
     private var cancellables = Set<AnyCancellable>()
-
-    /// Снимок событий для списка ближайших дат (только в `.overview`).
     private var events: [EventModel] = []
 
-    init(
-        dependencies: ClubScreenDependencies,
-        clubScreen: ClubScreenViewModel,
+    public init(
+        dependencies: FavoriteEventDetailDependencies,
+        navigation: FavoriteEventDetailNavigating,
         occurrenceIdentifier: String,
-        mode: ClubNavigationRouter.FavoriteEventDetailMode
+        mode: FavoriteEventDetailMode
     ) {
         self.dependencies = dependencies
-        self.clubScreen = clubScreen
+        self.navigation = navigation
         self.occurrenceIdentifier = occurrenceIdentifier
         self.mode = mode
 
         switch mode {
         case .overview:
-            onSelectUpcomingOccurrence = { [weak self] id in
-                self?.clubScreen.presentRoute(
-                    .favoriteEventDetail(occurrenceIdentifier: id, mode: .slot),
-                    presentation: .push
-                )
+            onSelectUpcomingOccurrence = { [weak navigation] id in
+                navigation?.presentFavoriteEventSlotDetail(occurrenceIdentifier: id)
             }
         case .slot:
             onSelectUpcomingOccurrence = nil
@@ -61,11 +51,11 @@ final class ClubFavoriteEventDetailViewModel: ObservableObject {
             .store(in: &cancellables)
     }
 
-    var detailDisplayOptions: EventDetailDisplayOptions {
-        mode == .overview ? .clubFavoriteEventOverview : .default
+    public var detailDisplayOptions: EventDetailDisplayOptions {
+        mode == .overview ? .favoriteEventOverview : .default
     }
 
-    var upcomingOccurrences: [EventDetailUpcomingOccurrence]? {
+    public var upcomingOccurrences: [EventDetailUpcomingOccurrence]? {
         guard mode == .overview,
               let model = events.first(where: { eventOccurrenceIdentifier(for: $0) == occurrenceIdentifier })
         else { return nil }
@@ -73,7 +63,7 @@ final class ClubFavoriteEventDetailViewModel: ObservableObject {
         return rows.isEmpty ? nil : rows
     }
 
-    func makeEventActionHandler() -> EventActionHandler {
+    public func makeEventActionHandler() -> EventActionHandler {
         { [weak self] action in
             guard let self else { return }
             applyEventActionParts(
@@ -81,13 +71,12 @@ final class ClubFavoriteEventDetailViewModel: ObservableObject {
                 applyNavigation: { nav in
                     switch nav {
                     case .dismiss:
-                        self.clubScreen.popNavigation()
+                        self.navigation?.dismissFavoriteEventDetail()
                     case .onMusicianDetails(let musician):
-                        self.clubScreen.presentRoute(.musicianDetail(musician), presentation: .push)
-                    case .onEventDetails(let vm):
-                        self.clubScreen.presentRoute(
-                            .favoriteEventDetail(occurrenceIdentifier: vm.occurrenceIdentifier, mode: .slot),
-                            presentation: .push
+                        self.navigation?.presentMusicianDetail(musician)
+                    case .onEventDetails(let viewModel):
+                        self.navigation?.presentFavoriteEventSlotDetail(
+                            occurrenceIdentifier: viewModel.occurrenceIdentifier
                         )
                     case .onBuy:
                         break

@@ -18,6 +18,7 @@ struct EventPresentation {
     var description: String { model.description }
     var text: String { model.text }
     var imageUrlString: String? { model.thumbnailUrl }
+    var bannerUrlString: String? { model.bannerUrl }
     var isJazzLab: Bool { model.type == .jazzLab }
     var date: Date { model.dateWithTimes.date }
     var isTop: Bool { model.isTop }

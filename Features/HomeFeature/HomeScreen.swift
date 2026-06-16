@@ -8,19 +8,23 @@
 import SwiftUI
 import Combine
 import Core
+import Services
 import SharedInfrastructure
 
 public struct HomeScreen: View {
     /// Родитель (`HomeTabShell`) держит VM в `@StateObject` — здесь только наблюдение.
     @ObservedObject public var viewModel: HomeScreenViewModel
     private let uiFactory: any UIFactory
-    
+    private let imageLoader: ImageLoader
+
     public init(
         viewModel: HomeScreenViewModel,
-        uiFactory: any UIFactory
+        uiFactory: any UIFactory,
+        imageLoader: ImageLoader
     ) {
         _viewModel = ObservedObject(wrappedValue: viewModel)
         self.uiFactory = uiFactory
+        self.imageLoader = imageLoader
     }
     
     public var body: some View {
@@ -28,28 +32,11 @@ public struct HomeScreen: View {
             VStack(alignment: .leading, spacing: 32) {
                 // MARK: - Top events  block
                 if !viewModel.mainEvents.isEmpty {
-                    HomeScreenSection(title: "Главные события") {
-                        VStack(alignment: .leading) {
-                            ScrollView(.horizontal, showsIndicators: false) {
-                                LazyHStack(alignment: .center, spacing: 8) {
-                                    ForEach(viewModel.mainEvents) { event in
-                                        AnyView(uiFactory.produce(unit: .event(event)))
-                                            .frame(
-                                                width: viewModel.mainEvents.count == 1
-                                                ? UIScreen.screenWidth - 24
-                                                : UIScreen.screenWidth * 0.9,
-                                                height: 100
-                                            )
-                                            .onTapGesture {
-                                                viewModel.onEventDetails(event)
-                                            }
-                                    }
-                                }
-                                .padding(.horizontal, 12)
-                                .frame(maxHeight: 200)
-                            }
-                        }
-                    }
+                    HomeMainEventsBannerSlider(
+                        events: viewModel.mainEvents,
+                        imageLoader: imageLoader,
+                        onSelect: { viewModel.onEventDetails($0) }
+                    )
                 }
                 
                 // MARK: - Today events block

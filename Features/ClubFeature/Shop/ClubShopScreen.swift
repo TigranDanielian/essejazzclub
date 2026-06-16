@@ -8,26 +8,6 @@ import Core
 import Services
 import SharedInfrastructure
 
-private enum ClubShopGridLayout {
-    static let screenEdgeInset: CGFloat = 12
-    static let columnSpacing: CGFloat = 12
-
-    static var cellWidth: CGFloat {
-        let totalWidth = UIScreen.screenWidth
-        return (totalWidth - screenEdgeInset * 2 - columnSpacing) / 2
-    }
-}
-
-private enum ShopGridItemLayout {
-    static let cardHeight: CGFloat = 240
-    static let infoBarHeight: CGFloat = 80
-    static var imageSlotHeight: CGFloat { cardHeight - infoBarHeight }
-}
-
-private enum ClubShopLayout {
-    static let sectionSpacing: CGFloat = 28
-}
-
 private enum ShopCategoryChipID {
     static let all = "shop-category-all"
 
@@ -55,13 +35,13 @@ public struct ClubShopScreen: View {
                     .tint(Color(uiColor: Colors.secondaryText))
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
             } else if let message = viewModel.loadErrorMessage, viewModel.sections.isEmpty {
-                shopEmptyState(
+                ClubCatalogEmptyStateView(
                     symbol: "exclamationmark.triangle",
                     title: "Не удалось загрузить",
                     subtitle: message
                 )
             } else if viewModel.sections.isEmpty {
-                shopEmptyState(
+                ClubCatalogEmptyStateView(
                     symbol: "bag",
                     title: "Пока пусто",
                     subtitle: "Товары появятся здесь, когда каталог будет доступен."
@@ -84,7 +64,7 @@ public struct ClubShopScreen: View {
                 .background(Color(uiColor: Colors.mainBackground))
 
             ScrollView(.vertical, showsIndicators: false) {
-                VStack(alignment: .leading, spacing: ClubShopLayout.sectionSpacing) {
+                VStack(alignment: .leading, spacing: ClubCatalogGridLayout.sectionSpacing) {
                     ForEach(viewModel.visibleSections) { section in
                         shopSection(section)
                     }
@@ -102,28 +82,28 @@ public struct ClubShopScreen: View {
         ScrollViewReader { proxy in
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 8) {
-                    categoryChip(
+                    ClubCatalogCategoryChip(
                         title: "Все",
                         isSelected: viewModel.selectedCategoryID == nil,
                         id: ShopCategoryChipID.all
                     ) {
                         viewModel.selectCategory(id: nil)
-                        centerCategoryTab(ShopCategoryChipID.all, proxy: proxy)
+                        ClubCatalogCategoryTabs.center(ShopCategoryChipID.all, proxy: proxy)
                     }
 
                     ForEach(viewModel.sections) { section in
                         let chipID = ShopCategoryChipID.category(section.category.id)
-                        categoryChip(
+                        ClubCatalogCategoryChip(
                             title: section.category.name,
                             isSelected: viewModel.selectedCategoryID == section.category.id,
                             id: chipID
                         ) {
                             viewModel.selectCategory(id: section.category.id)
-                            centerCategoryTab(chipID, proxy: proxy)
+                            ClubCatalogCategoryTabs.center(chipID, proxy: proxy)
                         }
                     }
                 }
-                .padding(.horizontal, ClubShopGridLayout.screenEdgeInset)
+                .padding(.horizontal, ClubCatalogGridLayout.screenEdgeInset)
                 .padding(.vertical, 10)
             }
         }
@@ -133,45 +113,8 @@ public struct ClubShopScreen: View {
         viewModel.selectedCategoryID.map(String.init) ?? ShopCategoryChipID.all
     }
 
-    private func centerCategoryTab(_ id: String, proxy: ScrollViewProxy) {
-        Task { @MainActor in
-            withAnimation(.easeOut(duration: 0.25)) {
-                proxy.scrollTo(id, anchor: .center)
-            }
-        }
-    }
-
-    private func categoryChip(
-        title: String,
-        isSelected: Bool,
-        id: String,
-        action: @escaping () -> Void
-    ) -> some View {
-        Button(action: action) {
-            Text(title)
-                .font(.subheadline.weight(.medium))
-                .foregroundStyle(
-                    isSelected
-                        ? Color(uiColor: Colors.textInverted)
-                        : Color(uiColor: Colors.text)
-                )
-                .padding(.horizontal, 14)
-                .padding(.vertical, 8)
-                .background(
-                    Capsule()
-                        .fill(
-                            isSelected
-                                ? Color(uiColor: Colors.freetag)
-                                : Color(uiColor: Colors.cardBackground)
-                        )
-                )
-        }
-        .buttonStyle(.plain)
-        .id(id)
-    }
-
     private func shopSection(_ section: ShopSection) -> some View {
-        let cellWidth = ClubShopGridLayout.cellWidth
+        let cellWidth = ClubCatalogGridLayout.cellWidth
 
         return VStack(alignment: .leading, spacing: 12) {
             if viewModel.selectedCategoryID == nil {
@@ -179,12 +122,12 @@ public struct ClubShopScreen: View {
                     .font(.footnote.weight(.semibold))
                     .foregroundStyle(Color(uiColor: Colors.secondaryText))
                     .textCase(.uppercase)
-                    .padding(.horizontal, ClubShopGridLayout.screenEdgeInset)
+                    .padding(.horizontal, ClubCatalogGridLayout.screenEdgeInset)
             }
 
             LazyVGrid(
                 columns: [
-                    GridItem(.fixed(cellWidth), spacing: ClubShopGridLayout.columnSpacing),
+                    GridItem(.fixed(cellWidth), spacing: ClubCatalogGridLayout.columnSpacing),
                     GridItem(.fixed(cellWidth)),
                 ],
                 spacing: 16
@@ -193,139 +136,21 @@ public struct ClubShopScreen: View {
                     Button {
                         selectedProduct = product
                     } label: {
-                        ShopProductCardView(
-                            product: product,
+                        ClubCatalogGridCard(
+                            title: ShopProductDisplay.name(for: product),
+                            subtitle: ShopProductDisplay.price(for: product),
+                            imagePath: product.image,
+                            placeholderSystemName: "bag.fill",
                             imageLoader: imageLoader,
-                            cellWidth: cellWidth
+                            cellWidth: cellWidth,
+                            loadTaskID: String(product.id)
                         )
-                        .frame(width: cellWidth, height: ShopGridItemLayout.cardHeight)
                         .contentShape(Rectangle())
                     }
                     .buttonStyle(.plain)
                 }
             }
-            .padding(.horizontal, ClubShopGridLayout.screenEdgeInset)
-        }
-    }
-
-    private func shopEmptyState(symbol: String, title: String, subtitle: String) -> some View {
-        VStack(spacing: 14) {
-            Image(systemName: symbol)
-                .font(.system(size: 44))
-                .foregroundStyle(Color(uiColor: Colors.secondaryText))
-            Text(title)
-                .font(.title3.weight(.semibold))
-                .foregroundStyle(Color(uiColor: Colors.text))
-            Text(subtitle)
-                .font(.subheadline)
-                .foregroundStyle(Color(uiColor: Colors.secondaryText))
-                .multilineTextAlignment(.center)
-                .padding(.horizontal, 32)
-        }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-    }
-}
-
-// MARK: - Product card
-
-private struct ShopProductCardView: View {
-    let product: ShopProduct
-    let imageLoader: ImageLoader
-    let cellWidth: CGFloat
-
-    @State private var image: UIImage?
-    @State private var isLoadingImage = false
-
-    private var imageSlotSize: CGSize {
-        CGSize(width: cellWidth, height: ShopGridItemLayout.imageSlotHeight)
-    }
-
-    private var displayName: String {
-        ShopProductDisplay.name(for: product)
-    }
-
-    private var displayPrice: String? {
-        ShopProductDisplay.price(for: product)
-    }
-
-    var body: some View {
-        VStack(spacing: 0) {
-            photoSlot
-                .frame(width: imageSlotSize.width, height: imageSlotSize.height)
-                .clipped()
-
-            infoBar
-                .frame(width: cellWidth, height: ShopGridItemLayout.infoBarHeight)
-        }
-        .frame(width: cellWidth, height: ShopGridItemLayout.cardHeight)
-        .clipShape(RoundedRectangle(cornerRadius: 14))
-        .shadow(color: .black.opacity(0.08), radius: 6, y: 2)
-        .task(id: product.id) {
-            await loadImageIfNeeded()
-        }
-    }
-
-    @ViewBuilder
-    private var photoSlot: some View {
-        let w = imageSlotSize.width
-        let h = imageSlotSize.height
-        Group {
-            if let image {
-                Image(uiImage: image)
-                    .resizable()
-                    .scaledToFill()
-                    .frame(width: w, height: h)
-                    .clipped()
-            } else if isLoadingImage {
-                SkeletonView()
-                    .frame(width: w, height: h)
-            } else {
-                ZStack {
-                    Color(uiColor: Colors.cardBackground)
-                    Image(systemName: "bag.fill")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(maxWidth: w * 0.45, maxHeight: h * 0.45)
-                        .foregroundStyle(Color(uiColor: Colors.secondaryText))
-                }
-                .frame(width: w, height: h)
-            }
-        }
-    }
-
-    private var infoBar: some View {
-        VStack(alignment: .leading, spacing: 4) {
-            Text(displayName)
-                .font(.headline.weight(.semibold))
-                .foregroundStyle(Color(uiColor: Colors.text))
-                .multilineTextAlignment(.leading)
-                .lineLimit(2)
-                .minimumScaleFactor(0.85)
-
-            if let displayPrice {
-                Text(displayPrice)
-                    .font(.caption)
-                    .foregroundStyle(Color(uiColor: Colors.accentSheet))
-                    .lineLimit(1)
-            }
-
-            Spacer(minLength: 0)
-        }
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-        .padding(.horizontal, 10)
-        .padding(.vertical, 10)
-        .background(Color(uiColor: Colors.cardBackground))
-    }
-
-    private func loadImageIfNeeded() async {
-        guard image == nil else { return }
-        guard let path = product.image?.trimmingCharacters(in: .whitespacesAndNewlines), !path.isEmpty else {
-            return
-        }
-        isLoadingImage = true
-        defer { isLoadingImage = false }
-        if let loaded = try? await imageLoader.loadImage(path: path) {
-            image = loaded
+            .padding(.horizontal, ClubCatalogGridLayout.screenEdgeInset)
         }
     }
 }

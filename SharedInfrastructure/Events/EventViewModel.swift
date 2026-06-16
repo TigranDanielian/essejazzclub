@@ -33,6 +33,7 @@ public final class EventViewModel: ObservableObject {
     public var text: String { presentation.text }
     public var times: [String] { presentation.times }
     public var imageUrlString: String? { presentation.imageUrlString }
+    public var bannerUrlString: String? { presentation.bannerUrlString }
     public var isJazzLab: Bool { presentation.isJazzLab }
     public var date: Date { presentation.date }
     public var isTop: Bool { presentation.isTop }

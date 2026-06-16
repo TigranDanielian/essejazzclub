@@ -6,10 +6,10 @@
 import UIKit
 import Core
 
-enum HTMLBioFormatting {
-    static let detailFont = UIFont.systemFont(ofSize: 14, weight: .medium)
+public enum HTMLBioFormatting {
+    public static let detailFont = UIFont.systemFont(ofSize: 14, weight: .medium)
 
-    static func attributedString(
+    public static func attributedString(
         from html: String,
         color: UIColor = Colors.text
     ) async -> AttributedString? {

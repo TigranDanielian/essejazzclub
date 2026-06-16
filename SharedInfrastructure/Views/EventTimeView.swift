@@ -8,14 +8,14 @@
 import SwiftUI
 import Core
 
-struct EventTimeView: View {
+public struct EventTimeView: View {
     @State private var time: String
     
-    init(time: String) {
+    public init(time: String) {
         self.time = time
     }
 
-    var body: some View {
+    public var body: some View {
         Text(time)
             .padding(2)
             .font(.caption)
