@@ -101,7 +101,7 @@ public extension EventModel {
         dateWithTimes = DateWithTimes(
             id: scheduleItem.id,
             date: scheduleItem.date,
-            times: [Time(id: scheduleItem.id, time: scheduleItem.time)]
+            times: [Time(id: scheduleItem.id, time: scheduleItem.time, bookLink: scheduleItem.bookLink)]
         )
         thumbnailUrl = remote.thumbnail
         bannerUrl = remote.image
@@ -111,5 +111,73 @@ public extension EventModel {
         youTubeLinks = remote.youTubeLinks
         eventId = remote.id
         bookLink = scheduleItem.bookLink
+    }
+
+    /// Слоты одного концерта в один день (и на одной сцене) — одна карточка с несколькими временами.
+    static func mergedFromScheduleItems(_ items: [EventScheduleItem]) -> [EventModel] {
+        mergedCombined(items.map(EventModel.init(scheduleItem:)))
+    }
+
+    static func mergedCombined(_ models: [EventModel]) -> [EventModel] {
+        let calendar = Calendar.current
+
+        struct Key: Hashable {
+            let eventId: String
+            let day: Date
+            let isJazzLab: Bool
+        }
+
+        let grouped = Dictionary(grouping: models) { model in
+            Key(
+                eventId: model.id,
+                day: calendar.startOfDay(for: model.dateWithTimes.date),
+                isJazzLab: model.type == .jazzLab
+            )
+        }
+
+        return grouped.values
+            .map { mergeScheduleOccurrenceGroup($0) }
+            .sorted {
+                if $0.dateWithTimes.date != $1.dateWithTimes.date {
+                    return $0.dateWithTimes.date < $1.dateWithTimes.date
+                }
+                if $0.type != $1.type {
+                    return $0.type == .main
+                }
+                return $0.title.localizedCaseInsensitiveCompare($1.title) == .orderedAscending
+            }
+    }
+
+    private static func mergeScheduleOccurrenceGroup(_ models: [EventModel]) -> EventModel {
+        guard let first = models.first else {
+            fatalError("mergeScheduleOccurrenceGroup requires at least one model")
+        }
+        guard models.count > 1 else { return first }
+
+        let sortedSlots = models.sorted {
+            if $0.dateWithTimes.date != $1.dateWithTimes.date {
+                return $0.dateWithTimes.date < $1.dateWithTimes.date
+            }
+            let t0 = $0.dateWithTimes.times.first?.time ?? .distantPast
+            let t1 = $1.dateWithTimes.times.first?.time ?? .distantPast
+            return t0 < t1
+        }
+
+        var seenTimeIDs = Set<Int>()
+        let mergedTimes = sortedSlots
+            .flatMap(\.dateWithTimes.times)
+            .sorted { $0.time < $1.time }
+            .filter { seenTimeIDs.insert($0.id).inserted }
+
+        let primarySlot = sortedSlots.first { $0.dateWithTimes.id == mergedTimes.first?.id }
+            ?? sortedSlots[0]
+
+        var merged = primarySlot
+        merged.dateWithTimes = DateWithTimes(
+            id: primarySlot.dateWithTimes.id,
+            date: primarySlot.dateWithTimes.date,
+            times: mergedTimes
+        )
+        return merged
     }
 }

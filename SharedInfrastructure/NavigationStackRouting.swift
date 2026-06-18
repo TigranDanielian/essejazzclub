@@ -30,7 +30,9 @@ open class StackNavigationRouter<Route: Hashable & Identifiable>: Router {
     public func present(route: Route, presentation: NavigationPresentationStyle) {
         switch presentation {
         case .push:
-            path.append(route)
+            // Присваивание, не append: NavigationStack(path:) реагирует на setter binding,
+            // in-place мутация @Published-массива стек не обновляет.
+            path = path + [route]
         case .sheet:
             sheetDestination = route
         case .fullScreenCover:
@@ -53,6 +55,6 @@ open class StackNavigationRouter<Route: Hashable & Identifiable>: Router {
 
     public func pop() {
         guard !path.isEmpty else { return }
-        path.removeLast()
+        path = Array(path.dropLast())
     }
 }

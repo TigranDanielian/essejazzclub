@@ -51,6 +51,15 @@ struct EventPresentation {
         isFreeEvent ? "Забронировать" : "Купить билет"
     }
 
+    var bookingSlots: [EventBookingSlot] {
+        model.dateWithTimes.times.compactMap { slot in
+            let url = EventWebsiteLink.resolveBookingURL(from: slot.bookLink ?? model.bookLink)
+                ?? EventWebsiteLink.url(eventId: model.eventId, occurrenceId: slot.id)
+            let label = slot.time.formatted(date: .omitted, time: .shortened)
+            return EventBookingSlot(id: slot.id, timeLabel: label, url: url)
+        }
+    }
+
     var calendarStartDates: [Date] {
         model.dateWithTimes.times.map {
             EventDateFormatting.calendarStartDate(day: model.dateWithTimes.date, time: $0.time)

@@ -23,7 +23,7 @@ public final class ScheduleScreenViewModel: ObservableObject {
     @Published var selectedEvent: EventViewModel?
 
     private var cancellables: Set<AnyCancellable> = []
-    private var loadedEvents: [EventViewModel] = []
+    private var loadedModels: [EventModel] = []
     private var currentPage = 0
     private var isFetchingPage = false
 
@@ -52,7 +52,7 @@ public final class ScheduleScreenViewModel: ObservableObject {
     }
 
     func loadInitialIfNeeded() async {
-        guard loadedEvents.isEmpty, !isFetchingPage else { return }
+        guard loadedModels.isEmpty, !isFetchingPage else { return }
         await reload()
     }
 
@@ -67,7 +67,7 @@ public final class ScheduleScreenViewModel: ObservableObject {
 
         currentPage = 0
         hasMore = false
-        loadedEvents = []
+        loadedModels = []
 
         do {
             try await appendPage(1)
@@ -102,18 +102,10 @@ public final class ScheduleScreenViewModel: ObservableObject {
             per: PaginatedEventScheduleRequest.schedulePageSize
         )
 
-        let newViewModels = response.items.map { item -> EventViewModel in
-            let model = EventModel(scheduleItem: item)
-            return viewModelFactory.produce(
-                unit: .event(hasContextMenu: true, hasDate: false, model)
-            ) as! EventViewModel
-        }
-
-        if page == 1 {
-            loadedEvents = newViewModels
-        } else {
-            loadedEvents.append(contentsOf: newViewModels)
-        }
+        let pageModels = EventModel.mergedFromScheduleItems(response.items)
+        loadedModels = page == 1
+            ? pageModels
+            : EventModel.mergedCombined(loadedModels + pageModels)
 
         currentPage = response.page
         hasMore = response.hasMore
@@ -140,7 +132,13 @@ public final class ScheduleScreenViewModel: ObservableObject {
     }
 
     private func applyFilterAndGroup() {
-        let filtered = loadedEvents.filter { viewModel in
+        let viewModels = loadedModels.map { model in
+            viewModelFactory.produce(
+                unit: .event(hasContextMenu: true, hasDate: false, model)
+            ) as! EventViewModel
+        }
+
+        let filtered = viewModels.filter { viewModel in
             guard !searchInputText.isEmpty else { return true }
             return viewModel.title.lowercased().contains(searchInputText.lowercased())
         }

@@ -16,7 +16,7 @@ public final class HomeScreenViewModel: ObservableObject {
     /// Максимум элементов в каждом горизонтальном слайдере «Избранное» на главной.
     public static let homeFavoritesCarouselLimit = 3
 
-    @Published var mainEvents: [EventViewModel] = []
+    @Published public var mainEvents: [EventViewModel] = []
     @Published var todayEvents: [GroupedEventSection] = []
     @Published var favoriteConcertRows: [FavoriteConcertRow] = []
     @Published var favoriteMusicianRows: [FavoriteMusicianRow] = []
@@ -139,7 +139,7 @@ public final class HomeScreenViewModel: ObservableObject {
         }
     }
 
-    func onEventDetails(_ viewModel: EventViewModel) {
+    public func onEventDetails(_ viewModel: EventViewModel) {
         handleAction(.event(.navigation(.onEventDetails(viewModel))))
     }
 
@@ -157,7 +157,7 @@ public final class HomeScreenViewModel: ObservableObject {
                 profession: row.subtitle,
                 imageUrl: row.imageUrl
             )
-        guard let vm = viewModelFactory.produce(unit: .musician(musician)) as? MusicianViewModel else { return }
-        tabNavigation.presentMusicianDetail(viewModel: vm)
+        guard let viewModel = viewModelFactory.produce(unit: .musician(musician)) as? MusicianViewModel else { return }
+        tabNavigation.presentMusicianDetail(viewModel: viewModel)
     }
 }

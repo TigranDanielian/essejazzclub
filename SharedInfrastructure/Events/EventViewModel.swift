@@ -47,8 +47,10 @@ public final class EventViewModel: ObservableObject {
     public var isFreeEvent: Bool { presentation.isFreeEvent }
     public var bookingButtonTitle: String { presentation.bookingButtonTitle }
 
+    public var bookingSlots: [EventBookingSlot] { presentation.bookingSlots }
+
     public var bookingURL: URL? {
-        EventWebsiteLink.resolveBookingURL(from: model.bookLink)
+        bookingSlots.first?.url
     }
 
     public var occurrenceSlotId: Int { model.dateWithTimes.id }

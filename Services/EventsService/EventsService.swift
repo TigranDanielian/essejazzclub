@@ -135,7 +135,7 @@ public extension EventModel {
             let times = dates.filter({
                 $0.eventId == currentDate.eventId
                 && $0.date == currentDate.date
-            }).map({ Time(id: $0.id, time: $0.time ) })
+            }).map({ Time(id: $0.id, time: $0.time, bookLink: $0.bookLink) })
             
             return DateWithTimes(id: currentDate.id, date: date, times: times)
         }).first(where: { $0.date == currentDate.date }) ?? .init(id: 0, date: Date(), times: [])

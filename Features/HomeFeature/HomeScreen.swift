@@ -15,89 +15,110 @@ public struct HomeScreen: View {
     /// Родитель (`HomeTabShell`) держит VM в `@StateObject` — здесь только наблюдение.
     @ObservedObject public var viewModel: HomeScreenViewModel
     private let uiFactory: any UIFactory
-    private let imageLoader: ImageLoader
 
     public init(
         viewModel: HomeScreenViewModel,
-        uiFactory: any UIFactory,
-        imageLoader: ImageLoader
+        uiFactory: any UIFactory
     ) {
         _viewModel = ObservedObject(wrappedValue: viewModel)
         self.uiFactory = uiFactory
-        self.imageLoader = imageLoader
     }
-    
-    public var body: some View {
-        ScrollView(.vertical) {
-            VStack(alignment: .leading, spacing: 32) {
-                // MARK: - Top events  block
-                if !viewModel.mainEvents.isEmpty {
-                    HomeMainEventsBannerSlider(
-                        events: viewModel.mainEvents,
-                        imageLoader: imageLoader,
-                        onSelect: { viewModel.onEventDetails($0) }
-                    )
+
+    private var hasHeroSlider: Bool {
+        !viewModel.mainEvents.isEmpty
+    }
+
+    public     var body: some View {
+        Group {
+            if hasHeroSlider {
+                HomeTopClampedScrollView(
+                    showsIndicators: false,
+                    scrollClipDisabled: true,
+                    bounces: false
+                ) {
+                    homeSheetContent
                 }
-                
-                // MARK: - Today events block
-                HomeScreenSection(title: "Сегодня") {
-                    DayView(sections: viewModel.todayEvents) { event in
+            } else {
+                ScrollView(.vertical, showsIndicators: false) {
+                    homeSheetContent
+                }
+                .scrollBounceBehavior(.basedOnSize, axes: .vertical)
+                .appScrollContentBackgroundHidden()
+            }
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+    }
+
+    private var homeSheetContent: some View {
+        VStack(alignment: .leading, spacing: 32) {
+            HomeScreenSection(title: "Сегодня") {
+                DayView(sections: viewModel.todayEvents) { event in
+                    AnyView(
                         uiFactory.produce(unit: .event(event))
-                            .onTapGesture {
-                                viewModel.onEventDetails(event)
-                            }
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .contentShape(Rectangle())
+                    )
+                    .onTapGesture {
+                        viewModel.onEventDetails(event)
                     }
                 }
-               
-                
-                // MARK: - Favorites block (до 3 концертов и 3 музыкантов — горизонтальные слайдеры)
-                
-                if !viewModel.favoriteConcertRows.isEmpty || !viewModel.favoriteMusicianRows.isEmpty {
-                    HomeScreenSection(title: "Избранное") {
-                        VStack(alignment: .leading, spacing: 12) {
-                            if !viewModel.favoriteConcertRows.isEmpty {
-                                homeFavoritesSubheader("Концерты")
-                                ScrollView(.horizontal, showsIndicators: false) {
-                                    LazyHStack(alignment: .center, spacing: 12) {
-                                        ForEach(viewModel.favoriteConcertRows) { row in
-                                            AnyView(uiFactory.produce(unit: .favoriteConcertRow(row)))
-                                                .frame(width: homeFavoritesCarouselCardWidth(itemCount: viewModel.favoriteConcertRows.count))
-                                                .contentShape(Rectangle())
-                                                .onTapGesture {
-                                                    viewModel.onFavoriteConcertTap(row)
-                                                }
-                                        }
+            }
+
+            if !viewModel.favoriteConcertRows.isEmpty || !viewModel.favoriteMusicianRows.isEmpty {
+                HomeScreenSection(title: "Избранное") {
+                    VStack(alignment: .leading, spacing: 12) {
+                        if !viewModel.favoriteConcertRows.isEmpty {
+                            homeFavoritesSubheader("Концерты")
+                            ScrollView(.horizontal, showsIndicators: false) {
+                                LazyHStack(alignment: .center, spacing: 12) {
+                                    ForEach(viewModel.favoriteConcertRows) { row in
+                                        AnyView(uiFactory.produce(unit: .favoriteConcertRow(row)))
+                                            .frame(width: homeFavoritesCarouselCardWidth(itemCount: viewModel.favoriteConcertRows.count))
+                                            .fixedSize(horizontal: false, vertical: true)
+                                            .contentShape(Rectangle())
+                                            .onTapGesture {
+                                                viewModel.onFavoriteConcertTap(row)
+                                            }
                                     }
-                                    .padding(.horizontal, 12)
                                 }
+                                .padding(.horizontal, 12)
                             }
-                            
-                            if !viewModel.favoriteMusicianRows.isEmpty {
-                                homeFavoritesSubheader("Музыканты")
-                                ScrollView(.horizontal, showsIndicators: false) {
-                                    LazyHStack(alignment: .center, spacing: 12) {
-                                        ForEach(viewModel.favoriteMusicianRows) { row in
-                                            AnyView(uiFactory.produce(unit: .favoriteMusicianRow(row)))
-                                                .frame(width: homeFavoritesCarouselCardWidth(itemCount: viewModel.favoriteMusicianRows.count))
-                                                .contentShape(Rectangle())
-                                                .onTapGesture {
-                                                    viewModel.onFavoriteMusicianTap(row)
-                                                }
-                                        }
+                            .fixedSize(horizontal: false, vertical: true)
+                        }
+
+                        if !viewModel.favoriteMusicianRows.isEmpty {
+                            homeFavoritesSubheader("Музыканты")
+                            ScrollView(.horizontal, showsIndicators: false) {
+                                LazyHStack(alignment: .center, spacing: 12) {
+                                    ForEach(viewModel.favoriteMusicianRows) { row in
+                                        AnyView(uiFactory.produce(unit: .favoriteMusicianRow(row)))
+                                            .frame(width: homeFavoritesCarouselCardWidth(itemCount: viewModel.favoriteMusicianRows.count))
+                                            .fixedSize(horizontal: false, vertical: true)
+                                            .contentShape(Rectangle())
+                                            .onTapGesture {
+                                                viewModel.onFavoriteMusicianTap(row)
+                                            }
                                     }
-                                    .padding(.horizontal, 12)
                                 }
+                                .padding(.horizontal, 12)
                             }
+                            .fixedSize(horizontal: false, vertical: true)
                         }
                     }
                 }
-                
-                Spacer()
             }
-            .padding(.top, 12)
+
         }
-        .appScrollContentBackgroundHidden()
+        .padding(.top, 16)
+        .padding(.bottom, 24)
+        .frame(maxWidth: .infinity, alignment: .leading)
         .background(Color(uiColor: Colors.mainBackground))
+        .clipShape(
+            UnevenRoundedRectangle(
+                topLeadingRadius: hasHeroSlider ? HomeHeroSheetLayout.sheetCornerRadius : 0,
+                topTrailingRadius: hasHeroSlider ? HomeHeroSheetLayout.sheetCornerRadius : 0
+            )
+        )
     }
 
     private func homeFavoritesSubheader(_ title: String) -> some View {
@@ -120,7 +141,7 @@ struct HomeScreenSection: View {
     var title: String
     var content: () -> any View
     @State private var textWidth: CGFloat = 0
-    
+
     var body: some View {
         ZStack(alignment: .topLeading) {
             TopLeftCutoutShape(
@@ -129,7 +150,7 @@ struct HomeScreenSection: View {
             )
             .fill(Color(uiColor: Colors.altBackground), style: FillStyle(eoFill: true))
             .cornerRadius(12)
-            
+
             Text(title)
                 .font(.largeTitle)
                 .bold()
@@ -146,7 +167,7 @@ struct HomeScreenSection: View {
                 .onPreferenceChange(TextWidthPreferenceKey.self) { value in
                     textWidth = value
                 }
-            
+
             AnyView(content())
                 .padding(.top, 60)
                 .padding(.bottom, 12)
@@ -154,7 +175,3 @@ struct HomeScreenSection: View {
         .cornerRadius(12)
     }
 }
-
-//#Preview {
-//    HomeScreen()
-//}

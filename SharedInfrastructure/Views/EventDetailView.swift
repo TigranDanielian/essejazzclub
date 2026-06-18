@@ -17,6 +17,7 @@ public struct EventDetailView: View {
     private let onSelectUpcomingOccurrence: ((String) -> Void)?
     @State private var attributedText: AttributedString = .init()
     @State private var bookingPresentation: BookingPresentation?
+    @State private var bookingTimePickerPresentation: EventBookingTimePickerPresentation?
 
     public init(
         viewModel: EventViewModel,
@@ -101,16 +102,13 @@ public struct EventDetailView: View {
                                 Spacer()
                             }
 
-                            if displayOptions.showsBuyTicketButton, let bookingURL = viewModel.bookingURL {
+                            if displayOptions.showsBuyTicketButton, !viewModel.bookingSlots.isEmpty {
                                 VStack {
                                     Spacer()
                                     HStack {
                                         Spacer()
                                         BuyButton(title: viewModel.bookingButtonTitle) {
-                                            bookingPresentation = BookingPresentation(
-                                                url: bookingURL,
-                                                title: viewModel.bookingButtonTitle
-                                            )
+                                            presentBooking(for: viewModel)
                                         }
                                     }
                                     .padding(12)
@@ -183,8 +181,35 @@ public struct EventDetailView: View {
             viewModel.cancelImageLoad()
             viewModel.cancelMusiciansLoad()
         }
+        .sheet(item: $bookingTimePickerPresentation) { presentation in
+            EventBookingTimePickerSheet(
+                slots: presentation.slots
+            ) { slot in
+                bookingPresentation = BookingPresentation(
+                    url: slot.url,
+                    title: presentation.bookingTitle
+                )
+            }
+        }
         .sheet(item: $bookingPresentation) { presentation in
             TicketBookingSheet(url: presentation.url, title: presentation.title)
+        }
+    }
+
+    private func presentBooking(for viewModel: EventViewModel) {
+        let slots = viewModel.bookingSlots
+        guard let first = slots.first else { return }
+
+        if slots.count > 1 {
+            bookingTimePickerPresentation = EventBookingTimePickerPresentation(
+                slots: slots,
+                bookingTitle: viewModel.bookingButtonTitle
+            )
+        } else {
+            bookingPresentation = BookingPresentation(
+                url: first.url,
+                title: viewModel.bookingButtonTitle
+            )
         }
     }
 

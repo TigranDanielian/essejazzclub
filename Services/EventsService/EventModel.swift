@@ -65,6 +65,13 @@ public enum PaymentZone: String {
 public struct Time {
     public let id: Int
     public let time: Date
+    public let bookLink: String?
+
+    public init(id: Int, time: Date, bookLink: String? = nil) {
+        self.id = id
+        self.time = time
+        self.bookLink = bookLink
+    }
 }
 
 public struct RemoteEvent: Decodable {

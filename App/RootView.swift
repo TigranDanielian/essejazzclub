@@ -174,6 +174,7 @@ private struct HomeTabShell<RouteContent: View>: View {
     @ViewBuilder let routeView: (HomeNavigationRouter.Route) -> RouteContent
 
     @StateObject private var viewModel: HomeScreenViewModel
+    @State private var navPath: [HomeNavigationRouter.Route] = []
 
     init(
         container: AppContainer,
@@ -197,16 +198,52 @@ private struct HomeTabShell<RouteContent: View>: View {
         )
     }
 
+    private var showsHeroBanner: Bool {
+        !viewModel.mainEvents.isEmpty && navPath.isEmpty
+    }
+
+    private var hasHeroEvents: Bool {
+        !viewModel.mainEvents.isEmpty
+    }
+
     var body: some View {
-        NavigationStack(path: $router.path) {
-            HomeScreen(
-                viewModel: viewModel,
-                uiFactory: container.uiFactory,
-                imageLoader: container.imageLoader
-            )
+        NavigationStack(path: $navPath) {
+            VStack(spacing: hasHeroEvents ? -HomeHeroSheetLayout.sheetOverlap : 0) {
+                if hasHeroEvents {
+                    HomeHeroBanner(
+                        events: viewModel.mainEvents,
+                        imageLoader: container.imageLoader,
+                        onDetails: { viewModel.onEventDetails($0) }
+                    )
+                    .opacity(showsHeroBanner ? 1 : 0)
+                    .allowsHitTesting(showsHeroBanner)
+                    .accessibilityHidden(!showsHeroBanner)
+                }
+
+                HomeScreen(
+                    viewModel: viewModel,
+                    uiFactory: container.uiFactory
+                )
+                .zIndex(1)
                 .navigationDestination(for: HomeNavigationRouter.Route.self) { route in
                     routeView(route)
                 }
+            }
+            .toolbar(.hidden, for: .navigationBar)
+            .toolbarBackground(.hidden, for: .navigationBar)
+            .ignoresSafeArea(edges: .top)
+            .background(Color(uiColor: Colors.mainBackground))
+        }
+        .onAppear {
+            navPath = router.path
+        }
+        .onChange(of: router.path) { _, newPath in
+            guard newPath != navPath else { return }
+            navPath = newPath
+        }
+        .onChange(of: navPath) { _, newPath in
+            guard newPath != router.path else { return }
+            router.path = newPath
         }
         .sheet(item: $router.sheetDestination) { route in
             routeView(route)
