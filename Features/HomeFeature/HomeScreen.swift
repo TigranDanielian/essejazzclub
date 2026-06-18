@@ -28,7 +28,7 @@ public struct HomeScreen: View {
         !viewModel.mainEvents.isEmpty
     }
 
-    public     var body: some View {
+    public var body: some View {
         Group {
             if hasHeroSlider {
                 HomeTopClampedScrollView(

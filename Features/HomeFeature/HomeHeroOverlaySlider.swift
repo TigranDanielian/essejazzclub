@@ -31,10 +31,8 @@ struct HomeHeroOverlaySlider: View {
         .overlay(alignment: .bottom) {
             if events.count > 1 {
                 HomeHeroPageIndicator(count: events.count, selection: selectedIndex)
-                    .padding(
-                        .bottom,
-                        HomeHeroSheetLayout.pageIndicatorBottomInset + HomeHeroSheetLayout.pageIndicatorLift
-                    )
+                    .padding(.bottom, HomeHeroSheetLayout.pageIndicatorBottomInset + HomeHeroSheetLayout.pageIndicatorLift)
+                    .padding(.horizontal, 16)
             }
         }
     }
@@ -45,11 +43,12 @@ private struct HomeHeroPageIndicator: View {
     let selection: Int
 
     var body: some View {
-        HStack(spacing: 8) {
+        HStack(spacing: 2) {
             ForEach(0 ..< count, id: \.self) { index in
-                Circle()
+                Rectangle()
                     .fill(Color.white.opacity(index == selection ? 1 : 0.35))
-                    .frame(width: 7, height: 7)
+                    .frame(height: 3)
+                    .cornerRadius(2)
             }
         }
         .animation(.easeInOut(duration: 0.2), value: selection)
