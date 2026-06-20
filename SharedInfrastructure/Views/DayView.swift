@@ -44,7 +44,7 @@ public struct DayView: View {
             }
                 
             VStack(alignment: .leading, spacing: 20) {
-                ForEach(sections) { section in
+                ForEach(sections.filter({ !$0.events.isEmpty })) { section in
                     VStack(alignment: .leading, spacing: 8) {
                         Text(section.type.rawValue.uppercased())
                             .font(.headline)

@@ -238,8 +238,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "35"
             endingLineNumber = "35"
-            landmarkName = "init(eventsService:viewModelFactory:tabNavigation:contextHandler:)"
-            landmarkType = "7">
+            landmarkName = "listEmptyState"
+            landmarkType = "24">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -254,8 +254,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "40"
             endingLineNumber = "40"
-            landmarkName = "init(eventsService:viewModelFactory:tabNavigation:contextHandler:)"
-            landmarkType = "7">
+            landmarkName = "listEmptyState"
+            landmarkType = "24">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -270,8 +270,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "36"
             endingLineNumber = "36"
-            landmarkName = "init(eventsService:viewModelFactory:tabNavigation:contextHandler:)"
-            landmarkType = "7">
+            landmarkName = "listEmptyState"
+            landmarkType = "24">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -286,8 +286,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "29"
             endingLineNumber = "29"
-            landmarkName = "ScheduleScreenViewModel"
-            landmarkType = "3">
+            landmarkName = "isSearchActive"
+            landmarkType = "24">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -490,7 +490,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "109"
             endingLineNumber = "109"
-            landmarkName = "body"
+            landmarkName = "searchHeader"
             landmarkType = "24">
          </BreakpointContent>
       </BreakpointProxy>
@@ -808,8 +808,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "143"
             endingLineNumber = "143"
-            landmarkName = "onEventDetails(_:)"
-            landmarkType = "7">
+            landmarkName = "HomeScreenViewModel"
+            landmarkType = "3">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy

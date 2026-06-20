@@ -41,6 +41,7 @@
 		26C712BCD68202DD7578FA0B /* Services.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 7AC7774ED32ECC57C344CE2C /* Services.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		26E7EAE92227C8FD190BBFAD /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CDF1605888301165977862B5 /* Preview Assets.xcassets */; };
 		282CE10E8824CF7F4B749573 /* SharedInfrastructure.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 309260A176D68C1D5FACFB49 /* SharedInfrastructure.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		2BCA7FFA640045C8B1E5BC9E /* ScheduleEmptyStateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 252C53A318413AD1A6751FE4 /* ScheduleEmptyStateView.swift */; };
 		2C9F7F65761308EC75678042 /* EventsGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB17BDC17CB2F2CFAB6D6052 /* EventsGroup.swift */; };
 		2D43331BD409F721469E59C5 /* EventShareCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A85B49095E7D1C05B5930E28 /* EventShareCoordinator.swift */; };
 		2D694CF94BB2A1AA9D8DF4DE /* FavoriteEventDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83A0A8DABF57BC3D3FDE3768 /* FavoriteEventDetailViewModel.swift */; };
@@ -78,6 +79,7 @@
 		5312C0725DDD9CD2B258C92B /* AppAppearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62F90AAD676C9549448266D6 /* AppAppearance.swift */; };
 		537901BA3F43601951EBC25B /* DetailHeroImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E214287787249CD4C7554890 /* DetailHeroImageView.swift */; };
 		53A6E5B198B95056BD9BA921 /* SkeletonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75293FAF798CAF048BF32B44 /* SkeletonView.swift */; };
+		53AE6523205021AA2CB5CF9F /* ScheduleListEmptyState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89DE6D672E30A0FE0CED0090 /* ScheduleListEmptyState.swift */; };
 		55F2C9525305DE4BC9E152B4 /* ClubScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59B7DFC916EEA740D9B5249E /* ClubScreen.swift */; };
 		56F2DC0FC39B5F24EC662DC8 /* ScheduleScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = A765291C7B33841FA000DBE9 /* ScheduleScreen.swift */; };
 		58441607B6D39095966BB4AA /* MusicianRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A8E6002DA4D3620A18E915E /* MusicianRowView.swift */; };
@@ -501,6 +503,7 @@
 		1BFA4F8E1147273EAC6ED1E2 /* ScheduleEventFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleEventFilter.swift; sourceTree = "<group>"; };
 		1C530DD5F05AE5BDB6CE6DB3 /* ClubFeaturesSlider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClubFeaturesSlider.swift; sourceTree = "<group>"; };
 		246C0095DAE977ABEDBFDA76 /* HomeScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeScreen.swift; sourceTree = "<group>"; };
+		252C53A318413AD1A6751FE4 /* ScheduleEmptyStateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleEmptyStateView.swift; sourceTree = "<group>"; };
 		267A4E3F447272BAB362E32B /* ScheduleScreenViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleScreenViewModel.swift; sourceTree = "<group>"; };
 		269F751622560AE3FD937B96 /* HomeFeature.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = HomeFeature.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		26F5315A47E44DA78FEF345D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -567,6 +570,7 @@
 		83A0A8DABF57BC3D3FDE3768 /* FavoriteEventDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteEventDetailViewModel.swift; sourceTree = "<group>"; };
 		87155370A455631D77766E51 /* HomeHeroBanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeHeroBanner.swift; sourceTree = "<group>"; };
 		8731D18EFC904EB20AAE469F /* TopLeftCutoutShape.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopLeftCutoutShape.swift; sourceTree = "<group>"; };
+		89DE6D672E30A0FE0CED0090 /* ScheduleListEmptyState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleListEmptyState.swift; sourceTree = "<group>"; };
 		8AEB26D2DE114D29BF5069B5 /* ClubNavigationRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClubNavigationRouter.swift; sourceTree = "<group>"; };
 		8F3D9EFA19BBA4754BA40D44 /* ImageLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageLoader.swift; sourceTree = "<group>"; };
 		8FE413E445BA23D2525E1FEC /* HomeTabNavigating.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeTabNavigating.swift; sourceTree = "<group>"; };
@@ -1041,6 +1045,7 @@
 				1BFA4F8E1147273EAC6ED1E2 /* ScheduleEventFilter.swift */,
 				E476248A6F139AFF3009DF78 /* ScheduleFilterScreen.swift */,
 				3374ABC07D16F06EC5F33058 /* ScheduleFilterViewModel.swift */,
+				89DE6D672E30A0FE0CED0090 /* ScheduleListEmptyState.swift */,
 				E3DD0115914E3692111892B2 /* ScheduleNavigationRouter.swift */,
 				A765291C7B33841FA000DBE9 /* ScheduleScreen.swift */,
 				267A4E3F447272BAB362E32B /* ScheduleScreenViewModel.swift */,
@@ -1161,6 +1166,7 @@
 			isa = PBXGroup;
 			children = (
 				E5CCBC924798254BD20D8931 /* ScheduleDayView.swift */,
+				252C53A318413AD1A6751FE4 /* ScheduleEmptyStateView.swift */,
 				4739388B2A7F6E49661ED603 /* ScheduleEventView.swift */,
 			);
 			path = Views;
@@ -1665,10 +1671,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				3C789594F1FC1EF39A2D2788 /* ScheduleDayView.swift in Sources */,
+				2BCA7FFA640045C8B1E5BC9E /* ScheduleEmptyStateView.swift in Sources */,
 				BC258E4FE9C5373B6AF28F65 /* ScheduleEventFilter.swift in Sources */,
 				7342EBDC2064817AF133524B /* ScheduleEventView.swift in Sources */,
 				D00E9A7FD8A6FF2EC3D3C8AB /* ScheduleFilterScreen.swift in Sources */,
 				BE3A8589BFE12A76BEC733DC /* ScheduleFilterViewModel.swift in Sources */,
+				53AE6523205021AA2CB5CF9F /* ScheduleListEmptyState.swift in Sources */,
 				8F763DDCE56A8518DFCC8062 /* ScheduleNavigationRouter.swift in Sources */,
 				56F2DC0FC39B5F24EC662DC8 /* ScheduleScreen.swift in Sources */,
 				44B519DBB76201C9B2B6B135 /* ScheduleScreenViewModel.swift in Sources */,
@@ -1905,7 +1913,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_TEAM = UBJG79G298;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "Supporting Files/Info.plist";
@@ -2065,7 +2073,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_TEAM = UBJG79G298;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "Supporting Files/Info.plist";
@@ -2226,7 +2234,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_TEAM = UBJG79G298;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "Supporting Files/Info.plist";
@@ -2253,7 +2261,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_TEAM = UBJG79G298;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "Supporting Files/Info.plist";

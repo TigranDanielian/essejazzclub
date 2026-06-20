@@ -9,6 +9,10 @@ import SwiftUI
 import Core
 import SharedInfrastructure
 
+private enum ScheduleScreenLayout {
+    static let searchHeaderHeight: CGFloat = 52
+}
+
 public struct ScheduleScreen: View {
     private var uiFactory: any UIFactory
     /// Родитель (`ScheduleTabShell`) держит VM в `@StateObject` — здесь только наблюдение.
@@ -27,98 +31,115 @@ public struct ScheduleScreen: View {
     }
     
     public var body: some View {
-        ZStack(alignment: .topLeading) {
-            ScrollView {
-                GeometryReader { geo in
-                    Color.clear.preference(
-                        key: ScrollOffsetPreferenceKey.self,
-                        value: geo.frame(in: .global).minY
-                    )
-                }
-                .frame(height: 1)
-                .onPreferenceChange(ScrollOffsetPreferenceKey.self) { value in
-                    if initialOffset == nil {
-                        initialOffset = value
-                        return
-                    }
-                    
-                    let offset = value - (initialOffset ?? 0)
-                    let prev = prevOffset ?? 0
-                    
-                    // Hides search header while scrolling down, and shows when scrolling up
-                    
-                    if offset < 60, prev > offset, !isHeaderHidden {
-                        withAnimation(.easeInOut(duration: 0.2)) {
-                            isHeaderHidden = true
-                        }
-                    } else if prev < offset, isHeaderHidden {
-                        withAnimation(.easeInOut(duration: 0.2)) {
-                            isHeaderHidden = false
-                        }
-                    }
-                    
-                    prevOffset = offset
-                }
-                
-                LazyVStack(alignment: .leading, spacing: 16) {
-                    if viewModel.isLoading, viewModel.grouped.isEmpty {
-                        ProgressView()
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, 48)
-                    } else {
-                        ForEach(viewModel.grouped) { day in
-                            ScheduleDayView(
-                                eventsDay: day,
-                                actionHandler: { viewModel.handleAction(.event($0)) },
-                                uiFactory: uiFactory
-                            )
-                        }
-
-                        if viewModel.hasMore {
-                            paginationFooter
-                        }
-                    }
-                }
-                .padding(.top, 20)
-                .offset(y: 36)
-            }
-            .appScrollContentBackgroundHidden()
-            .scrollDismissesKeyboard(.immediately)
-            .scrollIndicators(.hidden)
-            .refreshable {
-                await viewModel.refresh()
-            }
-            .task {
-                await viewModel.loadInitialIfNeeded()
-            }
-            
-            HStack(spacing: 8) {
-                AnyView(
-                    uiFactory.produce(
-                        unit: .searchTextField($viewModel.searchInputText, prompt: "Название мероприятия")
-                    )
+        ScrollView {
+            GeometryReader { geo in
+                Color.clear.preference(
+                    key: ScrollOffsetPreferenceKey.self,
+                    value: geo.frame(in: .global).minY
                 )
-                
-                Button {
-                    viewModel.openFilter()
-                } label: {
-                    ZStack(alignment: .topTrailing) {
-                        Image(uiImage: UIImage(resource: .filter).withRenderingMode(.alwaysTemplate))
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 32, height: 32)
-                            .foregroundStyle(Color(uiColor: viewModel.isFilterActive ? Colors.accentSheet : Colors.secondaryText))
+            }
+            .frame(height: 1)
+            .onPreferenceChange(ScrollOffsetPreferenceKey.self) { value in
+                if initialOffset == nil {
+                    initialOffset = value
+                    return
+                }
+
+                let offset = value - (initialOffset ?? 0)
+                let prev = prevOffset ?? 0
+
+                if offset < 60, prev > offset, !isHeaderHidden {
+                    withAnimation(.easeInOut(duration: 0.2)) {
+                        isHeaderHidden = true
+                    }
+                } else if prev < offset, isHeaderHidden {
+                    withAnimation(.easeInOut(duration: 0.2)) {
+                        isHeaderHidden = false
                     }
                 }
-                .padding(.trailing, 4)
+
+                prevOffset = offset
             }
-            .padding(.horizontal, 12)
-            .padding(.vertical, 8)
-            .opacity(isHeaderHidden ? 0 : 1)
-            .offset(y: isHeaderHidden ? -20 : 0)
-            
+
+            LazyVStack(alignment: .leading, spacing: 16) {
+                if viewModel.isLoading, viewModel.grouped.isEmpty {
+                    ProgressView()
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 48)
+                } else if let emptyState = viewModel.listEmptyState {
+                    ScheduleEmptyStateView(state: emptyState)
+                } else {
+                    ForEach(viewModel.grouped) { day in
+                        ScheduleDayView(
+                            eventsDay: day,
+                            actionHandler: { viewModel.handleAction(.event($0)) },
+                            uiFactory: uiFactory
+                        )
+                    }
+
+                    if viewModel.hasMore {
+                        paginationFooter
+                    }
+                }
+            }
+            .padding(.top, 20)
+            .frame(minHeight: UIScreen.screenHeight - 120)
+        }
+        .appScrollContentBackgroundHidden()
+        .scrollDismissesKeyboard(.immediately)
+        .scrollIndicators(.hidden)
+        .safeAreaInset(edge: .top, spacing: 0) {
+            searchHeader
+        }
+        .refreshable {
+            await viewModel.refresh()
+        }
+        .task {
+            await viewModel.loadInitialIfNeeded()
         }
         .background(Color(uiColor: Colors.mainBackground))
+    }
+
+    private var searchHeader: some View {
+        HStack(spacing: 8) {
+            AnyView(
+                uiFactory.produce(
+                    unit: .searchTextField(
+                        searchBinding,
+                        prompt: "Название мероприятия",
+                        onClear: { viewModel.clearSearchInput() }
+                    )
+                )
+            )
+
+            Button {
+                viewModel.openFilter()
+            } label: {
+                ZStack(alignment: .topTrailing) {
+                    Image(uiImage: UIImage(resource: .filter).withRenderingMode(.alwaysTemplate))
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 32, height: 32)
+                        .foregroundStyle(Color(uiColor: viewModel.isFilterActive ? Colors.accentSheet : Colors.secondaryText))
+                }
+            }
+            .padding(.trailing, 4)
+        }
+        .padding(.horizontal, 12)
+        .padding(.vertical, 8)
+        .frame(height: ScheduleScreenLayout.searchHeaderHeight)
+        .background(Color(uiColor: Colors.mainBackground))
+        .opacity(isHeaderHidden ? 0 : 1)
+        .offset(y: isHeaderHidden ? -ScheduleScreenLayout.searchHeaderHeight : 0)
+        .allowsHitTesting(!isHeaderHidden)
+        .animation(.easeInOut(duration: 0.2), value: isHeaderHidden)
+    }
+
+    private var searchBinding: Binding<String> {
+        Binding(
+            get: { viewModel.searchInputText },
+            set: { viewModel.setSearchInput($0) }
+        )
     }
 
     private var paginationFooter: some View {

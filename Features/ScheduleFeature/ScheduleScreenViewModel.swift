@@ -25,7 +25,21 @@ public final class ScheduleScreenViewModel: ObservableObject {
 
     public var isFilterActive: Bool { filter.isActive }
 
-    private var cancellables: Set<AnyCancellable> = []
+    var isSearchActive: Bool {
+        !searchInputText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+    }
+
+    var listEmptyState: ScheduleListEmptyState? {
+        guard !isLoading, grouped.isEmpty else { return nil }
+        if isSearchActive || isFilterActive {
+            return .noMatchingResults
+        }
+        if loadedModels.isEmpty {
+            return .noEvents
+        }
+        return .noMatchingResults
+    }
+
     private var loadedModels: [EventModel] = []
     private var currentPage = 0
     private var isFetchingPage = false
@@ -45,13 +59,17 @@ public final class ScheduleScreenViewModel: ObservableObject {
         self.viewModelFactory = viewModelFactory
         self.tabNavigation = tabNavigation
         self.contextHandler = contextHandler
+    }
 
-        $searchInputText
-            .removeDuplicates()
-            .sink { [weak self] _ in
-                self?.applyFilterAndGroup()
-            }
-            .store(in: &cancellables)
+    func setSearchInput(_ text: String) {
+        guard searchInputText != text else { return }
+        searchInputText = text
+        applyFilterAndGroup()
+    }
+
+    func clearSearchInput() {
+        searchInputText = ""
+        applyFilterAndGroup()
     }
 
     func loadInitialIfNeeded() async {
@@ -135,6 +153,8 @@ public final class ScheduleScreenViewModel: ObservableObject {
     }
 
     private func applyFilterAndGroup() {
+        let query = searchInputText.trimmingCharacters(in: .whitespacesAndNewlines)
+
         let viewModels = loadedModels.map { model in
             viewModelFactory.produce(
                 unit: .event(hasContextMenu: true, hasDate: false, model)
@@ -142,8 +162,8 @@ public final class ScheduleScreenViewModel: ObservableObject {
         }
 
         let filtered = viewModels.filter { viewModel in
-            if !searchInputText.isEmpty,
-               !viewModel.title.lowercased().contains(searchInputText.lowercased()) {
+            if !query.isEmpty,
+               !viewModel.title.lowercased().contains(query.lowercased()) {
                 return false
             }
             return filter.matches(viewModel)

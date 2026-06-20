@@ -50,9 +50,9 @@ private struct ClubNavigationShell: View {
             ScrollView(.vertical, showsIndicators: false) {
                 VStack(alignment: .leading, spacing: 28) {
                     clubIdentityHeader
-
-                    ClubFeaturesSlider(items: bannerItems)
-                        .frame(height: 220)
+//
+//                    ClubFeaturesSlider(items: bannerItems)
+//                        .frame(height: 220)
 
                     hubSectionGroups
                 }

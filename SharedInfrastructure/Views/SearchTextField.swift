@@ -11,27 +11,45 @@ import Core
 struct SearchTextField: View {
     @Binding var textInput: String
     var prompt: String = "Search event"
+    var onClear: (() -> Void)?
 
     var body: some View {
         HStack {
             Image(systemName: "magnifyingglass")
                 .foregroundColor(Color(uiColor: Colors.secondaryText))
                 .padding(4)
-            
-            TextField(
-                "",
-                text: $textInput,
-                prompt: Text(prompt).foregroundColor(Color(uiColor: Colors.secondaryText))
-            )
-            .padding([.trailing, .vertical], 8)
-            .foregroundColor(Color(uiColor: Colors.text))
-            .background(.clear)
-            .tint(Color(uiColor: Colors.text))
-            
+
+            ZStack(alignment: .trailing) {
+                TextField(
+                    "",
+                    text: $textInput,
+                    prompt: Text(prompt).foregroundColor(Color(uiColor: Colors.secondaryText))
+                )
+                .padding([.trailing, .vertical], 8)
+                .foregroundColor(Color(uiColor: Colors.text))
+                .background(.clear)
+                .tint(Color(uiColor: Colors.text))
+
+                if !textInput.isEmpty {
+                    Button(action: clearInput) {
+                        Image(systemName: "xmark.circle.fill")
+                            .foregroundColor(Color(uiColor: Colors.secondaryText))
+                    }
+                }
+            }
+
             Spacer()
         }
         .background(Color(uiColor: Colors.cardBackground))
         .cornerRadius(8)
+    }
+
+    private func clearInput() {
+        if let onClear {
+            onClear()
+        } else {
+            textInput = ""
+        }
     }
 }
 

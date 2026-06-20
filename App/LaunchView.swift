@@ -99,6 +99,14 @@ private struct LaunchSpotlightBackground: View {
                         core: Color.appText.opacity(0.1),
                         halo: Color.appAccent.opacity(0.08)
                     )
+                    
+                    spotlightBeam(
+                        center: secondaryCenter,
+                        radius: beamRadius * 0.72,
+                        intensity: beamIntensity,
+                        core: Color.appText.opacity(0.1),
+                        halo: Color.appTopEvent.opacity(0.08)
+                    )
                 }
             }
         }
@@ -146,12 +154,18 @@ private struct LaunchSpotlightBackground: View {
 
 private struct LaunchLogoView: View {
     var body: some View {
-        Image(ImageResource.logoBlackEng)
-            .renderingMode(.template)
-            .resizable()
-            .scaledToFit()
-            .foregroundStyle(Color.appText)
-            .padding(.horizontal, 40)
+        TimelineView(.animation(minimumInterval: 1.0 / 30.0)) { context in
+            let time = context.date.timeIntervalSinceReferenceDate
+            let breath = (sin(time * 1.1) + 1) / 2
+
+            Image(ImageResource.logoBlackEng)
+                .renderingMode(.template)
+                .resizable()
+                .scaledToFit()
+                .foregroundStyle(Color.appText)
+                .scaleEffect(0.985 + breath * 0.03)
+                .padding(.horizontal, 40)
+        }
     }
 }
 
