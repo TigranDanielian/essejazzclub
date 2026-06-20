@@ -143,7 +143,7 @@ struct HomeScreenSection: View {
                 cutoutSize: CGSize(width: textWidth, height: 48),
                 cornerRadius: 12
             )
-            .fill(Color(uiColor: Colors.altBackground), style: FillStyle(eoFill: true))
+            .fill(DayBlockBackground.gradient, style: FillStyle(eoFill: true))
             .cornerRadius(12)
 
             Text(title)

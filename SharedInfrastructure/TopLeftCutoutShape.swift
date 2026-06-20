@@ -7,6 +7,21 @@
 
 import Foundation
 import SwiftUI
+import Core
+
+public enum DayBlockBackground {
+    public static var gradient: LinearGradient {
+        LinearGradient(
+            colors: [
+                Color(uiColor: Colors.dayBlockGradientTop),
+                Color(uiColor: Colors.dayBlock),
+                Color(uiColor: Colors.background),
+            ],
+            startPoint: .topLeading,
+            endPoint: .bottomTrailing
+        )
+    }
+}
 
 public struct TopLeftCutoutShape: Shape {
     let cutoutSize: CGSize

@@ -29,9 +29,8 @@ struct EventDetailHeroSlider: View {
         if videoIDs.isEmpty {
             return [.photo]
         }
-        var result = videoIDs.map { EventDetailHeroSlide.youtube($0) }
-        result.append(.photo)
-        return result
+        
+        return [.photo] + videoIDs.map { EventDetailHeroSlide.youtube($0) }
     }
 
     /// Как у прежнего `scaledToFit` по ширине карточки; пока нет картинки — 16:9.

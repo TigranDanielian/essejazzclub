@@ -21,7 +21,7 @@ struct ScheduleDayView: View {
                 cutoutSize: CGSize(width: textWidth, height: 36),
                 cornerRadius: 12
             )
-            .fill(Color(uiColor: Colors.altBackground), style: FillStyle(eoFill: true))
+            .fill(DayBlockBackground.gradient, style: FillStyle(eoFill: true))
             .cornerRadius(12)
             
             DayView(title: eventsDay.dateString, sections: eventsDay.sections, textWidth: $textWidth) { eventViewModel in

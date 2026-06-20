@@ -129,7 +129,11 @@ public struct HomeHeroBanner: View {
                     .onTapGesture { goToPreviousStory() }
 
                 Color.clear
-                    .allowsHitTesting(false)
+                    .contentShape(Rectangle())
+                    .onTapGesture {
+                        guard events.indices.contains(selectedIndex) else { return }
+                        onDetails(events[selectedIndex])
+                    }
 
                 Color.clear
                     .contentShape(Rectangle())
@@ -287,27 +291,14 @@ struct HomeHeroOverlaySlide: View {
                         }
                     }
                 }
-
-                Button(action: onDetails) {
-                    Text("Подробнее")
-                        .font(.subheadline.weight(.semibold))
-                        .foregroundStyle(Color(uiColor: Colors.textInverted))
-                        .padding(.horizontal, 18)
-                        .padding(.vertical, 9)
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 10)
-                                .stroke(Color.white.opacity(0.9), lineWidth: 1)
-                        )
-                        .contentShape(Rectangle())
-                }
-                .buttonStyle(.plain)
-                .padding(.top, 4)
             }
             .padding(.horizontal, 20)
             .padding(.top, UIScreen.safeAreaTop + 12)
             .padding(.bottom, 56)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         }
+        .contentShape(Rectangle())
+        .onTapGesture(perform: onDetails)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .ignoresSafeArea(edges: .top)
         .task(id: event.occurrenceIdentifier) {

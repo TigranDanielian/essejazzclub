@@ -48,6 +48,16 @@ public enum Colors {
     /// Текст на индиго-акцентном фоне (кнопки, чипы).
     public static var textOnAccent: UIColor { textPrimary }
 
+    /// Фон дневного блока — темнее elevated surface.
+    public static var dayBlock: UIColor {
+        UIColor(hex: "101828")
+    }
+
+    /// Верх градиента дневного блока.
+    public static var dayBlockGradientTop: UIColor {
+        UIColor(hex: "141B2E")
+    }
+
     /// Топ-мероприятия (isTop) — глубокий тёмно-бордовый.
     public static var topEvent: UIColor {
         UIColor(hex: "452020")

@@ -92,7 +92,7 @@ public struct ScheduleScreen: View {
                 await viewModel.loadInitialIfNeeded()
             }
             
-            HStack {
+            HStack(spacing: 8) {
                 AnyView(
                     uiFactory.produce(
                         unit: .searchTextField($viewModel.searchInputText, prompt: "Название мероприятия")
@@ -107,16 +107,8 @@ public struct ScheduleScreen: View {
                             .resizable()
                             .scaledToFit()
                             .frame(width: 32, height: 32)
-                            .foregroundStyle(Color(uiColor: Colors.secondaryText))
-
-                        if viewModel.isFilterActive {
-                            Circle()
-                                .fill(Color(uiColor: Colors.accentSheet))
-                                .frame(width: 8, height: 8)
-                                .offset(x: 2, y: -2)
-                        }
+                            .foregroundStyle(Color(uiColor: viewModel.isFilterActive ? Colors.accentSheet : Colors.secondaryText))
                     }
-                    .cornerRadius(8)
                 }
                 .padding(.trailing, 4)
             }
