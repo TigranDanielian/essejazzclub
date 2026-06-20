@@ -31,13 +31,28 @@ public struct GroupedEventSection: Identifiable {
     public let type: EventStageSection
     public let events: [EventViewModel]
 
+    @MainActor
     public init(type: EventStageSection, events: [EventViewModel]) {
         self.type = type
-        self.events = events
+        self.events = events.sortedByStartTime()
     }
 }
 
 public enum EventStageSection: String {
     case mainStage = "Главная сцена, 2 этаж"
     case jazzLab = "Jazz Lab, 1 этаж"
+}
+
+@MainActor
+private extension Array where Element == EventViewModel {
+    func sortedByStartTime() -> [EventViewModel] {
+        sorted { lhs, rhs in
+            let lhsStart = lhs.calendarStartDates.min() ?? lhs.date
+            let rhsStart = rhs.calendarStartDates.min() ?? rhs.date
+            if lhsStart != rhsStart {
+                return lhsStart < rhsStart
+            }
+            return lhs.title.localizedCaseInsensitiveCompare(rhs.title) == .orderedAscending
+        }
+    }
 }

@@ -14,8 +14,16 @@ public enum HomeHeroSheetLayout {
     /// На сколько поднять точки над исходным положением.
     public static let pageIndicatorLift: CGFloat = 8
 
-    /// Шит наезжает на баннер до линии исходных точек.
+    /// Отступ прогресс-бара stories от низа баннера.
+    public static var storyProgressBottomInset: CGFloat {
+        pageIndicatorBottomInset + pageIndicatorLift
+    }
+
+    /// Шит наезжает на баннер до линии индикатора.
     public static var sheetOverlap: CGFloat {
         pageIndicatorBottomInset
     }
+
+    /// Длительность одного «сторис»-слайда в герой-баннере.
+    public static let storyDuration: TimeInterval = 7
 }

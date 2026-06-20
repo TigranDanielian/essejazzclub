@@ -199,20 +199,17 @@ private struct HomeTabShell<RouteContent: View>: View {
     }
 
     private var showsHeroBanner: Bool {
-        !viewModel.mainEvents.isEmpty && navPath.isEmpty
-    }
-
-    private var hasHeroEvents: Bool {
-        !viewModel.mainEvents.isEmpty
+        viewModel.hasHeroBanner && navPath.isEmpty
     }
 
     var body: some View {
         NavigationStack(path: $navPath) {
-            VStack(spacing: hasHeroEvents ? -HomeHeroSheetLayout.sheetOverlap : 0) {
-                if hasHeroEvents {
+            VStack(spacing: viewModel.hasHeroBanner ? -HomeHeroSheetLayout.sheetOverlap : 0) {
+                if viewModel.hasHeroBanner {
                     HomeHeroBanner(
                         events: viewModel.mainEvents,
                         imageLoader: container.imageLoader,
+                        isPlaybackActive: showsHeroBanner,
                         onDetails: { viewModel.onEventDetails($0) }
                     )
                     .opacity(showsHeroBanner ? 1 : 0)

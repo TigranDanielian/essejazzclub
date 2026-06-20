@@ -83,6 +83,7 @@ public struct ScheduleScreen: View {
                 .offset(y: 36)
             }
             .appScrollContentBackgroundHidden()
+            .scrollDismissesKeyboard(.immediately)
             .scrollIndicators(.hidden)
             .refreshable {
                 await viewModel.refresh()

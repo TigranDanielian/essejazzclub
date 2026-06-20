@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import Combine
 import Core
 import Services
 import SharedInfrastructure
@@ -24,13 +23,9 @@ public struct HomeScreen: View {
         self.uiFactory = uiFactory
     }
 
-    private var hasHeroSlider: Bool {
-        !viewModel.mainEvents.isEmpty
-    }
-
     public var body: some View {
         Group {
-            if hasHeroSlider {
+            if viewModel.hasHeroBanner {
                 HomeTopClampedScrollView(
                     showsIndicators: false,
                     scrollClipDisabled: true,
@@ -115,8 +110,8 @@ public struct HomeScreen: View {
         .background(Color(uiColor: Colors.mainBackground))
         .clipShape(
             UnevenRoundedRectangle(
-                topLeadingRadius: hasHeroSlider ? HomeHeroSheetLayout.sheetCornerRadius : 0,
-                topTrailingRadius: hasHeroSlider ? HomeHeroSheetLayout.sheetCornerRadius : 0
+                topLeadingRadius: viewModel.hasHeroBanner ? HomeHeroSheetLayout.sheetCornerRadius : 0,
+                topTrailingRadius: viewModel.hasHeroBanner ? HomeHeroSheetLayout.sheetCornerRadius : 0
             )
         )
     }

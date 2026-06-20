@@ -21,6 +21,8 @@ public final class HomeScreenViewModel: ObservableObject {
     @Published var favoriteConcertRows: [FavoriteConcertRow] = []
     @Published var favoriteMusicianRows: [FavoriteMusicianRow] = []
 
+    public var hasHeroBanner: Bool { !mainEvents.isEmpty }
+
     private var cancellables: Set<AnyCancellable> = []
     private var musiciansCatalog: [Musician] = []
     private let viewModelFactory: ViewModelFactory
