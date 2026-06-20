@@ -61,8 +61,8 @@ public struct MusicianDetailsView: View {
             .appScrollContentBackgroundHidden()
 
             HStack(spacing: 10) {
-                EventContextButton(
-                    viewModel: viewModel.favoriteButtonViewModel,
+                FavoriteContextButton(
+                    viewModel: viewModel.favoriteHeartButtonViewModel,
                     onTap: { actionHandler(.favorite(viewModel.favoriteStorageId)) }
                 )
             }

@@ -11,19 +11,6 @@ import Core
 import UIKit
 
 enum EventContextButtonPublishers {
-    static func favoriteHeart(
-        favoritesStorage: FavoritesStorage<String>,
-        value: String,
-        key: FavoritesStorageKey
-    ) -> AnyPublisher<UIImage?, Never> {
-        favoritesStorage
-            .isFavoritePublisher(for: value, key: key)
-            .map { isFavorite in
-                UIImage(systemName: isFavorite ? "heart.fill" : "heart")
-            }
-            .eraseToAnyPublisher()
-    }
-
     static func staticIcon(named imageName: String) -> AnyPublisher<UIImage?, Never> {
         Just(UIImage(systemName: imageName)).eraseToAnyPublisher()
     }
@@ -51,22 +38,45 @@ enum EventContextButtonPublishers {
     }
 }
 
+@MainActor
+public final class FavoriteHeartButtonViewModel: ObservableObject {
+    @Published private(set) var isFavorite = false
+
+    private var cancellable: AnyCancellable?
+
+    public init(
+        favoritesStorage: FavoritesStorage<String>,
+        value: String,
+        key: FavoritesStorageKey
+    ) {
+        cancellable = favoritesStorage
+            .isFavoritePublisher(for: value, key: key)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] isFavorite in
+                self?.isFavorite = isFavorite
+            }
+    }
+}
+
 public struct EventContextButtons: View {
     @ObservedObject public var viewModel: EventViewModel
     public var onTap: (EventContextButtonType) -> Void
-    
+
     public init(viewModel: EventViewModel, onTap: @escaping (EventContextButtonType) -> Void) {
         self.viewModel = viewModel
         self.onTap = onTap
     }
-    
+
     public var body: some View {
         VStack(alignment: .trailing) {
             HStack(alignment: .top) {
-                EventContextButton(viewModel: viewModel.favoriteButtonViewModel, onTap: { onTap(.favorite(viewModel.eventId)) })
+                FavoriteContextButton(
+                    viewModel: viewModel.favoriteHeartButtonViewModel,
+                    onTap: { onTap(.favorite(viewModel.eventId)) }
+                )
                 EventContextButton(viewModel: viewModel.calendarButtonViewModel, onTap: { onTap(.calendar(viewModel)) })
             }
-            
+
             HStack(alignment: .top) {
                 EventContextButton(viewModel: viewModel.shareButtonViewModel, onTap: { onTap(.share(viewModel)) })
                 EventContextButton(viewModel: viewModel.detailsButtonViewModel, onTap: { onTap(.details(viewModel)) })
@@ -82,7 +92,7 @@ public class EventContextButtonViewModel: ObservableObject {
             .receive(on: DispatchQueue.main)
             .assign(to: &$image)
     }
-    
+
     @Published var image: UIImage?
 }
 
@@ -103,6 +113,30 @@ public enum EventContextButtonType {
         case .share:
             return "square.and.arrow.up"
         }
+    }
+}
+
+struct FavoriteContextButton: View {
+    @ObservedObject var viewModel: FavoriteHeartButtonViewModel
+    var onTap: () -> Void
+
+    private var heartColor: Color {
+        viewModel.isFavorite ? .appFavorite : .white
+    }
+
+    var body: some View {
+        Image(systemName: viewModel.isFavorite ? "heart.fill" : "heart")
+            .font(.system(size: 16, weight: .medium))
+            .symbolRenderingMode(.monochrome)
+            .foregroundStyle(heartColor)
+            .frame(width: 16, height: 16)
+            .padding(8)
+            .background(Color(uiColor: Colors.cardBackground).opacity(0.92))
+            .cornerRadius(8)
+            .contentShape(Rectangle())
+            .onTapGesture(perform: onTap)
+            .accessibilityAddTraits(.isButton)
+            .accessibilityLabel(viewModel.isFavorite ? "Убрать из избранного" : "Добавить в избранное")
     }
 }
 

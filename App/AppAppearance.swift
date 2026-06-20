@@ -15,7 +15,7 @@ extension EsseJazzClubApp {
         appearance.largeTitleTextAttributes = [.foregroundColor: Colors.text]
 
         let backImage = UIImage(systemName: "chevron.left")?
-            .withTintColor(Colors.primary, renderingMode: .alwaysOriginal)
+            .withTintColor(Colors.accent, renderingMode: .alwaysOriginal)
         appearance.setBackIndicatorImage(backImage, transitionMaskImage: backImage)
 
         let backButtonAppearance = UIBarButtonItemAppearance()

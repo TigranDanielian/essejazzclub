@@ -29,8 +29,11 @@ extension View {
 }
 
 extension Color {
-  public static var appMainBackground: Color { Color(uiColor: Colors.mainBackground) }
-  public static var appCardBackground: Color { Color(uiColor: Colors.cardBackground) }
-  public static var appText: Color { Color(uiColor: Colors.text) }
-  public static var appSecondaryText: Color { Color(uiColor: Colors.secondaryText) }
+  public static var appMainBackground: Color { Color(uiColor: Colors.background) }
+  public static var appCardBackground: Color { Color(uiColor: Colors.surface) }
+  public static var appText: Color { Color(uiColor: Colors.textPrimary) }
+  public static var appSecondaryText: Color { Color(uiColor: Colors.textSecondary) }
+  public static var appAccent: Color { Color(uiColor: Colors.accent) }
+  public static var appFavorite: Color { Color(uiColor: Colors.favorite) }
+  public static var appTopEvent: Color { Color(uiColor: Colors.topEvent) }
 }

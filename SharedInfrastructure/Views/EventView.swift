@@ -53,7 +53,7 @@ public struct EventView: View {
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.vertical, 4)
             }
-            .background(Color(uiColor: Colors.cardBackground))
+            .background(Color(uiColor: viewModel.isTop ? Colors.topEvent : Colors.cardBackground))
             .cornerRadius(12)
             .frame(maxWidth: .infinity, maxHeight: 100, alignment: .leading)
             .shadow(radius: 8)

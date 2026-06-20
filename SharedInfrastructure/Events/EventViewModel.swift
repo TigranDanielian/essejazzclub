@@ -64,12 +64,10 @@ public final class EventViewModel: ObservableObject {
 
     public var calendarStartDates: [Date] { presentation.calendarStartDates }
 
-    public lazy var favoriteButtonViewModel: EventContextButtonViewModel = EventContextButtonViewModel(
-        imagePublisher: EventContextButtonPublishers.favoriteHeart(
-            favoritesStorage: favoritesStorage,
-            value: eventId,
-            key: .events
-        )
+    public lazy var favoriteHeartButtonViewModel: FavoriteHeartButtonViewModel = FavoriteHeartButtonViewModel(
+        favoritesStorage: favoritesStorage,
+        value: eventId,
+        key: .events
     )
 
     public lazy var shareButtonViewModel: EventContextButtonViewModel = EventContextButtonViewModel(

@@ -168,7 +168,7 @@ private struct ScheduleFilterChip: View {
                 .font(.subheadline.weight(.medium))
                 .foregroundStyle(
                     isSelected
-                        ? Color(uiColor: Colors.textInverted)
+                        ? Color(uiColor: Colors.textOnAccent)
                         : Color(uiColor: Colors.text)
                 )
                 .padding(.horizontal, 14)

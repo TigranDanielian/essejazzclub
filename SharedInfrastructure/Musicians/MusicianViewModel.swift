@@ -25,12 +25,10 @@ public final class MusicianViewModel: ObservableObject {
     /// Идентификатор для `FavoritesStorageKey.musicians` (совпадает с `id`).
     public var favoriteStorageId: String { id }
 
-    public lazy var favoriteButtonViewModel: EventContextButtonViewModel = EventContextButtonViewModel(
-        imagePublisher: EventContextButtonPublishers.favoriteHeart(
-            favoritesStorage: favoritesStorage,
-            value: favoriteStorageId,
-            key: .musicians
-        )
+    public lazy var favoriteHeartButtonViewModel: FavoriteHeartButtonViewModel = FavoriteHeartButtonViewModel(
+        favoritesStorage: favoritesStorage,
+        value: favoriteStorageId,
+        key: .musicians
     )
 
     public var imageLoadTask: Task<Void, Never>?

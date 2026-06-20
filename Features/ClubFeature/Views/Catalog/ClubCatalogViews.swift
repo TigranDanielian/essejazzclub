@@ -58,7 +58,7 @@ struct ClubCatalogCategoryChip: View {
                 .font(.subheadline.weight(.medium))
                 .foregroundStyle(
                     isSelected
-                        ? Color(uiColor: Colors.textInverted)
+                        ? Color(uiColor: Colors.textOnAccent)
                         : Color(uiColor: Colors.text)
                 )
                 .padding(.horizontal, 14)
@@ -67,7 +67,7 @@ struct ClubCatalogCategoryChip: View {
                     Capsule()
                         .fill(
                             isSelected
-                                ? Color(uiColor: Colors.freetag)
+                                ? Color(uiColor: Colors.accent)
                                 : Color(uiColor: Colors.cardBackground)
                         )
                 )

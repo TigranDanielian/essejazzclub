@@ -82,8 +82,8 @@ public struct EventDetailView: View {
                             VStack {
                                 HStack {
                                     Spacer()
-                                    EventContextButton(
-                                        viewModel: viewModel.favoriteButtonViewModel,
+                                    FavoriteContextButton(
+                                        viewModel: viewModel.favoriteHeartButtonViewModel,
                                         onTap: { actionHandler(.contextAction(.favorite(viewModel.eventId))) }
                                     )
                                     EventContextButton(

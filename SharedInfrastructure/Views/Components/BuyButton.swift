@@ -14,10 +14,10 @@ struct BuyButton: View {
         Button(action: action) {
             Text(title)
                 .font(.caption)
-                .foregroundColor(Color(uiColor: Colors.textInverted))
+                .foregroundColor(Color(uiColor: Colors.textOnAccent))
                 .padding(.horizontal, 12)
                 .padding(.vertical, 6)
-                .background(Color(uiColor: Colors.freetag))
+                .background(Color(uiColor: Colors.accent))
                 .cornerRadius(8)
         }
     }
