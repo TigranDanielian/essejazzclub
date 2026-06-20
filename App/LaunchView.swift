@@ -12,27 +12,30 @@ struct LaunchView: View {
     @EnvironmentObject var appState: AppState
 
     @State private var alertInfo: AlertInfo?
-    @State private var isAnimating = false
+    @State private var isExiting = false
 
     var body: some View {
-        ShimmeringImage()
-            .scaleEffect(isAnimating ? 2.0 : 1.0)
-            .opacity(isAnimating ? 0 : 1)
-            .animation(.easeInOut(duration: 0.5), value: isAnimating)
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .background(Color.appMainBackground)
-            .onAppear {
-                retryLoading()
-            }
-            .alert(item: $alertInfo) { info in
-                Alert(
-                    title: Text(info.title),
-                    message: Text(info.message),
-                    dismissButton: .default(Text("Повторить"), action: {
-                        retryLoading()
-                    })
-                )
-            }
+        ZStack {
+            LaunchSpotlightBackground(isExiting: isExiting)
+
+            LaunchLogoView()
+                .scaleEffect(isExiting ? 1.08 : 1.0)
+                .opacity(isExiting ? 0 : 1)
+                .animation(.easeInOut(duration: 0.55), value: isExiting)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .onAppear {
+            retryLoading()
+        }
+        .alert(item: $alertInfo) { info in
+            Alert(
+                title: Text(info.title),
+                message: Text(info.message),
+                dismissButton: .default(Text("Повторить"), action: {
+                    retryLoading()
+                })
+            )
+        }
     }
 
     @MainActor
@@ -41,8 +44,8 @@ struct LaunchView: View {
             switch result {
             case .success:
                 DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                    isAnimating = true
-                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(500)) {
+                    isExiting = true
+                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(550)) {
                         appState.isReady = true
                     }
                 }
@@ -53,15 +56,95 @@ struct LaunchView: View {
     }
 }
 
-private struct AlertInfo: Identifiable {
-    let id = UUID()
-    let title: String
-    let message: String
+private struct LaunchSpotlightBackground: View {
+    var isExiting: Bool
+
+    @State private var beamIntensity: CGFloat = 0
+
+    private let fadeInDuration: TimeInterval = 2.4
+    private let secondaryDelay: TimeInterval = 0.55
+
+    var body: some View {
+        TimelineView(.animation(minimumInterval: 1.0 / 30.0)) { context in
+            let time = context.date.timeIntervalSinceReferenceDate
+            let primaryAngle = time * 0.42
+            let primaryCenter = UnitPoint(
+                x: 0.5 + cos(primaryAngle) * 0.32,
+                y: 0.5 + sin(primaryAngle * 0.78) * 0.36
+            )
+            let secondaryCenter = UnitPoint(
+                x: 0.5 - cos(primaryAngle * 0.65 + .pi / 3) * 0.26,
+                y: 0.5 - sin(primaryAngle * 0.55) * 0.28
+            )
+
+            GeometryReader { geometry in
+                let beamRadius = max(geometry.size.width, geometry.size.height) * 0.62
+                let secondaryIntensity = delayedIntensity(beamIntensity, delay: secondaryDelay)
+
+                ZStack {
+                    Color.appMainBackground
+
+                    spotlightBeam(
+                        center: primaryCenter,
+                        radius: beamRadius,
+                        intensity: beamIntensity,
+                        core: Color.appAccent.opacity(0.38),
+                        halo: Color.appSoftGold.opacity(0.14)
+                    )
+
+                    spotlightBeam(
+                        center: secondaryCenter,
+                        radius: beamRadius * 0.72,
+                        intensity: secondaryIntensity,
+                        core: Color.appText.opacity(0.1),
+                        halo: Color.appAccent.opacity(0.08)
+                    )
+                }
+            }
+        }
+        .ignoresSafeArea()
+        .onAppear {
+            withAnimation(.easeInOut(duration: fadeInDuration)) {
+                beamIntensity = 1
+            }
+        }
+        .onChange(of: isExiting) { _, exiting in
+            guard exiting else { return }
+            withAnimation(.easeInOut(duration: 0.55)) {
+                beamIntensity = 0
+            }
+        }
+    }
+
+    private func delayedIntensity(_ intensity: CGFloat, delay: TimeInterval) -> CGFloat {
+        guard intensity > 0 else { return 0 }
+        let threshold = CGFloat(delay / fadeInDuration)
+        guard intensity > threshold else { return 0 }
+        return min((intensity - threshold) / (1 - threshold), 1)
+    }
+
+    private func spotlightBeam(
+        center: UnitPoint,
+        radius: CGFloat,
+        intensity: CGFloat,
+        core: Color,
+        halo: Color
+    ) -> some View {
+        RadialGradient(
+            colors: [
+                core.opacity(intensity),
+                halo.opacity(intensity),
+                .clear,
+            ],
+            center: center,
+            startRadius: 0,
+            endRadius: max(radius * intensity, 1)
+        )
+        .blendMode(.plusLighter)
+    }
 }
 
-struct ShimmeringImage: View {
-    @State private var shimmerOffset: CGFloat = -1.0
-
+private struct LaunchLogoView: View {
     var body: some View {
         Image(ImageResource.logoBlackEng)
             .renderingMode(.template)
@@ -69,32 +152,11 @@ struct ShimmeringImage: View {
             .scaledToFit()
             .foregroundStyle(Color.appText)
             .padding(.horizontal, 40)
-            .overlay(
-                shimmer
-                    .mask(
-                        Image(ImageResource.logoBlackEng)
-                            .renderingMode(.template)
-                            .resizable()
-                            .scaledToFit()
-                    )
-            )
-            .onAppear {
-                withAnimation(
-                    Animation.easeOut(duration: 1.5)
-                        .repeatForever(autoreverses: false)
-                ) {
-                    shimmerOffset = 2.0
-                }
-            }
     }
+}
 
-    private var shimmer: some View {
-        LinearGradient(
-            gradient: Gradient(colors: [Color.clear, Color.black.opacity(0.45), Color.clear]),
-            startPoint: .leading,
-            endPoint: .trailing
-        )
-        .offset(x: shimmerOffset * 300)
-        .rotationEffect(.degrees(20))
-    }
+private struct AlertInfo: Identifiable {
+    let id = UUID()
+    let title: String
+    let message: String
 }

@@ -34,6 +34,7 @@ extension Color {
   public static var appText: Color { Color(uiColor: Colors.textPrimary) }
   public static var appSecondaryText: Color { Color(uiColor: Colors.textSecondary) }
   public static var appAccent: Color { Color(uiColor: Colors.accent) }
+  public static var appSoftGold: Color { Color(uiColor: Colors.softGold) }
   public static var appFavorite: Color { Color(uiColor: Colors.favorite) }
   public static var appTopEvent: Color { Color(uiColor: Colors.topEvent) }
 }

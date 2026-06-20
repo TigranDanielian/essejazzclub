@@ -10,38 +10,43 @@ import UIKit
 public enum Colors {
     // MARK: - Palette
 
-    /// Background — #111827
+    /// Background — #0A1020
     public static var background: UIColor {
-        UIColor(hex: "111827")
+        UIColor(hex: "0A1020")
     }
 
-    /// Surface — #1F2937
+    /// Surface — #151D33
     public static var surface: UIColor {
-        UIColor(hex: "1F2937")
+        UIColor(hex: "151D33")
     }
 
-    /// Secondary Surface — #374151
+    /// Surface Elevated — #202A45
     public static var secondarySurface: UIColor {
-        UIColor(hex: "374151")
+        UIColor(hex: "202A45")
     }
 
-    /// Accent — #D4A574
+    /// Indigo Accent — #5B6CFF
     public static var accent: UIColor {
-        UIColor(hex: "D4A574")
+        UIColor(hex: "5B6CFF")
     }
 
-    /// Text Primary — #F9FAFB
+    /// Soft Gold — #D5AE6B
+    public static var softGold: UIColor {
+        UIColor(hex: "D5AE6B")
+    }
+
+    /// Text — #F4F5F7
     public static var textPrimary: UIColor {
-        UIColor(hex: "F9FAFB")
+        UIColor(hex: "F4F5F7")
     }
 
-    /// Text Secondary — #9CA3AF
+    /// Приглушённый текст (производный от палитры).
     public static var textSecondary: UIColor {
-        UIColor(hex: "9CA3AF")
+        UIColor(hex: "939BAB")
     }
 
-    /// Текст на акцентном фоне (кнопки, чипы).
-    public static var textOnAccent: UIColor { background }
+    /// Текст на индиго-акцентном фоне (кнопки, чипы).
+    public static var textOnAccent: UIColor { textPrimary }
 
     /// Топ-мероприятия (isTop) — глубокий тёмно-бордовый.
     public static var topEvent: UIColor {
@@ -58,7 +63,7 @@ public enum Colors {
     public static var mainBackground: UIColor { background }
     public static var cardBackground: UIColor { surface }
     public static var altBackground: UIColor { secondarySurface }
-    public static var accentSheet: UIColor { accent }
+    public static var accentSheet: UIColor { softGold }
     public static var text: UIColor { textPrimary }
     public static var textInverted: UIColor { textPrimary }
     public static var secondaryText: UIColor { textSecondary }
@@ -71,9 +76,9 @@ public enum Colors {
         UIColor(hex: "78A978")
     }
 
-    /// Время на карточках — приглушённый акцент.
+    /// Время на карточках — Soft Gold.
     public static var timeTag: UIColor {
-        UIColor(hex: "B8956A")
+        softGold
     }
 }
 
