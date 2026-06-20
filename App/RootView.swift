@@ -110,7 +110,7 @@ struct RootView: View {
                 )
             )
         case .filter:
-            scheduleFilterPlaceholder(dismiss: { scheduleTabNavigation.dismissPresentedOrPop() })
+            EmptyView()
         }
     }
 
@@ -122,20 +122,6 @@ struct RootView: View {
     @ViewBuilder
     private func musicianDetailView(viewModel: MusicianViewModel, actionHandler: @escaping MusicianActionHandler) -> some View {
         MusicianDetailsView(viewModel: viewModel, actionHandler: actionHandler)
-    }
-
-    private func scheduleFilterPlaceholder(dismiss: @escaping () -> Void) -> some View {
-        NavigationStack {
-            Text("Фильтры")
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .background(Color(uiColor: Colors.mainBackground))
-                .navigationTitle("Фильтр")
-                .toolbar {
-                    ToolbarItem(placement: .cancellationAction) {
-                        Button("Закрыть", action: dismiss)
-                    }
-                }
-        }
     }
 }
 
@@ -313,7 +299,18 @@ private struct ScheduleTabShell<RouteContent: View>: View {
                 }
         }
         .sheet(item: $router.sheetDestination) { route in
-            routeView(route)
+            switch route {
+            case .filter:
+                ScheduleFilterScreen(
+                    viewModel: ScheduleFilterViewModel(
+                        appliedFilter: viewModel.filter,
+                        onApply: { viewModel.updateFilter($0) }
+                    ),
+                    onDismiss: { router.dismissPresentedOrPop() }
+                )
+            default:
+                routeView(route)
+            }
         }
         .fullScreenCover(item: $router.fullScreenDestination) { route in
             routeView(route)

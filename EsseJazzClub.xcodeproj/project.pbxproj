@@ -158,7 +158,9 @@
 		B38DDEE495D3FCA9A69C6032 /* ClubScreenViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AB2D3E69C037ED8713A2261 /* ClubScreenViewModel.swift */; };
 		B8A0A9129C776F1578CA0251 /* ClubShopProductDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFDDF85A14F75DBFFC1AB2C7 /* ClubShopProductDetailView.swift */; };
 		BC021BA76C5197017F4C1434 /* RemoteImageLoadable.swift in Sources */ = {isa = PBXBuildFile; fileRef = C282D64D03258CE38BA39FFD /* RemoteImageLoadable.swift */; };
+		BC258E4FE9C5373B6AF28F65 /* ScheduleEventFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BFA4F8E1147273EAC6ED1E2 /* ScheduleEventFilter.swift */; };
 		BD479C60C85B6E4BD8F0FF75 /* Core.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A1059EAB8C03AF412D52227E /* Core.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		BE3A8589BFE12A76BEC733DC /* ScheduleFilterViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3374ABC07D16F06EC5F33058 /* ScheduleFilterViewModel.swift */; };
 		C0658E31248B419E4CD88288 /* ApiEndpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D9EFFB6AA0B0D1D9DF73F5D /* ApiEndpoint.swift */; };
 		C0CC974DF7617C7A1FDE798B /* SharedInfrastructure.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 309260A176D68C1D5FACFB49 /* SharedInfrastructure.framework */; };
 		C2A11C12B1D275520D89A994 /* EventDetailDisplayOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B077316FA91658AD19BF607 /* EventDetailDisplayOptions.swift */; };
@@ -170,6 +172,7 @@
 		C82EDFF1473D275196F48631 /* EventSchedulePage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660252E35D53B912350A71D6 /* EventSchedulePage.swift */; };
 		CE0AC84FEE60A47AC8A7E927 /* YouTubeVideoID.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FD03E66C6EECA44F6091637 /* YouTubeVideoID.swift */; };
 		CED6FAE3A109A6D00FAF0F58 /* Core.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A1059EAB8C03AF412D52227E /* Core.framework */; };
+		D00E9A7FD8A6FF2EC3D3C8AB /* ScheduleFilterScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = E476248A6F139AFF3009DF78 /* ScheduleFilterScreen.swift */; };
 		D15F15E7B45AF3B6611F8517 /* EventDateFormatting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50D826275EBCDAB1FEA6E6E9 /* EventDateFormatting.swift */; };
 		D1E508D2E724CDB753D3C92A /* EventBookingTimePickerSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = AED7D24D33B0F2F36DEB2DD0 /* EventBookingTimePickerSheet.swift */; };
 		D27D21DD11F54816B1723CA0 /* ClubMenuItemDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FB8EFB24DC8CCF5CCEFBD93 /* ClubMenuItemDetailView.swift */; };
@@ -495,6 +498,7 @@
 		15ADB869BD9A95F238B43E12 /* EventDetailUpcomingOccurrence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventDetailUpcomingOccurrence.swift; sourceTree = "<group>"; };
 		163DA58A5A60AFBC280DC906 /* AppTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppTheme.swift; sourceTree = "<group>"; };
 		165D5232E194C553D04DF3FB /* Media.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Media.xcassets; sourceTree = "<group>"; };
+		1BFA4F8E1147273EAC6ED1E2 /* ScheduleEventFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleEventFilter.swift; sourceTree = "<group>"; };
 		1C530DD5F05AE5BDB6CE6DB3 /* ClubFeaturesSlider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClubFeaturesSlider.swift; sourceTree = "<group>"; };
 		246C0095DAE977ABEDBFDA76 /* HomeScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeScreen.swift; sourceTree = "<group>"; };
 		267A4E3F447272BAB362E32B /* ScheduleScreenViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleScreenViewModel.swift; sourceTree = "<group>"; };
@@ -513,6 +517,7 @@
 		327DCF1B4391ABEF8DC67B6D /* SharedInfrastructure_Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = SharedInfrastructure_Info.plist; sourceTree = "<group>"; };
 		3294053040738329F24F12D2 /* HomeNavigationRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeNavigationRouter.swift; sourceTree = "<group>"; };
 		336AE0F8E014FDFB4F2713C3 /* EventDetailHeroSlider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventDetailHeroSlider.swift; sourceTree = "<group>"; };
+		3374ABC07D16F06EC5F33058 /* ScheduleFilterViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleFilterViewModel.swift; sourceTree = "<group>"; };
 		359495A8DB0881767FE49207 /* DefaultApiClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultApiClient.swift; sourceTree = "<group>"; };
 		3AACF37ACFE89AE548B1007F /* HomeHeroSheetLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeHeroSheetLayout.swift; sourceTree = "<group>"; };
 		3C477EFFB80354CF5FF8E082 /* MusicianAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicianAction.swift; sourceTree = "<group>"; };
@@ -615,6 +620,7 @@
 		E241D976F7124C46B589615A /* EventViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventViewModel.swift; sourceTree = "<group>"; };
 		E3385744B245B60DFB64B7FD /* BuyButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuyButton.swift; sourceTree = "<group>"; };
 		E3DD0115914E3692111892B2 /* ScheduleNavigationRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleNavigationRouter.swift; sourceTree = "<group>"; };
+		E476248A6F139AFF3009DF78 /* ScheduleFilterScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleFilterScreen.swift; sourceTree = "<group>"; };
 		E513146610ED0191B32C392A /* FavoriteEventSchedule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteEventSchedule.swift; sourceTree = "<group>"; };
 		E5CCBC924798254BD20D8931 /* ScheduleDayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleDayView.swift; sourceTree = "<group>"; };
 		E7BAFB2C9A8CCA43A1DE0BE6 /* ClubRouteDestinationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClubRouteDestinationView.swift; sourceTree = "<group>"; };
@@ -1032,6 +1038,9 @@
 			isa = PBXGroup;
 			children = (
 				165D5232E194C553D04DF3FB /* Media.xcassets */,
+				1BFA4F8E1147273EAC6ED1E2 /* ScheduleEventFilter.swift */,
+				E476248A6F139AFF3009DF78 /* ScheduleFilterScreen.swift */,
+				3374ABC07D16F06EC5F33058 /* ScheduleFilterViewModel.swift */,
 				E3DD0115914E3692111892B2 /* ScheduleNavigationRouter.swift */,
 				A765291C7B33841FA000DBE9 /* ScheduleScreen.swift */,
 				267A4E3F447272BAB362E32B /* ScheduleScreenViewModel.swift */,
@@ -1656,7 +1665,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				3C789594F1FC1EF39A2D2788 /* ScheduleDayView.swift in Sources */,
+				BC258E4FE9C5373B6AF28F65 /* ScheduleEventFilter.swift in Sources */,
 				7342EBDC2064817AF133524B /* ScheduleEventView.swift in Sources */,
+				D00E9A7FD8A6FF2EC3D3C8AB /* ScheduleFilterScreen.swift in Sources */,
+				BE3A8589BFE12A76BEC733DC /* ScheduleFilterViewModel.swift in Sources */,
 				8F763DDCE56A8518DFCC8062 /* ScheduleNavigationRouter.swift in Sources */,
 				56F2DC0FC39B5F24EC662DC8 /* ScheduleScreen.swift in Sources */,
 				44B519DBB76201C9B2B6B135 /* ScheduleScreenViewModel.swift in Sources */,

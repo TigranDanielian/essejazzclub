@@ -99,20 +99,26 @@ public struct ScheduleScreen: View {
                     )
                 )
                 
-                // TODO: Filter
-                
-//                .padding(.trailing, 4)
-//                
-//                Button {
-//                    viewModel.openFilter()
-//                } label: {
-//                    Image(uiImage: UIImage(resource: .filter).withRenderingMode(.alwaysTemplate))
-//                        .resizable()
-//                        .scaledToFit()
-//                        .frame(width: 32, height: 32)
-//                        .foregroundStyle(Color(uiColor: Colors.secondaryText))
-//                        .cornerRadius(8)
-//                }
+                Button {
+                    viewModel.openFilter()
+                } label: {
+                    ZStack(alignment: .topTrailing) {
+                        Image(uiImage: UIImage(resource: .filter).withRenderingMode(.alwaysTemplate))
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 32, height: 32)
+                            .foregroundStyle(Color(uiColor: Colors.secondaryText))
+
+                        if viewModel.isFilterActive {
+                            Circle()
+                                .fill(Color(uiColor: Colors.accentSheet))
+                                .frame(width: 8, height: 8)
+                                .offset(x: 2, y: -2)
+                        }
+                    }
+                    .cornerRadius(8)
+                }
+                .padding(.trailing, 4)
             }
             .padding(.horizontal, 12)
             .padding(.vertical, 8)

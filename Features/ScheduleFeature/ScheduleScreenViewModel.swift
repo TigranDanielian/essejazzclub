@@ -16,11 +16,14 @@ import SharedInfrastructure
 public final class ScheduleScreenViewModel: ObservableObject {
     @Published var grouped: [GroupedEventsByDay] = []
     @Published var searchInputText: String = ""
+    @Published public private(set) var filter = ScheduleEventFilter.empty
     @Published private(set) var isLoading = false
     @Published private(set) var isLoadingMore = false
     @Published private(set) var hasMore = false
 
     @Published var selectedEvent: EventViewModel?
+
+    public var isFilterActive: Bool { filter.isActive }
 
     private var cancellables: Set<AnyCancellable> = []
     private var loadedModels: [EventModel] = []
@@ -139,8 +142,11 @@ public final class ScheduleScreenViewModel: ObservableObject {
         }
 
         let filtered = viewModels.filter { viewModel in
-            guard !searchInputText.isEmpty else { return true }
-            return viewModel.title.lowercased().contains(searchInputText.lowercased())
+            if !searchInputText.isEmpty,
+               !viewModel.title.lowercased().contains(searchInputText.lowercased()) {
+                return false
+            }
+            return filter.matches(viewModel)
         }
         groupEvents(filtered)
     }
@@ -183,5 +189,10 @@ public final class ScheduleScreenViewModel: ObservableObject {
 
     public func openFilter() {
         tabNavigation.presentFilter(presentation: .sheet)
+    }
+
+    public func updateFilter(_ filter: ScheduleEventFilter) {
+        self.filter = filter
+        applyFilterAndGroup()
     }
 }
