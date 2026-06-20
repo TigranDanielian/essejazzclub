@@ -219,6 +219,7 @@ private struct HomeTabShell<RouteContent: View>: View {
         }
         .onAppear {
             navPath = router.path
+            container.calendarEventsManager.requestAccessIfNeeded()
         }
         .onChange(of: router.path) { _, newPath in
             guard newPath != navPath else { return }

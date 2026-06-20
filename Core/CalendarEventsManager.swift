@@ -18,9 +18,7 @@ public final class CalendarEventsManager: ObservableObject {
 
     private static let startDateMatchTolerance: TimeInterval = 120
 
-    public init() {
-        requestAccess()
-    }
+    public init() {}
 
     func fetchEvent(date: Date) -> [EKEvent] {
         let start = Calendar.current.startOfDay(for: date)
@@ -29,8 +27,10 @@ public final class CalendarEventsManager: ObservableObject {
         return eventStore.events(matching: predicate)
     }
 
-    public func requestAccess() {
+    public func requestAccessIfNeeded() {
         Task {
+            let status = EKEventStore.authorizationStatus(for: .event)
+            guard status == .notDetermined else { return }
             _ = try? await authorizationStatus()
         }
     }
