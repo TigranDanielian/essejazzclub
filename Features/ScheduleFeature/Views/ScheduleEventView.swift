@@ -4,6 +4,7 @@
 //
 
 import SwiftUI
+import UIKit
 import Core
 import SharedInfrastructure
 
@@ -38,9 +39,6 @@ struct ScheduleEventView: View {
                 .environment(\.eventCardTap, openEventDetails)
         }
         .id(viewModel.id)
-        .onAppear {
-            interaction.lockedAxis = nil
-        }
         .onDisappear {
             interaction.reset()
         }
@@ -93,59 +91,159 @@ private struct SwipableView<Content: View, SwipeContent: View>: View {
                     .scaleEffect(interaction.offsetX / swipeThreshold, anchor: .center)
             }
 
-            content()
-                .offset(x: interaction.offsetX)
-                .modifier(HorizontalRowSwipeModifier(
+            ZStack(alignment: .topTrailing) {
+                ScheduleRowPanContainer(
                     interaction: interaction,
-                    revealWidth: swipeThreshold
-                ))
-        }
-        .overlay(alignment: .topTrailing) {
-            if showsOptionsButton {
-                EventOptionsButton(action: optionsAction)
-                    .fixedSize()
-                    .offset(x: interaction.offsetX)
+                    revealWidth: swipeThreshold,
+                    content: content()
+                )
+
+                if showsOptionsButton {
+                    EventOptionsButton(action: optionsAction)
+                        .fixedSize()
+                }
             }
+            .offset(x: interaction.offsetX)
         }
     }
 }
 
-private struct HorizontalRowSwipeModifier: ViewModifier {
+/// UIKit horizontal pan: не начинается при вертикальном движении — скролл списка не блокируется.
+private struct ScheduleRowPanContainer<Content: View>: UIViewRepresentable {
     @ObservedObject var interaction: ScheduleEventRowInteraction
     let revealWidth: CGFloat
+    let content: Content
 
-    func body(content: Content) -> some View {
-        content
-            .simultaneousGesture(
-                DragGesture(minimumDistance: 12, coordinateSpace: .local)
-                    .onChanged { value in
-                        let dx = value.translation.width
-                        let dy = value.translation.height
+    func makeCoordinator() -> Coordinator {
+        Coordinator(interaction: interaction, revealWidth: revealWidth)
+    }
 
-                        if interaction.lockedAxis == nil {
-                            guard abs(dx) > 10 || abs(dy) > 10 else { return }
-                            interaction.lockedAxis = abs(dx) > abs(dy) ? .horizontal : .vertical
-                            if interaction.lockedAxis == .horizontal {
-                                interaction.startOffsetX = interaction.offsetX
-                            }
-                        }
+    func makeUIView(context: Context) -> RowContainerView {
+        let container = RowContainerView()
+        container.coordinator = context.coordinator
+        context.coordinator.container = container
 
-                        guard interaction.lockedAxis == .horizontal else { return }
+        let hosting = UIHostingController(rootView: content)
+        hosting.view.backgroundColor = .clear
+        context.coordinator.hostingController = hosting
+        container.setHostedView(hosting.view)
+        container.installPanRecognizer()
+        return container
+    }
 
-                        let newOffset = interaction.startOffsetX + dx
-                        interaction.offsetX = min(max(newOffset, -revealWidth), 0)
-                    }
-                    .onEnded { value in
-                        defer { interaction.lockedAxis = nil }
+    func updateUIView(_ uiView: RowContainerView, context: Context) {
+        context.coordinator.interaction = interaction
+        context.coordinator.revealWidth = revealWidth
+        context.coordinator.hostingController?.rootView = content
+    }
 
-                        guard interaction.lockedAxis == .horizontal else { return }
+    @MainActor
+    final class Coordinator: NSObject, UIGestureRecognizerDelegate {
+        var interaction: ScheduleEventRowInteraction
+        var revealWidth: CGFloat
+        weak var container: RowContainerView?
+        weak var hostingController: UIHostingController<Content>?
 
-                        let shouldOpen = -(interaction.startOffsetX + value.translation.width) > revealWidth / 2
-                        withAnimation(.easeOut(duration: 0.2)) {
-                            interaction.offsetX = shouldOpen ? -revealWidth : 0
-                            interaction.startOffsetX = interaction.offsetX
-                        }
-                    }
-            )
+        init(interaction: ScheduleEventRowInteraction, revealWidth: CGFloat) {
+            self.interaction = interaction
+            self.revealWidth = revealWidth
+        }
+
+        @objc func handlePan(_ pan: UIPanGestureRecognizer) {
+            let translationX = pan.translation(in: pan.view).x
+
+            switch pan.state {
+            case .began:
+                interaction.startOffsetX = interaction.offsetX
+            case .changed:
+                let newOffset = interaction.startOffsetX + translationX
+                interaction.offsetX = min(max(newOffset, -revealWidth), 0)
+            case .ended, .cancelled, .failed:
+                let finalOffset = interaction.startOffsetX + translationX
+                let shouldOpen = -finalOffset > revealWidth / 2
+                withAnimation(.easeOut(duration: 0.2)) {
+                    interaction.offsetX = shouldOpen ? -revealWidth : 0
+                    interaction.startOffsetX = interaction.offsetX
+                }
+            default:
+                break
+            }
+        }
+
+        func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+            guard let pan = gestureRecognizer as? UIPanGestureRecognizer,
+                  let view = pan.view else { return false }
+
+            if interaction.offsetX != 0 {
+                return true
+            }
+
+            let velocity = pan.velocity(in: view)
+            let translation = pan.translation(in: view)
+            let absVX = abs(velocity.x)
+            let absVY = abs(velocity.y)
+
+            if absVX + absVY > 40 {
+                return absVX > absVY
+            }
+            return abs(translation.x) > abs(translation.y)
+        }
+
+        func gestureRecognizer(
+            _ gestureRecognizer: UIGestureRecognizer,
+            shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer
+        ) -> Bool {
+            false
+        }
+    }
+
+    final class RowContainerView: UIView {
+        weak var coordinator: Coordinator?
+        private let hostedContentView = UIView()
+        private var panRecognizer: UIPanGestureRecognizer?
+
+        override init(frame: CGRect) {
+            super.init(frame: frame)
+            backgroundColor = .clear
+            addSubview(hostedContentView)
+        }
+
+        @available(*, unavailable)
+        required init?(coder: NSCoder) {
+            fatalError("init(coder:) has not been implemented")
+        }
+
+        override var intrinsicContentSize: CGSize {
+            CGSize(width: UIView.noIntrinsicMetric, height: 100)
+        }
+
+        func setHostedView(_ view: UIView) {
+            view.translatesAutoresizingMaskIntoConstraints = false
+            hostedContentView.subviews.forEach { $0.removeFromSuperview() }
+            hostedContentView.addSubview(view)
+            NSLayoutConstraint.activate([
+                view.leadingAnchor.constraint(equalTo: hostedContentView.leadingAnchor),
+                view.trailingAnchor.constraint(equalTo: hostedContentView.trailingAnchor),
+                view.topAnchor.constraint(equalTo: hostedContentView.topAnchor),
+                view.bottomAnchor.constraint(equalTo: hostedContentView.bottomAnchor),
+            ])
+        }
+
+        func installPanRecognizer() {
+            guard panRecognizer == nil, let coordinator else { return }
+
+            let pan = UIPanGestureRecognizer(target: coordinator, action: #selector(Coordinator.handlePan))
+            pan.delegate = coordinator
+            pan.cancelsTouchesInView = false
+            pan.delaysTouchesBegan = false
+            pan.delaysTouchesEnded = false
+            addGestureRecognizer(pan)
+            panRecognizer = pan
+        }
+
+        override func layoutSubviews() {
+            super.layoutSubviews()
+            hostedContentView.frame = bounds
+        }
     }
 }
