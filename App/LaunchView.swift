@@ -40,17 +40,24 @@ struct LaunchView: View {
 
     @MainActor
     private func retryLoading() {
+        isExiting = false
+        let loadStartedAt = Date()
+
         container.loadEssentialData { result in
-            switch result {
-            case .success:
-                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                    isExiting = true
-                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(550)) {
-                        appState.isReady = true
+            Task { @MainActor in
+                switch result {
+                case .success:
+                    let elapsed = Date().timeIntervalSince(loadStartedAt)
+                    if elapsed < 1 {
+                        try? await Task.sleep(for: .seconds(1))
                     }
+
+                    isExiting = true
+                    try? await Task.sleep(for: .milliseconds(550))
+                    appState.isReady = true
+                case .failure(let error):
+                    alertInfo = AlertInfo(title: "Не удалось загрузить данные", message: error.localizedDescription)
                 }
-            case .failure(let error):
-                alertInfo = AlertInfo(title: "Не удалось загрузить данные", message: error.localizedDescription)
             }
         }
     }
