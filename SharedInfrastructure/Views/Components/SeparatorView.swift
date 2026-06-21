@@ -14,6 +14,6 @@ public struct SeparatorView: View {
             .frame(height: 5)
             .cornerRadius(5)
             .foregroundColor(Color(uiColor: Colors.separator))
-            .padding(.horizontal, 20)
+            .padding(.horizontal, 16)
     }
 }
