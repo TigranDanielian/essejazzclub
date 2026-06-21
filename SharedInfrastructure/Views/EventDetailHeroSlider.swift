@@ -81,16 +81,38 @@ struct EventDetailHeroSlider: View {
 
         case .photo:
             ZStack {
-                Image(uiImage: viewModel.image ?? UIImage())
-                    .resizable()
-                    .scaledToFit()
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                if let image = viewModel.image {
+                    Image(uiImage: image)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                } else if !viewModel.isLoadingImage {
+                    photoPlaceholder
+                }
 
                 if viewModel.isLoadingImage {
                     SkeletonView()
                 }
             }
             .clipShape(RoundedRectangle(cornerRadius: 12))
+            .onTapGesture {
+                viewModel.loadImageIfNeeded()
+            }
         }
+    }
+
+    private var photoPlaceholder: some View {
+        ZStack {
+            Color(uiColor: Colors.cardBackground)
+            VStack(spacing: 8) {
+                Image(systemName: "arrow.clockwise")
+                    .font(.system(size: 36))
+                    .foregroundStyle(Color(uiColor: Colors.secondaryText))
+                Text("Повотрить загрузку")
+                    .font(.caption)
+            }
+            
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 }
