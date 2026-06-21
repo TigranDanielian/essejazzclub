@@ -54,11 +54,11 @@ public struct EventDetailView: View {
                                     HStack {
                                         Image(systemName: "clock")
                                             .resizable()
-                                            .frame(width: 12, height: 12)
+                                            .frame(width: 14, height: 14)
                                             .foregroundColor(Color(uiColor: Colors.text))
 
                                         ForEach(viewModel.times, id: \.self) { time in
-                                            EventTimeView(time: time)
+                                            EventTimeView(time: time, large: true)
                                         }
                                     }
                                 }
@@ -69,10 +69,10 @@ public struct EventDetailView: View {
                                     Image(systemName: "ticket")
                                         .resizable()
                                         .scaledToFit()
-                                        .frame(height: 12)
+                                        .frame(height: 14)
                                         .foregroundColor(Color(uiColor: Colors.text))
 
-                                    EventPriceView(price: viewModel.priceString)
+                                    EventPriceView(price: viewModel.priceString, large: true)
                                 }
                             }
                             .padding([.horizontal, .bottom], 12)
@@ -80,7 +80,7 @@ public struct EventDetailView: View {
 
                             // 2️⃣ Кнопки сверху справа
                             VStack {
-                                HStack {
+                                HStack(spacing: 8) {
                                     Spacer()
                                     FavoriteContextButton(
                                         viewModel: viewModel.favoriteHeartButtonViewModel,
@@ -121,16 +121,18 @@ public struct EventDetailView: View {
                     .cornerRadius(12)
                     .shadow(radius: 12)
                     
-                    Text(viewModel.title)
-                        .bold()
-                        .padding(.horizontal, 12)
-                        .font(.system(size: 28, weight: .bold))
-                        .foregroundColor(Color(uiColor: Colors.text))
-                    
-                    Text(viewModel.description)
-                        .padding(.horizontal, 12)
-                        .font(.title3)
-                        .foregroundColor(Color(uiColor: Colors.text))
+                    VStack(alignment: .leading, spacing: 12) {
+                        Text(viewModel.title)
+                            .bold()
+                            .padding(.horizontal, 12)
+                            .font(.system(size: 26, weight: .bold))
+                            .foregroundColor(Color(uiColor: Colors.text))
+                        
+                        Text(viewModel.description)
+                            .padding(.horizontal, 12)
+                            .font(.title3)
+                            .foregroundColor(Color(uiColor: Colors.text))
+                    }
                     
                     SeparatorView()
 
@@ -140,8 +142,10 @@ public struct EventDetailView: View {
                     
                     ExpandableText(text: $attributedText, limit: 100)
                         .padding(12)
-                        .font(.caption2)
+                        .padding(.trailing, 24)
+                        .font(.system(size: 16, weight: .regular, design: .default))
                         .foregroundStyle(Color(uiColor: Colors.text))
+                        .lineSpacing(2.2)
                     
                     if !viewModel.musicians.isEmpty {
                         Text("Музыканты")

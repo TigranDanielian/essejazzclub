@@ -13,7 +13,7 @@ struct BuyButton: View {
     var body: some View {
         Button(action: action) {
             Text(title)
-                .font(.caption)
+                .font(.system(size: 16, weight: .semibold))
                 .foregroundColor(Color(uiColor: Colors.textOnAccent))
                 .padding(.horizontal, 12)
                 .padding(.vertical, 6)

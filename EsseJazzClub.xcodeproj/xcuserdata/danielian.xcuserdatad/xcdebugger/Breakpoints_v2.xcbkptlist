@@ -520,8 +520,8 @@
             filePath = "SharedInfrastructure/Views/EventDetailView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "224"
-            endingLineNumber = "224"
+            startingLineNumber = "228"
+            endingLineNumber = "228"
             landmarkName = "upcomingDatesSection(_:)"
             landmarkType = "7">
          </BreakpointContent>

@@ -12,7 +12,7 @@ struct EventInfoView: View {
     @ObservedObject var viewModel: EventViewModel
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 4) {
+        VStack(alignment: .leading, spacing: 8) {
             HStack(spacing: 12) {
                 if viewModel.hasDate {
                     Text(viewModel.dateString)
@@ -28,21 +28,23 @@ struct EventInfoView: View {
                     EventPriceView(price: viewModel.priceString)
                 }
             }
-           
-            Text(viewModel.title)
-                .font(.subheadline)
-                .bold()
-                .foregroundColor(Color(uiColor: Colors.text))
-                .multilineTextAlignment(.leading)
-                .padding(.trailing, 4)
-                .layoutPriority(1)
+            
+            VStack(alignment: .leading, spacing: 4) {
+                 Text(viewModel.title)
+                     .font(.subheadline)
+                     .bold()
+                     .foregroundColor(Color(uiColor: Colors.text))
+                     .multilineTextAlignment(.leading)
+                     .padding(.trailing, 4)
+                     .layoutPriority(1)
 
-            Text(viewModel.description)
-                .font(.caption)
-                .foregroundColor(Color(uiColor: Colors.secondaryText))
-                .multilineTextAlignment(.leading)
-                .padding(.trailing, 4)
-                .layoutPriority(0)
+                 Text(viewModel.description)
+                     .font(.caption)
+                     .foregroundColor(Color(uiColor: Colors.secondaryText))
+                     .multilineTextAlignment(.leading)
+                     .padding(.trailing, 4)
+                     .layoutPriority(0)
+            }
         }
     }
 }

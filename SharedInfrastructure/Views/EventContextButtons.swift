@@ -129,7 +129,7 @@ struct FavoriteContextButton: View {
             .font(.system(size: 16, weight: .medium))
             .symbolRenderingMode(.monochrome)
             .foregroundStyle(heartColor)
-            .frame(width: 16, height: 16)
+            .frame(width: 20, height: 20)
             .padding(8)
             .background(Color(uiColor: Colors.cardBackground).opacity(0.92))
             .cornerRadius(8)
@@ -148,7 +148,7 @@ struct EventContextButton: View {
     var body: some View {
         Button(action: onTap) {
             icon
-                .frame(width: 16, height: 16)
+                .frame(width: 20, height: 20)
                 .foregroundColor(Color(uiColor: Colors.text))
                 .padding(8)
                 .background(Color(uiColor: Colors.cardBackground).opacity(0.92))
