@@ -17,11 +17,7 @@ public struct ScheduleScreen: View {
     private var uiFactory: any UIFactory
     /// Родитель (`ScheduleTabShell`) держит VM в `@StateObject` — здесь только наблюдение.
     @ObservedObject var viewModel: ScheduleScreenViewModel
-    
-    @State private var isHeaderHidden = false
-    @State private var initialOffset: CGFloat?
-    @State private var prevOffset: CGFloat?
-    
+
     public init(
         viewModel: ScheduleScreenViewModel,
         uiFactory: any UIFactory
@@ -29,45 +25,27 @@ public struct ScheduleScreen: View {
         _viewModel = ObservedObject(wrappedValue: viewModel)
         self.uiFactory = uiFactory
     }
-    
+
     public var body: some View {
         ScrollView {
-            GeometryReader { geo in
-                Color.clear.preference(
-                    key: ScrollOffsetPreferenceKey.self,
-                    value: geo.frame(in: .global).minY
-                )
-            }
-            .frame(height: 1)
-            .onPreferenceChange(ScrollOffsetPreferenceKey.self) { value in
-                if initialOffset == nil {
-                    initialOffset = value
-                    return
-                }
-
-                let offset = value - (initialOffset ?? 0)
-                let prev = prevOffset ?? 0
-
-                if offset < 60, prev > offset, !isHeaderHidden {
-                    withAnimation(.easeInOut(duration: 0.2)) {
-                        isHeaderHidden = true
-                    }
-                } else if prev < offset, isHeaderHidden {
-                    withAnimation(.easeInOut(duration: 0.2)) {
-                        isHeaderHidden = false
-                    }
-                }
-
-                prevOffset = offset
-            }
-
             LazyVStack(alignment: .leading, spacing: 16) {
                 if viewModel.isLoading, viewModel.grouped.isEmpty {
                     ProgressView()
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 48)
                 } else if let emptyState = viewModel.listEmptyState {
-                    ScheduleEmptyStateView(state: emptyState)
+                    if viewModel.isLoadingMore, viewModel.hasMore, viewModel.isFilterActive || viewModel.isSearchActive {
+                        ProgressView()
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 48)
+                    } else {
+                        ScheduleEmptyStateView(state: emptyState)
+                    }
+
+                    if viewModel.showPaginationFooter {
+                        paginationFooter
+                            .id(viewModel.loadGeneration)
+                    }
                 } else {
                     ForEach(viewModel.grouped) { day in
                         ScheduleDayView(
@@ -77,8 +55,9 @@ public struct ScheduleScreen: View {
                         )
                     }
 
-                    if viewModel.hasMore {
+                    if viewModel.showPaginationFooter {
                         paginationFooter
+                            .id(viewModel.loadGeneration)
                     }
                 }
             }
@@ -129,10 +108,6 @@ public struct ScheduleScreen: View {
         .padding(.vertical, 8)
         .frame(height: ScheduleScreenLayout.searchHeaderHeight)
         .background(Color(uiColor: Colors.mainBackground))
-        .opacity(isHeaderHidden ? 0 : 1)
-        .offset(y: isHeaderHidden ? -ScheduleScreenLayout.searchHeaderHeight : 0)
-        .allowsHitTesting(!isHeaderHidden)
-        .animation(.easeInOut(duration: 0.2), value: isHeaderHidden)
     }
 
     private var searchBinding: Binding<String> {
@@ -154,13 +129,5 @@ public struct ScheduleScreen: View {
         .onAppear {
             Task { await viewModel.loadMore() }
         }
-    }
-}
-
-private struct ScrollOffsetPreferenceKey: PreferenceKey {
-    static var defaultValue: CGFloat = 0
-    
-    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
-        value = nextValue()
     }
 }

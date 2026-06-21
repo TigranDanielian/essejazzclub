@@ -20,6 +20,7 @@ public final class ScheduleScreenViewModel: ObservableObject {
     @Published private(set) var isLoading = false
     @Published private(set) var isLoadingMore = false
     @Published private(set) var hasMore = false
+    @Published private(set) var loadGeneration = 0
 
     @Published var selectedEvent: EventViewModel?
 
@@ -40,9 +41,14 @@ public final class ScheduleScreenViewModel: ObservableObject {
         return .noMatchingResults
     }
 
+    var showPaginationFooter: Bool {
+        hasMore && (!grouped.isEmpty || isFilterActive || isSearchActive)
+    }
+
     private var loadedModels: [EventModel] = []
     private var currentPage = 0
     private var isFetchingPage = false
+    private var searchFetchTask: Task<Void, Never>?
 
     private let eventsService: EventsService
     private let viewModelFactory: ViewModelFactory
@@ -65,10 +71,12 @@ public final class ScheduleScreenViewModel: ObservableObject {
         guard searchInputText != text else { return }
         searchInputText = text
         applyFilterAndGroup()
+        scheduleFilteredResultsFetch()
     }
 
     func clearSearchInput() {
         searchInputText = ""
+        searchFetchTask?.cancel()
         applyFilterAndGroup()
     }
 
@@ -81,20 +89,21 @@ public final class ScheduleScreenViewModel: ObservableObject {
         guard !isFetchingPage else { return }
         isFetchingPage = true
         isLoading = true
-        defer {
-            isLoading = false
-            isFetchingPage = false
-        }
-
+        loadGeneration += 1
         currentPage = 0
         hasMore = false
         loadedModels = []
+        grouped = []
 
         do {
             try await appendPage(1)
         } catch {
             grouped = []
         }
+
+        isLoading = false
+        isFetchingPage = false
+        await fetchMorePagesIfFilteredResultsEmpty()
     }
 
     func refresh() async {
@@ -135,20 +144,44 @@ public final class ScheduleScreenViewModel: ObservableObject {
 
     private func fetchSchedule(page: Int, per: Int) async throws -> PaginatedEventSchedule {
         try await withCheckedThrowingContinuation { continuation in
+            var didResume = false
             var cancellable: AnyCancellable?
+
             cancellable = eventsService.fetchEventSchedule(page: page, per: per)
                 .sink(
                     receiveCompletion: { completion in
+                        defer { cancellable?.cancel() }
+                        guard !didResume else { return }
                         if case .failure(let error) = completion {
+                            didResume = true
                             continuation.resume(throwing: error)
                         }
-                        cancellable?.cancel()
                     },
                     receiveValue: { value in
+                        guard !didResume else { return }
+                        didResume = true
                         continuation.resume(returning: value)
-                        cancellable?.cancel()
                     }
                 )
+        }
+    }
+
+    private func scheduleFilteredResultsFetch() {
+        searchFetchTask?.cancel()
+        searchFetchTask = Task {
+            try? await Task.sleep(nanoseconds: 350_000_000)
+            guard !Task.isCancelled else { return }
+            await fetchMorePagesIfFilteredResultsEmpty()
+        }
+    }
+
+    private func fetchMorePagesIfFilteredResultsEmpty() async {
+        guard isFilterActive || isSearchActive else { return }
+
+        var attempts = 0
+        while grouped.isEmpty, hasMore, attempts < 10 {
+            attempts += 1
+            await loadMore()
         }
     }
 
@@ -214,5 +247,6 @@ public final class ScheduleScreenViewModel: ObservableObject {
     public func updateFilter(_ filter: ScheduleEventFilter) {
         self.filter = filter
         applyFilterAndGroup()
+        Task { await fetchMorePagesIfFilteredResultsEmpty() }
     }
 }

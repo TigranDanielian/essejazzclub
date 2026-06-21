@@ -38,7 +38,7 @@ public struct ClubAboutScreen: View {
 
     public var body: some View {
         ScrollView {
-            LazyVStack(alignment: .leading, spacing: 12) {
+            VStack(alignment: .leading, spacing: 12) {
                 ForEach(viewModel.rows) { row in
                     switch row.kind {
                     case .text(let attributed):
