@@ -99,8 +99,18 @@ public struct EventView: View {
         .frame(maxWidth: .infinity, maxHeight: 100, alignment: .leading)
         .shadow(radius: 8)
         .contentShape(Rectangle())
-        .onTapGesture {
-            eventCardTap?()
+        .modifier(EventCardTapModifier(action: eventCardTap))
+    }
+}
+
+private struct EventCardTapModifier: ViewModifier {
+    let action: (() -> Void)?
+
+    func body(content: Content) -> some View {
+        if let action {
+            content.onTapGesture(perform: action)
+        } else {
+            content
         }
     }
 }

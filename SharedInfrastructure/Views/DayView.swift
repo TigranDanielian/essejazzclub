@@ -32,7 +32,7 @@ public struct DayView<EventRow: View>: View {
                 Text(title)
                     .bold()
                     .padding(.vertical, 2)
-                    .padding(.horizontal, 12)
+                    .padding(.horizontal, 8)
                     .font(.title2)
                     .foregroundColor(Color(uiColor: Colors.text))
                     .background(
@@ -50,7 +50,7 @@ public struct DayView<EventRow: View>: View {
 
             VStack(alignment: .leading, spacing: 20) {
                 ForEach(sections.filter({ !$0.events.isEmpty })) { section in
-                    VStack(alignment: .leading, spacing: 8) {
+                    VStack(alignment: .leading, spacing: 14) {
                         Text(section.type.rawValue.uppercased())
                             .font(.headline)
                             .foregroundColor(.init(uiColor: Colors.accentSheet))
@@ -66,7 +66,7 @@ public struct DayView<EventRow: View>: View {
                 }
             }
             .padding(.vertical, title == nil ? 0 : 12)
-            .padding(.horizontal, 12)
+            .padding(.horizontal, 8)
         }
     }
 }

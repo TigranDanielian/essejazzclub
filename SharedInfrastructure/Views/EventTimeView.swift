@@ -17,8 +17,9 @@ public struct EventTimeView: View {
 
     public var body: some View {
         Text(time)
-            .padding(2)
-            .font(.caption)
+            .padding(.horizontal, 4)
+            .padding(.vertical, 3)
+            .font(.footnote)
             .foregroundStyle(Color(uiColor: Colors.text))
             .background(Color(uiColor: Colors.mainBackground))
             .cornerRadius(4)

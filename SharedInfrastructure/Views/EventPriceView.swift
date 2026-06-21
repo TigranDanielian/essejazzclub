@@ -17,8 +17,9 @@ struct EventPriceView: View {
 
     var body: some View {
         Text(price.isEmpty ? "FREE" : "\(price)")
-            .padding(2)
-            .font(.caption)
+            .padding(.horizontal, 4)
+            .padding(.vertical, 3)
+            .font(.footnote)
             .foregroundStyle(Color(uiColor: price.isEmpty ? Colors.freetag : Colors.softGold))
             .background(Color(uiColor: Colors.mainBackground))
             .cornerRadius(4)

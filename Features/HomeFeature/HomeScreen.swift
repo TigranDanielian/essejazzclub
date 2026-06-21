@@ -50,12 +50,11 @@ public struct HomeScreen: View {
                 DayView(sections: viewModel.todayEvents) { event in
                     AnyView(
                         uiFactory.produce(unit: .event(event))
+                            .environment(\.eventCardTap) {
+                                viewModel.onEventDetails(event)
+                            }
                             .frame(maxWidth: .infinity, alignment: .leading)
-                            .contentShape(Rectangle())
                     )
-                    .onTapGesture {
-                        viewModel.onEventDetails(event)
-                    }
                 }
             }
 

@@ -16,7 +16,7 @@ struct EventInfoView: View {
             HStack(spacing: 12) {
                 if viewModel.hasDate {
                     Text(viewModel.dateString)
-                        .font(.caption)
+                        .font(.footnote)
                         .foregroundStyle(Color(uiColor: Colors.text))
                 }
                
