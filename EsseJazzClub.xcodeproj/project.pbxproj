@@ -172,12 +172,14 @@
 		C6AFD3F6CE67D194FBCF6D52 /* API.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 48BA7EEC6C75DEF58EE0D4B8 /* API.framework */; };
 		C76046E16C687A320888C537 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 26F5315A47E44DA78FEF345D /* Assets.xcassets */; };
 		C82EDFF1473D275196F48631 /* EventSchedulePage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660252E35D53B912350A71D6 /* EventSchedulePage.swift */; };
+		CCE16C2FEDEDE72D1072B41D /* ScheduleEventRowInteraction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E1B71D77B03E2C7F03A9372 /* ScheduleEventRowInteraction.swift */; };
 		CE0AC84FEE60A47AC8A7E927 /* YouTubeVideoID.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FD03E66C6EECA44F6091637 /* YouTubeVideoID.swift */; };
 		CED6FAE3A109A6D00FAF0F58 /* Core.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A1059EAB8C03AF412D52227E /* Core.framework */; };
 		D00E9A7FD8A6FF2EC3D3C8AB /* ScheduleFilterScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = E476248A6F139AFF3009DF78 /* ScheduleFilterScreen.swift */; };
 		D15F15E7B45AF3B6611F8517 /* EventDateFormatting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50D826275EBCDAB1FEA6E6E9 /* EventDateFormatting.swift */; };
 		D1E508D2E724CDB753D3C92A /* EventBookingTimePickerSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = AED7D24D33B0F2F36DEB2DD0 /* EventBookingTimePickerSheet.swift */; };
 		D27D21DD11F54816B1723CA0 /* ClubMenuItemDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FB8EFB24DC8CCF5CCEFBD93 /* ClubMenuItemDetailView.swift */; };
+		D647C5F19BBB54D43CFA51BC /* EventOptionsButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5D682C70966E606EAE16608 /* EventOptionsButton.swift */; };
 		D7642B4E65598FA2F2E62337 /* FavoriteContextAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8E49B1A77D614F7C62ECC1 /* FavoriteContextAction.swift */; };
 		D987A5A9FAA81B99D78ADBB8 /* Core.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A1059EAB8C03AF412D52227E /* Core.framework */; };
 		DA698EA86FD8CF199C273996 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 633682FC446C691876A451F9 /* String.swift */; };
@@ -532,6 +534,7 @@
 		48BA7EEC6C75DEF58EE0D4B8 /* API.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = API.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		48EE0305DCA70A8826CA0B87 /* SharedUIFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedUIFactory.swift; sourceTree = "<group>"; };
 		4A8E6002DA4D3620A18E915E /* MusicianRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicianRowView.swift; sourceTree = "<group>"; };
+		4E1B71D77B03E2C7F03A9372 /* ScheduleEventRowInteraction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleEventRowInteraction.swift; sourceTree = "<group>"; };
 		4E853C928D7E304D046C6D94 /* Services_Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Services_Info.plist; sourceTree = "<group>"; };
 		50D826275EBCDAB1FEA6E6E9 /* EventDateFormatting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventDateFormatting.swift; sourceTree = "<group>"; };
 		50E3808E844F3658238D3CBB /* Develop.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Develop.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -616,6 +619,7 @@
 		D14C7D551FB04D8BF0A3A906 /* SharedViewModelFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedViewModelFactory.swift; sourceTree = "<group>"; };
 		D397A0558C66AD13E449C3E8 /* ExpandableText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpandableText.swift; sourceTree = "<group>"; };
 		D4750CE12D045D580436876C /* FavoriteEventDetailMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteEventDetailMode.swift; sourceTree = "<group>"; };
+		D5D682C70966E606EAE16608 /* EventOptionsButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventOptionsButton.swift; sourceTree = "<group>"; };
 		D654FE3C47B75657D3393ADD /* EventWebsiteLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventWebsiteLink.swift; sourceTree = "<group>"; };
 		DB17BDC17CB2F2CFAB6D6052 /* EventsGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventsGroup.swift; sourceTree = "<group>"; };
 		DCD6A7C69ACB61E5619CFB7E /* AppConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppConfiguration.swift; sourceTree = "<group>"; };
@@ -1167,6 +1171,7 @@
 			children = (
 				E5CCBC924798254BD20D8931 /* ScheduleDayView.swift */,
 				252C53A318413AD1A6751FE4 /* ScheduleEmptyStateView.swift */,
+				4E1B71D77B03E2C7F03A9372 /* ScheduleEventRowInteraction.swift */,
 				4739388B2A7F6E49661ED603 /* ScheduleEventView.swift */,
 			);
 			path = Views;
@@ -1180,6 +1185,7 @@
 				336AE0F8E014FDFB4F2713C3 /* EventDetailHeroSlider.swift */,
 				A9DB296155A5ACB286240D62 /* EventDetailView.swift */,
 				53F0D134ECFEC025103F9E15 /* EventInfoView.swift */,
+				D5D682C70966E606EAE16608 /* EventOptionsButton.swift */,
 				2B553FAD6D43E218FEB9B148 /* EventPriceView.swift */,
 				E027C5B97FC5F033283EF1D1 /* EventTimeView.swift */,
 				FF60DF007CC10B683D92EDEF /* EventView.swift */,
@@ -1557,6 +1563,7 @@
 				72EEB88064197A8FAD60DDFD /* EventDetailView.swift in Sources */,
 				2EB34E03E73465CBAC895086 /* EventInfoView.swift in Sources */,
 				8C40D55FF806B4DD238E395A /* EventModel+Preview.swift in Sources */,
+				D647C5F19BBB54D43CFA51BC /* EventOptionsButton.swift in Sources */,
 				DDAAEC1EEC9F36291EE04B92 /* EventPresentation.swift in Sources */,
 				75698FA45FBBA06149AF71E1 /* EventPriceView.swift in Sources */,
 				2D43331BD409F721469E59C5 /* EventShareCoordinator.swift in Sources */,
@@ -1673,6 +1680,7 @@
 				3C789594F1FC1EF39A2D2788 /* ScheduleDayView.swift in Sources */,
 				2BCA7FFA640045C8B1E5BC9E /* ScheduleEmptyStateView.swift in Sources */,
 				BC258E4FE9C5373B6AF28F65 /* ScheduleEventFilter.swift in Sources */,
+				CCE16C2FEDEDE72D1072B41D /* ScheduleEventRowInteraction.swift in Sources */,
 				7342EBDC2064817AF133524B /* ScheduleEventView.swift in Sources */,
 				D00E9A7FD8A6FF2EC3D3C8AB /* ScheduleFilterScreen.swift in Sources */,
 				BE3A8589BFE12A76BEC733DC /* ScheduleFilterViewModel.swift in Sources */,

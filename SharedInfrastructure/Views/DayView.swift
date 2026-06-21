@@ -8,19 +8,24 @@
 import SwiftUI
 import Core
 
-public struct DayView: View {
+public struct DayView<EventRow: View>: View {
     let title: String?
     let sections: [GroupedEventSection]
     @Binding var textWidth: CGFloat
-    var eventViewProvider: (EventViewModel) -> any View
-    
-    public init(title: String? = nil, sections: [GroupedEventSection], textWidth: Binding<CGFloat>? = nil, eventViewProvider: @escaping (EventViewModel) -> any View) {
+    let eventViewProvider: (EventViewModel) -> EventRow
+
+    public init(
+        title: String? = nil,
+        sections: [GroupedEventSection],
+        textWidth: Binding<CGFloat>? = nil,
+        @ViewBuilder eventViewProvider: @escaping (EventViewModel) -> EventRow
+    ) {
         self.title = title
         self.sections = sections
         self.eventViewProvider = eventViewProvider
         _textWidth = textWidth ?? .constant(0)
     }
-    
+
     public var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             if let title {
@@ -42,17 +47,18 @@ public struct DayView: View {
                         textWidth = value
                     }
             }
-                
+
             VStack(alignment: .leading, spacing: 20) {
                 ForEach(sections.filter({ !$0.events.isEmpty })) { section in
                     VStack(alignment: .leading, spacing: 8) {
                         Text(section.type.rawValue.uppercased())
                             .font(.headline)
                             .foregroundColor(.init(uiColor: Colors.accentSheet))
-                        
+
                         VStack(spacing: 12) {
                             ForEach(section.events) { event in
-                                AnyView(eventViewProvider(event))
+                                eventViewProvider(event)
+                                    .id(event.id)
                                     .frame(maxWidth: .infinity)
                             }
                         }

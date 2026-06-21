@@ -50,8 +50,7 @@ public struct ScheduleScreen: View {
                     ForEach(viewModel.grouped) { day in
                         ScheduleDayView(
                             eventsDay: day,
-                            actionHandler: { viewModel.handleAction(.event($0)) },
-                            uiFactory: uiFactory
+                            actionHandler: { viewModel.handleAction(.event($0)) }
                         )
                     }
 

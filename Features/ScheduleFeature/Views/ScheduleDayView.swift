@@ -13,7 +13,6 @@ struct ScheduleDayView: View {
     let eventsDay: GroupedEventsByDay
     let actionHandler: EventActionHandler
     @State private var textWidth: CGFloat = 0
-    let uiFactory: any UIFactory
 
     var body: some View {
         ZStack(alignment: .topLeading) {
@@ -27,8 +26,7 @@ struct ScheduleDayView: View {
             DayView(title: eventsDay.dateString, sections: eventsDay.sections, textWidth: $textWidth) { eventViewModel in
                 ScheduleEventView(
                     viewModel: eventViewModel,
-                    onSelect: actionHandler,
-                    uiFactory: uiFactory
+                    onSelect: actionHandler
                 )
             }
         }
