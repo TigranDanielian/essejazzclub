@@ -4,23 +4,60 @@
 //
 
 import SwiftUI
+import UIKit
+
+/// Пропускает тапы в зону баннера, когда шит ещё не поднят; иначе отдаёт их контенту скролла.
+private final class HomeHeroPassthroughScrollView: UIScrollView {
+    var bannerPassthroughHeight: CGFloat = 0
+
+    override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+        guard isUserInteractionEnabled, !isHidden, alpha >= 0.01 else { return nil }
+        guard bounds.contains(point) else { return nil }
+
+        let contentY = point.y + contentOffset.y
+        if contentY < bannerPassthroughHeight {
+            return nil
+        }
+
+        return super.hitTest(point, with: event)
+    }
+}
+
+/// Не забирает тапы сам — отдаёт баннеру под шитом, если скролл их не обработал.
+private final class HomeTopClampedScrollContainerView: UIView {
+    override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+        guard isUserInteractionEnabled, !isHidden, alpha >= 0.01 else { return nil }
+
+        for subview in subviews.reversed() {
+            let converted = convert(point, to: subview)
+            if let hit = subview.hitTest(converted, with: event) {
+                return hit
+            }
+        }
+
+        return nil
+    }
+}
 
 /// Вертикальный скролл без «резинки» вниз от начальной позиции — шит не уезжает ниже слайдера.
 struct HomeTopClampedScrollView<Content: View>: UIViewControllerRepresentable {
     let showsIndicators: Bool
     let scrollClipDisabled: Bool
     let bounces: Bool
+    @Binding var scrollOffset: CGFloat
     @ViewBuilder let content: () -> Content
 
     init(
         showsIndicators: Bool = true,
         scrollClipDisabled: Bool = false,
         bounces: Bool = true,
+        scrollOffset: Binding<CGFloat> = .constant(0),
         @ViewBuilder content: @escaping () -> Content
     ) {
         self.showsIndicators = showsIndicators
         self.scrollClipDisabled = scrollClipDisabled
         self.bounces = bounces
+        _scrollOffset = scrollOffset
         self.content = content
     }
 
@@ -29,6 +66,7 @@ struct HomeTopClampedScrollView<Content: View>: UIViewControllerRepresentable {
         controller.showsIndicators = showsIndicators
         controller.scrollClipDisabled = scrollClipDisabled
         controller.bounces = bounces
+        controller.onScrollOffsetChange = { scrollOffset = $0 }
         return controller
     }
 
@@ -36,12 +74,13 @@ struct HomeTopClampedScrollView<Content: View>: UIViewControllerRepresentable {
         controller.showsIndicators = showsIndicators
         controller.scrollClipDisabled = scrollClipDisabled
         controller.bounces = bounces
+        controller.onScrollOffsetChange = { scrollOffset = $0 }
         controller.updateRootView(content())
     }
 }
 
 final class HomeTopClampedScrollViewController<Content: View>: UIViewController, UIScrollViewDelegate {
-    private let scrollView = UIScrollView()
+    private let scrollView = HomeHeroPassthroughScrollView()
     private let hostingController: UIHostingController<Content>
 
     var showsIndicators = true {
@@ -59,6 +98,8 @@ final class HomeTopClampedScrollViewController<Content: View>: UIViewController,
         }
     }
 
+    var onScrollOffsetChange: ((CGFloat) -> Void)?
+
     init(rootView: Content) {
         hostingController = UIHostingController(rootView: rootView)
         super.init(nibName: nil, bundle: nil)
@@ -67,6 +108,10 @@ final class HomeTopClampedScrollViewController<Content: View>: UIViewController,
     @available(*, unavailable)
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    override func loadView() {
+        view = HomeTopClampedScrollContainerView()
     }
 
     override func viewDidLoad() {
@@ -79,6 +124,7 @@ final class HomeTopClampedScrollViewController<Content: View>: UIViewController,
         hostingController.sizingOptions = .intrinsicContentSize
         hostingController.safeAreaRegions = []
 
+        scrollView.bannerPassthroughHeight = HomeHeroSheetLayout.scrollHitExtensionHeight
         scrollView.delegate = self
         scrollView.bounces = bounces
         scrollView.alwaysBounceVertical = bounces
@@ -119,5 +165,6 @@ final class HomeTopClampedScrollViewController<Content: View>: UIViewController,
         if scrollView.contentOffset.y < 0 {
             scrollView.contentOffset.y = 0
         }
+        onScrollOffsetChange?(scrollView.contentOffset.y)
     }
 }

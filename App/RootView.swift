@@ -207,6 +207,7 @@ private struct HomeTabShell<RouteContent: View>: View {
                     viewModel: viewModel,
                     uiFactory: container.uiFactory
                 )
+                .padding(.top, viewModel.hasHeroBanner ? -HomeHeroSheetLayout.scrollHitExtensionHeight : 0)
                 .zIndex(1)
                 .navigationDestination(for: HomeNavigationRouter.Route.self) { route in
                     routeView(route)

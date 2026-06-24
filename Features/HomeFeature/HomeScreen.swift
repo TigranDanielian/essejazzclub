@@ -13,6 +13,7 @@ import SharedInfrastructure
 public struct HomeScreen: View {
     /// Родитель (`HomeTabShell`) держит VM в `@StateObject` — здесь только наблюдение.
     @ObservedObject public var viewModel: HomeScreenViewModel
+    @State private var sheetScrollOffset: CGFloat = 0
     private let uiFactory: any UIFactory
 
     public init(
@@ -29,7 +30,8 @@ public struct HomeScreen: View {
                 HomeTopClampedScrollView(
                     showsIndicators: false,
                     scrollClipDisabled: true,
-                    bounces: false
+                    bounces: false,
+                    scrollOffset: $sheetScrollOffset
                 ) {
                     homeSheetContent
                 }
@@ -45,6 +47,19 @@ public struct HomeScreen: View {
     }
 
     private var homeSheetContent: some View {
+        VStack(spacing: 0) {
+            if viewModel.hasHeroBanner {
+                Color.clear
+                    .frame(height: HomeHeroSheetLayout.scrollHitExtensionHeight)
+                    .allowsHitTesting(false)
+            }
+
+            homeSheetBody
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+    }
+
+    private var homeSheetBody: some View {
         VStack(alignment: .leading, spacing: 32) {
             HomeScreenSection(title: "Сегодня") {
                 DayView(sections: viewModel.todayEvents) { event in
@@ -114,6 +129,7 @@ public struct HomeScreen: View {
             )
         )
     }
+
 
     private func homeFavoritesSubheader(_ title: String) -> some View {
         Text(title)

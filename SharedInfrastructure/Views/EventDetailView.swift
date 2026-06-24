@@ -76,6 +76,7 @@ public struct EventDetailView: View {
                                 }
                             }
                             .padding([.horizontal, .bottom], 12)
+                            .padding(.top, 8)
                             .frame(maxWidth: .infinity, alignment: .leading)
 
                             // 2️⃣ Кнопки сверху справа
@@ -171,6 +172,7 @@ public struct EventDetailView: View {
                     Spacer()
                 }
             }
+            .scrollIndicators(.hidden)
         }
         .navigationTitle(viewModel.title)
         .navigationBarTitleDisplayMode(.automatic)

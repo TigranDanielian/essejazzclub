@@ -24,6 +24,11 @@ public enum HomeHeroSheetLayout {
         pageIndicatorBottomInset
     }
 
+    /// Зона баннера над шитом: скролл расширяет hit-testing вверх на эту высоту.
+    public static var scrollHitExtensionHeight: CGFloat {
+        sliderHeight - sheetOverlap
+    }
+
     /// Длительность одного «сторис»-слайда в герой-баннере.
     public static let storyDuration: TimeInterval = 7
 }
