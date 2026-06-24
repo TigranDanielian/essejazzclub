@@ -15,8 +15,8 @@ public final class ScheduleFilterViewModel: ObservableObject {
         appliedFilter: ScheduleEventFilter,
         onApply: @escaping (ScheduleEventFilter) -> Void
     ) {
-        draft = appliedFilter
         self.onApply = onApply
+        draft = Self.normalized(appliedFilter)
     }
 
     public var canReset: Bool {
@@ -24,24 +24,18 @@ public final class ScheduleFilterViewModel: ObservableObject {
     }
 
     public func toggleStage(_ option: ScheduleStageFilterOption) {
-        if draft.stageTypes.contains(option) {
-            draft.stageTypes.remove(option)
-        } else {
-            draft.stageTypes.insert(option)
-        }
+        draft.stageTypes.removeAll()
+        draft.stageTypes.insert(option)
     }
 
     public func togglePrice(_ option: SchedulePriceFilterOption) {
-        if draft.priceTypes.contains(option) {
-            draft.priceTypes.remove(option)
-        } else {
-            draft.priceTypes.insert(option)
-        }
+        draft.priceTypes.removeAll()
+        draft.priceTypes.insert(option)
     }
 
     public func setDateFromEnabled(_ isEnabled: Bool) {
         if isEnabled {
-            draft.dateFrom = draft.dateFrom ?? Calendar.current.startOfDay(for: Date())
+            draft.dateFrom = draft.dateFrom.map { Self.clampedToMinimumDate($0) } ?? Self.startOfToday
         } else {
             draft.dateFrom = nil
         }
@@ -49,7 +43,8 @@ public final class ScheduleFilterViewModel: ObservableObject {
 
     public func setDateToEnabled(_ isEnabled: Bool) {
         if isEnabled {
-            draft.dateTo = draft.dateTo ?? draft.dateFrom ?? Calendar.current.startOfDay(for: Date())
+            let fallback = draft.dateFrom ?? Self.startOfToday
+            draft.dateTo = draft.dateTo.map { Self.clampedToMinimumDate($0, minimum: fallback) } ?? fallback
         } else {
             draft.dateTo = nil
         }
@@ -65,14 +60,30 @@ public final class ScheduleFilterViewModel: ObservableObject {
     }
 
     private func normalizedDraft() -> ScheduleEventFilter {
-        var normalized = draft
+        Self.normalized(draft)
+    }
+
+    private static var startOfToday: Date {
+        Calendar.current.startOfDay(for: Date())
+    }
+
+    private static func clampedToMinimumDate(_ date: Date, minimum: Date? = nil) -> Date {
         let calendar = Calendar.current
+        let floor = calendar.startOfDay(for: minimum ?? startOfToday)
+        return max(calendar.startOfDay(for: date), floor)
+    }
+
+    private static func normalized(_ filter: ScheduleEventFilter) -> ScheduleEventFilter {
+        var normalized = filter
+        let calendar = Calendar.current
+        let today = startOfToday
 
         if let from = normalized.dateFrom {
-            normalized.dateFrom = calendar.startOfDay(for: from)
+            normalized.dateFrom = max(calendar.startOfDay(for: from), today)
         }
         if let to = normalized.dateTo {
-            normalized.dateTo = calendar.startOfDay(for: to)
+            let minimumTo = normalized.dateFrom ?? today
+            normalized.dateTo = max(calendar.startOfDay(for: to), minimumTo)
         }
         if let from = normalized.dateFrom, let to = normalized.dateTo, from > to {
             normalized.dateFrom = to

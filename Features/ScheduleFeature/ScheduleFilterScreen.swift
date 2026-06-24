@@ -15,6 +15,14 @@ public struct ScheduleFilterScreen: View {
         self.onDismiss = onDismiss
     }
 
+    private var startOfToday: Date {
+        Calendar.current.startOfDay(for: Date())
+    }
+
+    private var minimumDateTo: Date {
+        max(startOfToday, viewModel.draft.dateFrom ?? startOfToday)
+    }
+
     public var body: some View {
         NavigationStack {
             ScrollView {
@@ -47,9 +55,16 @@ public struct ScheduleFilterScreen: View {
                                 title: "От",
                                 isEnabled: viewModel.draft.dateFrom != nil,
                                 date: Binding(
-                                    get: { viewModel.draft.dateFrom ?? Date() },
-                                    set: { viewModel.draft.dateFrom = Calendar.current.startOfDay(for: $0) }
+                                    get: { viewModel.draft.dateFrom ?? startOfToday },
+                                    set: { newValue in
+                                        let date = Calendar.current.startOfDay(for: newValue)
+                                        viewModel.draft.dateFrom = date
+                                        if let dateTo = viewModel.draft.dateTo, dateTo < date {
+                                            viewModel.draft.dateTo = date
+                                        }
+                                    }
                                 ),
+                                minimumDate: startOfToday,
                                 onToggle: viewModel.setDateFromEnabled
                             )
 
@@ -57,9 +72,10 @@ public struct ScheduleFilterScreen: View {
                                 title: "До",
                                 isEnabled: viewModel.draft.dateTo != nil,
                                 date: Binding(
-                                    get: { viewModel.draft.dateTo ?? viewModel.draft.dateFrom ?? Date() },
+                                    get: { viewModel.draft.dateTo ?? minimumDateTo },
                                     set: { viewModel.draft.dateTo = Calendar.current.startOfDay(for: $0) }
                                 ),
+                                minimumDate: minimumDateTo,
                                 onToggle: viewModel.setDateToEnabled
                             )
                         }
@@ -125,6 +141,7 @@ public struct ScheduleFilterScreen: View {
         title: String,
         isEnabled: Bool,
         date: Binding<Date>,
+        minimumDate: Date,
         onToggle: @escaping (Bool) -> Void
     ) -> some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -142,6 +159,7 @@ public struct ScheduleFilterScreen: View {
                 DatePicker(
                     "",
                     selection: date,
+                    in: minimumDate...Date.distantFuture,
                     displayedComponents: .date
                 )
                 .datePickerStyle(.automatic)
