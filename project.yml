@@ -15,7 +15,7 @@ settingGroups:
   application_debug:
     FRAMEWORK_SEARCH_PATHS: $(inherited)
     MARKETING_VERSION: 1.0.0
-    CURRENT_PROJECT_VERSION: 5
+    CURRENT_PROJECT_VERSION: 6
     ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES: $(inherited)
     INFOPLIST_FILE: Supporting Files/Info.plist
     INFOPLIST_KEY_NSAppTransportSecurity_NSAllowsArbitraryLoads: YES
@@ -28,7 +28,7 @@ settingGroups:
   application_prod:
     FRAMEWORK_SEARCH_PATHS: $(inherited)
     MARKETING_VERSION: 1.0.0
-    CURRENT_PROJECT_VERSION: 5
+    CURRENT_PROJECT_VERSION: 6
     ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES: $(inherited)
     INFOPLIST_FILE: Supporting Files/Info.plist
     INFOPLIST_KEY_NSAppTransportSecurity_NSAllowsArbitraryLoads: YES
