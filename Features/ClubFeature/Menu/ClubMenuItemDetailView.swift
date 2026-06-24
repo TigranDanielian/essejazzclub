@@ -62,12 +62,19 @@ struct ClubMenuItemDetailView: View {
                     Spacer()
                 }
             }
+            .ignoresSafeArea(edges: .top)
             .appScrollContentBackgroundHidden()
             .background(Color(uiColor: Colors.mainBackground))
+            .navigationTitle("")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbarBackground(.hidden, for: .navigationBar)
             .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("Закрыть") { dismiss() }
-                        .foregroundStyle(Color(uiColor: Colors.primary))
+                ToolbarItem(placement: .topBarLeading) {
+                    Button(action: dismiss.callAsFunction) {
+                        Image(systemName: "chevron.left")
+                            .font(.body.weight(.semibold))
+                            .foregroundStyle(Color(uiColor: Colors.text))
+                    }
                 }
             }
         }
