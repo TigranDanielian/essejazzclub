@@ -8,15 +8,17 @@
 import UIKit
 
 public extension String {
-     func htmlAttributed(font: UIFont, color: UIColor) -> AttributedString? {
+     func htmlAttributed(font: UIFont, color: UIColor, linkColor: UIColor = Colors.accent) -> AttributedString? {
         return htmlAttributed(family: font.familyName,
                               size: font.pointSize,
-                              color: color)
+                              color: color,
+                              linkColor: linkColor)
     }
     
     func htmlAttributed(family: String?,
                                size: CGFloat,
-                               color: UIColor) -> AttributedString? {
+                               color: UIColor,
+                               linkColor: UIColor) -> AttributedString? {
 
         do {
             let htmlCSSString = """
@@ -27,6 +29,9 @@ public extension String {
                     color: #\(color.hexString!);
                     white-space: pre-wrap;
                     line-height: 1.4;
+                }
+                a, a:link, a:visited {
+                    color: #\(linkColor.hexString!);
                 }
             </style>
             <div>\(self)</div>
@@ -41,6 +46,12 @@ public extension String {
                 options: [.documentType: NSAttributedString.DocumentType.html, .characterEncoding: String.Encoding.utf8.rawValue],
                 documentAttributes: nil
             )
+
+            let fullRange = NSRange(location: 0, length: result.length)
+            result.enumerateAttribute(.link, in: fullRange) { value, range, _ in
+                guard value != nil else { return }
+                result.addAttribute(.foregroundColor, value: linkColor, range: range)
+            }
             
             return try AttributedString(result, including: \.uiKit)
         } catch {
