@@ -9,6 +9,15 @@ import SwiftUI
 import Core
 import Services
 
+private struct TitleOffsetPreference: PreferenceKey {
+    static var defaultValue: CGFloat = 0
+    
+    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
+        print(value)
+        value = nextValue()
+    }
+}
+
 public struct EventDetailView: View {
     @ObservedObject var viewModel: EventViewModel
     private var actionHandler: EventActionHandler
@@ -18,6 +27,8 @@ public struct EventDetailView: View {
     @State private var attributedText: AttributedString = .init()
     @State private var bookingPresentation: BookingPresentation?
     @State private var bookingTimePickerPresentation: EventBookingTimePickerPresentation?
+    @State private var navTitleHidden: Bool = true
+    @State private var bottomBookButtonHidden: Bool = true
 
     public init(
         viewModel: EventViewModel,
@@ -34,7 +45,7 @@ public struct EventDetailView: View {
     }
     
     public var body: some View {
-        ZStack(alignment: .topTrailing) {
+        ZStack(alignment: .bottom) {
             ScrollView {
                 VStack(alignment: .leading) {
                     VStack(alignment: .leading) {
@@ -108,9 +119,19 @@ public struct EventDetailView: View {
                                     Spacer()
                                     HStack {
                                         Spacer()
-                                        BuyButton(title: viewModel.bookingButtonTitle) {
-                                            presentBooking(for: viewModel)
+                                        GeometryReader { geo in
+                                            BuyButton(title: viewModel.bookingButtonTitle) {
+                                                presentBooking(for: viewModel)
+                                            }
+                                            .frame(width: geo.frame(in: .local).width, height: geo.frame(in: .local).height, alignment: .bottomTrailing)
+                                            .preference(key: TitleOffsetPreference.self, value: geo.frame(in: .scrollView).minY)
                                         }
+                                        .onPreferenceChange(TitleOffsetPreference.self) { value in
+                                            withAnimation(.easeInOut(duration: 0.3)) {
+                                                bottomBookButtonHidden = value > 20
+                                            }
+                                        }
+                                        
                                     }
                                     .padding(12)
                                 }
@@ -128,14 +149,23 @@ public struct EventDetailView: View {
                             .padding(.horizontal, 12)
                             .font(.system(size: 26, weight: .bold))
                             .foregroundColor(Color(uiColor: Colors.text))
-                        
+                       
                         Text(viewModel.description)
                             .padding(.horizontal, 12)
                             .font(.title3)
                             .foregroundColor(Color(uiColor: Colors.text))
                     }
                     
-                    SeparatorView()
+                    GeometryReader { geo in
+                        SeparatorView()
+                            .preference(key: TitleOffsetPreference.self, value: geo.frame(in: .scrollView).minY)
+                    }
+                    .onPreferenceChange(TitleOffsetPreference.self) { value in
+                        withAnimation(.easeInOut(duration: 0.3)) {
+                            navTitleHidden = value > 44
+                        }
+                    }
+                    
 
                     if let upcomingOccurrences, !upcomingOccurrences.isEmpty {
                         upcomingDatesSection(upcomingOccurrences)
@@ -173,8 +203,26 @@ public struct EventDetailView: View {
                 }
             }
             .scrollIndicators(.hidden)
+            .safeAreaInset(edge: .bottom, spacing: 0) {
+                Color.clear
+                    .opacity(bottomBookButtonHidden ? 1 : 0)
+                    .frame(height: bottomBookButtonHidden ? 0 : 63)
+            }
+            
+            Button(action: { presentBooking(for: viewModel) }) {
+                Text(viewModel.bookingButtonTitle)
+                    .font(.system(size: 20, weight: .semibold))
+                    .foregroundColor(Color(uiColor: Colors.textOnAccent))
+                    .frame(maxWidth: .infinity, minHeight: 51)
+                    .background(Color(uiColor: Colors.accent))
+                    .cornerRadius(8)
+            }
+            .buttonStyle(.plain)
+            .padding(.horizontal, 16)
+            .padding(.bottom, 12)
+            .opacity(bottomBookButtonHidden ? 0 : 1)
         }
-        .navigationTitle(viewModel.title)
+        .navigationTitle(navTitleHidden ? "" : viewModel.title)
         .navigationBarTitleDisplayMode(.automatic)
         .appScrollContentBackgroundHidden()
         .background(Color(uiColor: Colors.mainBackground))
