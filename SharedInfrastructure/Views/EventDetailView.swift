@@ -128,7 +128,7 @@ public struct EventDetailView: View {
                                         }
                                         .onPreferenceChange(TitleOffsetPreference.self) { value in
                                             withAnimation(.easeInOut(duration: 0.3)) {
-                                                bottomBookButtonHidden = value > 20
+                                                bottomBookButtonHidden = value > -80
                                             }
                                         }
                                         
@@ -166,7 +166,6 @@ public struct EventDetailView: View {
                         }
                     }
                     
-
                     if let upcomingOccurrences, !upcomingOccurrences.isEmpty {
                         upcomingDatesSection(upcomingOccurrences)
                     }

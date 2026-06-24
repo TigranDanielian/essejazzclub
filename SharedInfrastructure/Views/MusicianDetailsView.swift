@@ -13,6 +13,7 @@ public struct MusicianDetailsView: View {
     @ObservedObject var viewModel: MusicianViewModel
     private var actionHandler: MusicianActionHandler
     @State private var attributedText: AttributedString = .init()
+    @State private var navTitleHidden: Bool = true
 
     private enum Layout {
         static let textHorizontalPadding: CGFloat = 12
@@ -48,8 +49,16 @@ public struct MusicianDetailsView: View {
                         .font(.title3)
                         .foregroundColor(Color(uiColor: Colors.text))
                     
-                    SeparatorView()
-                    
+                    GeometryReader { geo in
+                        SeparatorView()
+                            .preference(key: TitleOffsetPreference.self, value: geo.frame(in: .scrollView).minY)
+                    }
+                    .onPreferenceChange(TitleOffsetPreference.self) { value in
+                        withAnimation(.easeInOut(duration: 0.3)) {
+                            navTitleHidden = value > 44
+                        }
+                    }
+                                        
                     ExpandableText(text: $attributedText, limit: 100)
                         .padding(12)
                         .font(.caption2)
@@ -74,7 +83,7 @@ public struct MusicianDetailsView: View {
             viewModel.loadImageIfNeeded()
             await loadAttributedBio()
         }
-        .navigationTitle(viewModel.name)
+        .navigationTitle(navTitleHidden ? "" : viewModel.name)
         .navigationBarTitleDisplayMode(.automatic)
     }
 
@@ -82,5 +91,13 @@ public struct MusicianDetailsView: View {
         guard let parsed = await HTMLBioFormatting.attributedString(from: viewModel.text) else { return }
         guard !Task.isCancelled else { return }
         attributedText = parsed
+    }
+}
+
+private struct TitleOffsetPreference: PreferenceKey {
+    static var defaultValue: CGFloat = 0
+    
+    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
+        value = nextValue()
     }
 }
