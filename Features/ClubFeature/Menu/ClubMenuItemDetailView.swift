@@ -64,8 +64,6 @@ struct ClubMenuItemDetailView: View {
             }
             .appScrollContentBackgroundHidden()
             .background(Color(uiColor: Colors.mainBackground))
-            .navigationTitle(item.name)
-            .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Закрыть") { dismiss() }
