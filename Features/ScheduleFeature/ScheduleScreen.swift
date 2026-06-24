@@ -17,6 +17,9 @@ public struct ScheduleScreen: View {
     private var uiFactory: any UIFactory
     /// Родитель (`ScheduleTabShell`) держит VM в `@StateObject` — здесь только наблюдение.
     @ObservedObject var viewModel: ScheduleScreenViewModel
+    @State private var isHeaderHidden = false
+    @State private var initialOffset: CGFloat?
+    @State private var prevOffset: CGFloat?
 
     public init(
         viewModel: ScheduleScreenViewModel,
@@ -28,6 +31,37 @@ public struct ScheduleScreen: View {
 
     public var body: some View {
         ScrollView {
+            GeometryReader { geo in
+                Color.clear.preference(
+                    key: ScrollOffsetPreferenceKey.self,
+                    value: geo.frame(in: .global).minY
+                )
+            }
+            .frame(height: 1)
+            .onPreferenceChange(ScrollOffsetPreferenceKey.self) { value in
+                if initialOffset == nil {
+                    initialOffset = value
+                    return
+                }
+                
+                let offset = value - (initialOffset ?? 0)
+                let prev = prevOffset ?? 0
+                
+                // Hides search header while scrolling down, and shows when scrolling up
+                
+                if offset < 60, prev > offset, !isHeaderHidden {
+                    withAnimation(.easeInOut(duration: 0.2)) {
+                        isHeaderHidden = true
+                    }
+                } else if prev < offset, isHeaderHidden {
+                    withAnimation(.easeInOut(duration: 0.2)) {
+                        isHeaderHidden = false
+                    }
+                }
+                
+                prevOffset = offset
+            }
+            
             LazyVStack(alignment: .leading, spacing: 16) {
                 if viewModel.isLoading, viewModel.grouped.isEmpty {
                     ProgressView()
@@ -68,6 +102,8 @@ public struct ScheduleScreen: View {
         .scrollIndicators(.hidden)
         .safeAreaInset(edge: .top, spacing: 0) {
             searchHeader
+                .opacity(isHeaderHidden ? 0 : 1)
+                .offset(y: isHeaderHidden ? -20 : 0)
         }
         .refreshable {
             await viewModel.refresh()
@@ -128,5 +164,13 @@ public struct ScheduleScreen: View {
         .onAppear {
             Task { await viewModel.loadMore() }
         }
+    }
+}
+
+private struct ScrollOffsetPreferenceKey: PreferenceKey {
+    static var defaultValue: CGFloat = 0
+    
+    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
+        value = nextValue()
     }
 }
