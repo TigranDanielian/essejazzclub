@@ -157,6 +157,8 @@ struct ClubCatalogGridCard: View {
                 .multilineTextAlignment(.leading)
                 .lineLimit(2)
                 .minimumScaleFactor(0.85)
+            
+            Spacer(minLength: 0)
 
             if let subtitle {
                 Text(subtitle)
@@ -164,8 +166,6 @@ struct ClubCatalogGridCard: View {
                     .foregroundStyle(Color(uiColor: Colors.accentSheet))
                     .lineLimit(1)
             }
-
-            Spacer(minLength: 0)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         .padding(.horizontal, 10)
