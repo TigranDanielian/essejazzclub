@@ -16,7 +16,7 @@ struct EventInfoView: View {
             HStack(spacing: 12) {
                 if viewModel.hasDate {
                     Text(viewModel.dateString)
-                        .font(.footnote)
+                        .font(.system(size: 14, weight: .medium))
                         .foregroundStyle(Color(uiColor: Colors.text))
                 }
                
@@ -24,8 +24,9 @@ struct EventInfoView: View {
                     ForEach(viewModel.times, id: \.self) { time in
                         EventTimeView(time: time)
                     }
-
-                    EventPriceView(price: viewModel.priceString)
+                    if viewModel.hasPrice {
+                        EventPriceView(price: viewModel.priceString)
+                    }
                 }
             }
             

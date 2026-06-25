@@ -21,7 +21,7 @@ public struct EventTimeView: View {
         Text(time)
             .padding(.horizontal, 4)
             .padding(.vertical, 3)
-            .font(.system(size: large ? 16 : 14, weight: .semibold, design: .rounded))
+            .font(.system(size: large ? 16 : 14, weight: .medium, design: .rounded))
             .foregroundStyle(Color(uiColor: Colors.text))
             .background(Color(uiColor: Colors.mainBackground))
             .cornerRadius(4)

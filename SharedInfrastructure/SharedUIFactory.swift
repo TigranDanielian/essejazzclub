@@ -29,7 +29,7 @@ public enum UIUnit {
 }
 
 public enum ViewModelUnit {
-    case event(hasContextMenu: Bool = false, hasDate: Bool = false, EventModel)
+    case event(hasContextMenu: Bool = false, hasDate: Bool = false, hasPrice: Bool = true, EventModel)
     case musician(Musician)
 }
 

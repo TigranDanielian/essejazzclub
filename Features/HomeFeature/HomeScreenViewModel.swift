@@ -17,7 +17,7 @@ public final class HomeScreenViewModel: ObservableObject {
     public static let homeFavoritesCarouselLimit = 3
 
     @Published public var mainEvents: [EventViewModel] = []
-    @Published var todayEvents: [GroupedEventSection] = []
+    @Published var upcomingEventSections: [GroupedEventSection] = []
     @Published var favoriteConcertRows: [FavoriteConcertRow] = []
     @Published var favoriteMusicianRows: [FavoriteMusicianRow] = []
 
@@ -42,27 +42,60 @@ public final class HomeScreenViewModel: ObservableObject {
         self.contextHandler = contextHandler
         eventsService.state
             .tryMap { state in
-                let viewModels = state.events.map { model -> EventViewModel in
+                let calendar = Calendar.current
+                let todayStart = calendar.startOfDay(for: Date())
+                let upcomingEnd = calendar.date(byAdding: .day, value: 7, to: todayStart) ?? todayStart
+
+                func isUpcoming(_ date: Date) -> Bool {
+                    let day = calendar.startOfDay(for: date)
+                    return day >= todayStart && day < upcomingEnd
+                }
+
+                let mainEvents: [EventViewModel] = state.events
+                    .filter(\.isTop)
+                    .map { model in
+                        viewModelFactory.produce(
+                            unit: .event(hasContextMenu: false, hasDate: false, model)
+                        ) as! EventViewModel
+                    }
+
+                let upcomingModels = state.events
+                    .filter { isUpcoming($0.dateWithTimes.date) }
+                    .sorted { lhs, rhs in
+                        if lhs.dateWithTimes.date != rhs.dateWithTimes.date {
+                            return lhs.dateWithTimes.date < rhs.dateWithTimes.date
+                        }
+                        let lhsTime = lhs.dateWithTimes.times.map(\.time).min() ?? lhs.dateWithTimes.date
+                        let rhsTime = rhs.dateWithTimes.times.map(\.time).min() ?? rhs.dateWithTimes.date
+                        if lhsTime != rhsTime {
+                            return lhsTime < rhsTime
+                        }
+                        return lhs.title.localizedCaseInsensitiveCompare(rhs.title) == .orderedAscending
+                    }
+
+                let upcomingViewModels = upcomingModels.map { model in
                     viewModelFactory.produce(
-                        unit: .event(hasContextMenu: false, hasDate: false, model)
+                        unit: .event(hasContextMenu: false, hasDate: true, hasPrice: false, model)
                     ) as! EventViewModel
                 }
 
-                let todayViewModels = viewModels.filter {
-                    Calendar.current.isDateInToday($0.date)
+                let mainStage = upcomingViewModels.filter { !$0.isJazzLab }
+                let jazzLab = upcomingViewModels.filter { $0.isJazzLab }
+
+                var upcomingEventSections: [GroupedEventSection] = []
+                if !mainStage.isEmpty {
+                    upcomingEventSections.append(GroupedEventSection(type: .mainStage, events: mainStage))
+                }
+                if !jazzLab.isEmpty {
+                    upcomingEventSections.append(GroupedEventSection(type: .jazzLab, events: jazzLab))
                 }
 
-                let todaySections = [
-                    GroupedEventSection(type: .mainStage, events: todayViewModels.filter({ !$0.isJazzLab })),
-                    GroupedEventSection(type: .jazzLab, events: todayViewModels.filter({ $0.isJazzLab }))
-                ]
-
-                return (viewModels.filter({ $0.isTop }), todaySections)
+                return (mainEvents, upcomingEventSections)
             }
             .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] in
-                let (mainEvents, todaySections) = $0
-                self?.mainEvents = Array(mainEvents)
-                self?.todayEvents = todaySections
+                let (mainEvents, upcomingEventSections) = $0
+                self?.mainEvents = mainEvents
+                self?.upcomingEventSections = upcomingEventSections
             })
             .store(in: &cancellables)
 
@@ -127,7 +160,7 @@ public final class HomeScreenViewModel: ObservableObject {
             }
             .store(in: &cancellables)
     }
-
+    
     public func handleAction(_ action: HomeScreenAction) {
         switch action {
         case .event(let eventAction):

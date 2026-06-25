@@ -48,7 +48,7 @@ public final class SharedViewModelFactory: ViewModelFactory {
 
     public func produce(unit: ViewModelUnit) -> any ObservableObject {
         switch unit {
-        case .event(let hasContextMenu, let hasDate, let model):
+        case .event(let hasContextMenu, let hasDate, let hasPrice, let model):
             let key = EventViewModelCacheKey(
                 occurrenceIdentifier: eventOccurrenceIdentifier(for: model),
                 hasContextMenu: hasContextMenu,
@@ -62,6 +62,7 @@ public final class SharedViewModelFactory: ViewModelFactory {
                 model: model,
                 hasContextMenu: hasContextMenu,
                 withDate: hasDate,
+                withPrice: hasPrice,
                 imageLoader: imageLoader,
                 favoritesStorage: favoritesStorage,
                 calendarEventsManager: calendarEventsManager,

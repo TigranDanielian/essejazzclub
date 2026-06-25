@@ -21,7 +21,7 @@ struct EventPriceView: View {
         Text(price.isEmpty ? "FREE" : "\(price)")
             .padding(.horizontal, 4)
             .padding(.vertical, 3)
-            .font(.system(size: large ? 16 : 14, weight: .semibold, design: .rounded))
+            .font(.system(size: large ? 16 : 14, weight: .medium, design: .rounded))
             .foregroundStyle(Color(uiColor: price.isEmpty ? Colors.freetag : Colors.softGold))
             .background(Color(uiColor: Colors.mainBackground))
             .cornerRadius(4)

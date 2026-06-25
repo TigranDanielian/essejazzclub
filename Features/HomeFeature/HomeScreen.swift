@@ -61,18 +61,12 @@ public struct HomeScreen: View {
 
     private var homeSheetBody: some View {
         VStack(alignment: .leading, spacing: 32) {
-            HomeScreenSection(title: "Сегодня") {
-                DayView(sections: viewModel.todayEvents) { event in
-                    AnyView(
-                        uiFactory.produce(unit: .event(event))
-                            .environment(\.eventCardTap) {
-                                viewModel.onEventDetails(event)
-                            }
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                    )
-                }
-            }
-
+            HomeUpcomingConcertsCarousel(
+                sections: viewModel.upcomingEventSections,
+                uiFactory: uiFactory,
+                onEventDetails: { viewModel.onEventDetails($0) }
+            )
+            
             if !viewModel.favoriteConcertRows.isEmpty || !viewModel.favoriteMusicianRows.isEmpty {
                 HomeScreenSection(title: "Избранное") {
                     VStack(alignment: .leading, spacing: 12) {

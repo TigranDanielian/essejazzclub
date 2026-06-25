@@ -23,6 +23,7 @@ public final class EventViewModel: ObservableObject {
     /// Вариант карточки: контекстное меню / дата — задаётся при создании через фабрику.
     public let hasContextMenu: Bool
     public let hasDate: Bool
+    public let hasPrice: Bool
 
     @Published public var image: UIImage? = nil
     @Published public var isLoadingImage: Bool = false
@@ -101,6 +102,7 @@ public final class EventViewModel: ObservableObject {
         model: EventModel,
         hasContextMenu: Bool,
         withDate: Bool = false,
+        withPrice: Bool = true,
         imageLoader: @escaping AsyncImageLoader,
         favoritesStorage: FavoritesStorage<String>,
         calendarEventsManager: CalendarEventsManager,
@@ -115,6 +117,7 @@ public final class EventViewModel: ObservableObject {
         self.musiciansProvider = musiciansProvider
         self.hasContextMenu = hasContextMenu
         self.hasDate = withDate
+        self.hasPrice = withPrice
     }
 
     /// Обновляет данные события при повторном `produce` из фабрики с актуальной моделью API.
