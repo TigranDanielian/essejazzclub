@@ -11,7 +11,6 @@ import Services
 import SharedInfrastructure
 
 public struct HomeScreen: View {
-    /// Родитель (`HomeTabShell`) держит VM в `@StateObject` — здесь только наблюдение.
     @ObservedObject public var viewModel: HomeScreenViewModel
     private let uiFactory: any UIFactory
 
@@ -26,13 +25,8 @@ public struct HomeScreen: View {
     public var body: some View {
         Group {
             if viewModel.hasHeroBanner {
-                HomeTopClampedScrollView(
-                    showsIndicators: false,
-                    scrollClipDisabled: true,
-                    bounces: true,
-                    onRefresh: { await viewModel.refresh() }
-                ) {
-                    homeSheetContent
+                HomeSheetScrollView(onRefresh: { await viewModel.refresh() }) {
+                    homeSheetBody
                 }
             } else {
                 ScrollView(.vertical, showsIndicators: false) {
@@ -48,17 +42,6 @@ public struct HomeScreen: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
     }
 
-    private var homeSheetContent: some View {
-        VStack(spacing: 0) {
-            Color.clear
-                .frame(height: HomeHeroSheetLayout.scrollHitExtensionHeight)
-                .allowsHitTesting(false)
-
-            homeSheetBody
-        }
-        .frame(maxWidth: .infinity, alignment: .leading)
-    }
-
     private var homeSheetBody: some View {
         VStack(alignment: .leading, spacing: 32) {
             HomeUpcomingConcertsCarousel(
@@ -66,7 +49,7 @@ public struct HomeScreen: View {
                 uiFactory: uiFactory,
                 onEventDetails: { viewModel.onEventDetails($0) }
             )
-            
+
             if !viewModel.favoriteConcertRows.isEmpty || !viewModel.favoriteMusicianRows.isEmpty {
                 HomeScreenSection(title: "Избранное") {
                     VStack(alignment: .leading, spacing: 12) {
@@ -110,7 +93,6 @@ public struct HomeScreen: View {
                     }
                 }
             }
-
         }
         .padding(.top, 16)
         .padding(.bottom, 24)
@@ -123,7 +105,6 @@ public struct HomeScreen: View {
             )
         )
     }
-
 
     private func homeFavoritesSubheader(_ title: String) -> some View {
         Text(title)

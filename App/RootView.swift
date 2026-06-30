@@ -205,49 +205,31 @@ private struct HomeTabShell<RouteContent: View>: View {
 
     var body: some View {
         NavigationStack(path: $navPath) {
-            VStack(spacing: viewModel.hasHeroBanner ? -HomeHeroSheetLayout.sheetOverlap : 0) {
-                if viewModel.hasHeroBanner {
-                    HomeHeroBanner(
-                        events: viewModel.mainEvents,
-                        imageLoader: container.imageLoader,
-                        isPlaybackActive: isHeroBannerPlaybackActive,
-                        onDetails: { event in
-                            viewModel.onEventDetails(
-                                event,
-                                heroTransitionSourceID: EventHeroTransitionSourceID.banner(
-                                    occurrenceIdentifier: event.occurrenceIdentifier
-                                )
-                            )
-                        }
-                    )
-                    .opacity(showsHeroBanner ? 1 : 0)
-                    .animation(nil, value: showsHeroBanner)
-                    .allowsHitTesting(showsHeroBanner)
-                    .accessibilityHidden(!showsHeroBanner)
-                }
-                
-                Color(uiColor: Colors.mainBackground)
-//                    .padding(.top, viewModel.hasHeroBanner ? -HomeHeroSheetLayout.scrollHitExtensionHeight : 0)
-                    .allowsHitTesting(false)
-                    .cornerRadius(16)
-                    .overlay {
-                        
-                        HomeScreen(
-                            viewModel: viewModel,
-                            uiFactory: container.uiFactory
+            HomeHeroShell(
+                hasBanner: viewModel.hasHeroBanner,
+                showsBanner: showsHeroBanner,
+                isBannerPlaybackActive: isHeroBannerPlaybackActive,
+                bannerEvents: viewModel.mainEvents,
+                imageLoader: container.imageLoader,
+                onBannerEventDetails: { event in
+                    viewModel.onEventDetails(
+                        event,
+                        heroTransitionSourceID: EventHeroTransitionSourceID.banner(
+                            occurrenceIdentifier: event.occurrenceIdentifier
                         )
-                        .padding(.top, viewModel.hasHeroBanner ? -HomeHeroSheetLayout.scrollHitExtensionHeight : 0)
-                        .zIndex(1)
-                        .navigationDestination(for: HomeNavigationRouter.Route.self) { route in
-                            routeView(route)
-                        }
-                    }
-
+                    )
+                }
+            ) {
+                HomeScreen(
+                    viewModel: viewModel,
+                    uiFactory: container.uiFactory
+                )
+                .navigationDestination(for: HomeNavigationRouter.Route.self) { route in
+                    routeView(route)
+                }
             }
             .toolbar(.hidden, for: .navigationBar)
             .toolbarBackground(.hidden, for: .navigationBar)
-            .ignoresSafeArea(edges: .top)
-            .background(Color(uiColor: Colors.mainBackground))
         }
         .environment(\.eventHeroNamespace, eventHeroNamespace)
         .onAppear {

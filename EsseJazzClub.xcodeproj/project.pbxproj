@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		01743E771CB1234D98872F89 /* AppNavigationRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3A19D997F9A40F7D150FC76 /* AppNavigationRouter.swift */; };
 		026205E5BD61CC375CCD475F /* EventModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 323742A410BE0F463AE94F77 /* EventModel.swift */; };
+		035DD1E1ECDEC820F08685F3 /* HomeHeroShell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A429FF1AE6D8F2CB69AC9658 /* HomeHeroShell.swift */; };
 		03776C4D34C49BE2D3F94CE2 /* EventDetailHeroSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 336AE0F8E014FDFB4F2713C3 /* EventDetailHeroSlider.swift */; };
 		0454D100E3611C79E8C3A452 /* API.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 48BA7EEC6C75DEF58EE0D4B8 /* API.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		0609EE0B2E6C07D765BDE5FA /* BuyButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3385744B245B60DFB64B7FD /* BuyButton.swift */; };
@@ -155,7 +156,6 @@
 		ADF677DE3A0E86DE056A96F2 /* EventsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 585EE12BDB226435E286648E /* EventsService.swift */; };
 		AE758AC6E3B363C66D69BD1B /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE37024CC085264822271032 /* AppState.swift */; };
 		AF230A9165D616B390050BE5 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3EDDBC5529E406701C8DF5 /* RootView.swift */; };
-		B04CAE1EC8E40BA19C333F0D /* HomeTopClampedScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7554D20FDE3AD8DDE5806E92 /* HomeTopClampedScrollView.swift */; };
 		B21670614D2F37673E29F3AD /* SharedInfrastructure.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 309260A176D68C1D5FACFB49 /* SharedInfrastructure.framework */; };
 		B3037271F332F9D39A91816D /* ClubNavigationRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AEB26D2DE114D29BF5069B5 /* ClubNavigationRouter.swift */; };
 		B38DDEE495D3FCA9A69C6032 /* ClubScreenViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AB2D3E69C037ED8713A2261 /* ClubScreenViewModel.swift */; };
@@ -208,6 +208,7 @@
 		F3D86B9FA86A5321F54FFFDF /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3EDDBC5529E406701C8DF5 /* RootView.swift */; };
 		F3F07BD5DD63A52B5F00145E /* MenuYMLParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74303D39ED1EDCFAC3913539 /* MenuYMLParser.swift */; };
 		F403A39F4A617629DD8AF7DA /* Endpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = C597C5D176F36E4A579BD016 /* Endpoints.swift */; };
+		F43A802E1BF3ED2FFEEADD8C /* HomeSheetScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64D8C3CFBB83EB125F8E7A78 /* HomeSheetScrollView.swift */; };
 		F6B099637D0457E61FE8C0EF /* Core.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A1059EAB8C03AF412D52227E /* Core.framework */; };
 		FDD87EC7505D2F1AD16FB1AC /* TopLeftCutoutShape.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8731D18EFC904EB20AAE469F /* TopLeftCutoutShape.swift */; };
 		FDF4253C922B226FBAC08957 /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 165D5232E194C553D04DF3FB /* Media.xcassets */; };
@@ -556,6 +557,7 @@
 		5FD03E66C6EECA44F6091637 /* YouTubeVideoID.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YouTubeVideoID.swift; sourceTree = "<group>"; };
 		62F90AAD676C9549448266D6 /* AppAppearance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppAppearance.swift; sourceTree = "<group>"; };
 		633682FC446C691876A451F9 /* String.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
+		64D8C3CFBB83EB125F8E7A78 /* HomeSheetScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeSheetScrollView.swift; sourceTree = "<group>"; };
 		657EC9D78E618CE1166F0244 /* ScheduleFeature_Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = ScheduleFeature_Info.plist; sourceTree = "<group>"; };
 		660252E35D53B912350A71D6 /* EventSchedulePage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventSchedulePage.swift; sourceTree = "<group>"; };
 		67A33BF062F1F3FC41692C58 /* PathImageLoading.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PathImageLoading.swift; sourceTree = "<group>"; };
@@ -565,7 +567,6 @@
 		73FDB5D03EB9EB883C028EF0 /* ClubShopScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClubShopScreen.swift; sourceTree = "<group>"; };
 		74303D39ED1EDCFAC3913539 /* MenuYMLParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuYMLParser.swift; sourceTree = "<group>"; };
 		75293FAF798CAF048BF32B44 /* SkeletonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkeletonView.swift; sourceTree = "<group>"; };
-		7554D20FDE3AD8DDE5806E92 /* HomeTopClampedScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeTopClampedScrollView.swift; sourceTree = "<group>"; };
 		77E4E30544255861A2D3CDB0 /* ClubContactsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClubContactsScreen.swift; sourceTree = "<group>"; };
 		7A1F4CB2F4F44C2A60A0FB35 /* AppContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppContainer.swift; sourceTree = "<group>"; };
 		7AB2D3E69C037ED8713A2261 /* ClubScreenViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClubScreenViewModel.swift; sourceTree = "<group>"; };
@@ -592,6 +593,7 @@
 		A1059EAB8C03AF412D52227E /* Core.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Core.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A1CB1DC577ECAD66C341017F /* EsseJazzClubApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EsseJazzClubApp.swift; sourceTree = "<group>"; };
 		A273A42A071818D61668B7E4 /* ApiTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiTests.swift; sourceTree = "<group>"; };
+		A429FF1AE6D8F2CB69AC9658 /* HomeHeroShell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeHeroShell.swift; sourceTree = "<group>"; };
 		A5FDB064AF7FC64CAB3FA438 /* EventOccurrenceIdentifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventOccurrenceIdentifier.swift; sourceTree = "<group>"; };
 		A765291C7B33841FA000DBE9 /* ScheduleScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleScreen.swift; sourceTree = "<group>"; };
 		A80BB3E0B86285D531FA252B /* FavoriteMusicianRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteMusicianRow.swift; sourceTree = "<group>"; };
@@ -788,12 +790,13 @@
 				FB59A9F54E370F95A54BC79A /* HomeDaySliderView.swift */,
 				87155370A455631D77766E51 /* HomeHeroBanner.swift */,
 				3AACF37ACFE89AE548B1007F /* HomeHeroSheetLayout.swift */,
+				A429FF1AE6D8F2CB69AC9658 /* HomeHeroShell.swift */,
 				F0BF39F58D4BE02064975FB8 /* HomeHeroStoryPager.swift */,
 				3294053040738329F24F12D2 /* HomeNavigationRouter.swift */,
 				246C0095DAE977ABEDBFDA76 /* HomeScreen.swift */,
 				57B318AABEB71846F00FD1EA /* HomeScreenViewModel.swift */,
+				64D8C3CFBB83EB125F8E7A78 /* HomeSheetScrollView.swift */,
 				8FE413E445BA23D2525E1FEC /* HomeTabNavigating.swift */,
-				7554D20FDE3AD8DDE5806E92 /* HomeTopClampedScrollView.swift */,
 				563DEB75AAA3C49E52F924C8 /* HomeUpcomingConcertsCarousel.swift */,
 				EADBD6A23469E1E67D447228 /* Favorites */,
 			);
@@ -1725,12 +1728,13 @@
 				7C40C4DD7C73BEA7AB8C904F /* HomeFavoriteEventDetailHost.swift in Sources */,
 				6BC8A14C56464A10C4524058 /* HomeHeroBanner.swift in Sources */,
 				6544F51DA0C3C7CF494EF4DB /* HomeHeroSheetLayout.swift in Sources */,
+				035DD1E1ECDEC820F08685F3 /* HomeHeroShell.swift in Sources */,
 				3D34198DB636FDA3F532A403 /* HomeHeroStoryPager.swift in Sources */,
 				193C86DFAF2BC572409E706B /* HomeNavigationRouter.swift in Sources */,
 				6B2F99AA5FCF3A6569D47F35 /* HomeScreen.swift in Sources */,
 				31B94E2FFC5ABFEF6691C03A /* HomeScreenViewModel.swift in Sources */,
+				F43A802E1BF3ED2FFEEADD8C /* HomeSheetScrollView.swift in Sources */,
 				3C8A4E85AFFD706C82DB8484 /* HomeTabNavigating.swift in Sources */,
-				B04CAE1EC8E40BA19C333F0D /* HomeTopClampedScrollView.swift in Sources */,
 				B4063C3F613D778D69906AFC /* HomeUpcomingConcertsCarousel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
