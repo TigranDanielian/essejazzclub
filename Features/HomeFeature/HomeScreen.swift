@@ -13,7 +13,6 @@ import SharedInfrastructure
 public struct HomeScreen: View {
     /// Родитель (`HomeTabShell`) держит VM в `@StateObject` — здесь только наблюдение.
     @ObservedObject public var viewModel: HomeScreenViewModel
-    @State private var sheetScrollOffset: CGFloat = 0
     private let uiFactory: any UIFactory
 
     public init(
@@ -30,17 +29,20 @@ public struct HomeScreen: View {
                 HomeTopClampedScrollView(
                     showsIndicators: false,
                     scrollClipDisabled: true,
-                    bounces: false,
-                    scrollOffset: $sheetScrollOffset
+                    bounces: true,
+                    onRefresh: { await viewModel.refresh() }
                 ) {
                     homeSheetContent
                 }
             } else {
                 ScrollView(.vertical, showsIndicators: false) {
-                    homeSheetContent
+                    homeSheetBody
                 }
-                .scrollBounceBehavior(.basedOnSize, axes: .vertical)
+                .scrollBounceBehavior(.automatic, axes: .vertical)
                 .appScrollContentBackgroundHidden()
+                .refreshable {
+                    await viewModel.refresh()
+                }
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
@@ -48,11 +50,9 @@ public struct HomeScreen: View {
 
     private var homeSheetContent: some View {
         VStack(spacing: 0) {
-            if viewModel.hasHeroBanner {
-                Color.clear
-                    .frame(height: HomeHeroSheetLayout.scrollHitExtensionHeight)
-                    .allowsHitTesting(false)
-            }
+            Color.clear
+                .frame(height: HomeHeroSheetLayout.scrollHitExtensionHeight)
+                .allowsHitTesting(false)
 
             homeSheetBody
         }
@@ -149,14 +149,14 @@ struct HomeScreenSection: View {
     var body: some View {
         ZStack(alignment: .topLeading) {
             TopLeftCutoutShape(
-                cutoutSize: CGSize(width: textWidth, height: 48),
+                cutoutSize: CGSize(width: textWidth, height: 40),
                 cornerRadius: 12
             )
             .fill(DayBlockBackground.gradient, style: FillStyle(eoFill: true))
             .cornerRadius(12)
 
             Text(title)
-                .font(.largeTitle)
+                .font(.title)
                 .bold()
                 .foregroundStyle(Color(uiColor: Colors.secondaryText))
                 .padding(.horizontal, 12)

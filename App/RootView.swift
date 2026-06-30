@@ -66,9 +66,10 @@ struct RootView: View {
     @ViewBuilder
     private func homeRouteView(for route: HomeNavigationRouter.Route) -> some View {
         switch route {
-        case .eventDetail(let viewModel):
+        case .eventDetail(let viewModel, let heroTransitionSourceID):
             eventDetailView(
                 viewModel: viewModel,
+                heroTransitionSourceID: heroTransitionSourceID,
                 actionHandler: homeTabNavigation.makeEventDetailActionHandler(contextHandler: handleContextAction)
             )
         case .musicianDetail(let viewModel):
@@ -97,9 +98,10 @@ struct RootView: View {
     @ViewBuilder
     private func scheduleRouteView(for route: ScheduleNavigationRouter.Route) -> some View {
         switch route {
-        case .eventDetail(let viewModel):
+        case .eventDetail(let viewModel, let heroTransitionSourceID):
             eventDetailView(
                 viewModel: viewModel,
+                heroTransitionSourceID: heroTransitionSourceID,
                 actionHandler: scheduleTabNavigation.makeEventDetailActionHandler(contextHandler: handleContextAction)
             )
         case .musicianDetail(let viewModel):
@@ -115,8 +117,14 @@ struct RootView: View {
     }
 
     @ViewBuilder
-    private func eventDetailView(viewModel: EventViewModel, actionHandler: @escaping EventActionHandler) -> some View {
-        AnyView(container.uiFactory.produce(unit: .eventDetails(viewModel, actionHandler, nil, .default, onSelectUpcomingOccurrence: nil)))
+    private func eventDetailView(
+        viewModel: EventViewModel,
+        heroTransitionSourceID: String?,
+        actionHandler: @escaping EventActionHandler
+    ) -> some View {
+        AnyView(container.uiFactory.produce(
+            unit: .eventDetails(viewModel, actionHandler, nil, .default, heroTransitionSourceID: heroTransitionSourceID, onSelectUpcomingOccurrence: nil)
+        ))
     }
 
     @ViewBuilder
@@ -161,6 +169,9 @@ private struct HomeTabShell<RouteContent: View>: View {
 
     @StateObject private var viewModel: HomeScreenViewModel
     @State private var navPath: [HomeNavigationRouter.Route] = []
+    @State private var heroBannerHiddenForNavigation = false
+    @State private var heroBannerHideTask: Task<Void, Never>?
+    @Namespace private var eventHeroNamespace
 
     init(
         container: AppContainer,
@@ -185,6 +196,10 @@ private struct HomeTabShell<RouteContent: View>: View {
     }
 
     private var showsHeroBanner: Bool {
+        viewModel.hasHeroBanner && !heroBannerHiddenForNavigation
+    }
+
+    private var isHeroBannerPlaybackActive: Bool {
         viewModel.hasHeroBanner && navPath.isEmpty
     }
 
@@ -195,29 +210,46 @@ private struct HomeTabShell<RouteContent: View>: View {
                     HomeHeroBanner(
                         events: viewModel.mainEvents,
                         imageLoader: container.imageLoader,
-                        isPlaybackActive: showsHeroBanner,
-                        onDetails: { viewModel.onEventDetails($0) }
+                        isPlaybackActive: isHeroBannerPlaybackActive,
+                        onDetails: { event in
+                            viewModel.onEventDetails(
+                                event,
+                                heroTransitionSourceID: EventHeroTransitionSourceID.banner(
+                                    occurrenceIdentifier: event.occurrenceIdentifier
+                                )
+                            )
+                        }
                     )
                     .opacity(showsHeroBanner ? 1 : 0)
+                    .animation(nil, value: showsHeroBanner)
                     .allowsHitTesting(showsHeroBanner)
                     .accessibilityHidden(!showsHeroBanner)
                 }
+                
+                Color(uiColor: Colors.mainBackground)
+//                    .padding(.top, viewModel.hasHeroBanner ? -HomeHeroSheetLayout.scrollHitExtensionHeight : 0)
+                    .allowsHitTesting(false)
+                    .cornerRadius(16)
+                    .overlay {
+                        
+                        HomeScreen(
+                            viewModel: viewModel,
+                            uiFactory: container.uiFactory
+                        )
+                        .padding(.top, viewModel.hasHeroBanner ? -HomeHeroSheetLayout.scrollHitExtensionHeight : 0)
+                        .zIndex(1)
+                        .navigationDestination(for: HomeNavigationRouter.Route.self) { route in
+                            routeView(route)
+                        }
+                    }
 
-                HomeScreen(
-                    viewModel: viewModel,
-                    uiFactory: container.uiFactory
-                )
-                .padding(.top, viewModel.hasHeroBanner ? -HomeHeroSheetLayout.scrollHitExtensionHeight : 0)
-                .zIndex(1)
-                .navigationDestination(for: HomeNavigationRouter.Route.self) { route in
-                    routeView(route)
-                }
             }
             .toolbar(.hidden, for: .navigationBar)
             .toolbarBackground(.hidden, for: .navigationBar)
             .ignoresSafeArea(edges: .top)
             .background(Color(uiColor: Colors.mainBackground))
         }
+        .environment(\.eventHeroNamespace, eventHeroNamespace)
         .onAppear {
             navPath = router.path
             container.calendarEventsManager.requestAccessIfNeeded()
@@ -225,6 +257,21 @@ private struct HomeTabShell<RouteContent: View>: View {
         .onChange(of: router.path) { _, newPath in
             guard newPath != navPath else { return }
             navPath = newPath
+        }
+        .onChange(of: navPath.isEmpty) { _, isEmpty in
+            heroBannerHideTask?.cancel()
+            heroBannerHideTask = nil
+
+            if isEmpty {
+                heroBannerHiddenForNavigation = false
+            } else {
+                heroBannerHideTask = Task { @MainActor in
+                    // Держим баннер видимым на время zoom-перехода (iOS 18), затем прячем под деталкой.
+                    try? await Task.sleep(for: .milliseconds(500))
+                    guard !Task.isCancelled, !navPath.isEmpty else { return }
+                    heroBannerHiddenForNavigation = true
+                }
+            }
         }
         .onChange(of: navPath) { _, newPath in
             guard newPath != router.path else { return }
@@ -272,6 +319,7 @@ private struct ScheduleTabShell<RouteContent: View>: View {
     @ViewBuilder let routeView: (ScheduleNavigationRouter.Route) -> RouteContent
 
     @StateObject private var viewModel: ScheduleScreenViewModel
+    @Namespace private var eventHeroNamespace
 
     init(
         container: AppContainer,
@@ -300,6 +348,7 @@ private struct ScheduleTabShell<RouteContent: View>: View {
                     routeView(route)
                 }
         }
+        .environment(\.eventHeroNamespace, eventHeroNamespace)
         .sheet(item: $router.sheetDestination) { route in
             switch route {
             case .filter:

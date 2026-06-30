@@ -86,6 +86,11 @@ public struct EventView: View {
                 }
             }
             .frame(width: 100, height: 100)
+            .eventHeroTransitionSource(
+                sourceID: EventHeroTransitionSourceID.card(
+                    occurrenceIdentifier: viewModel.occurrenceIdentifier
+                )
+            )
             .onAppear { viewModel.loadImageIfNeeded() }
             .onDisappear { viewModel.cancelImageLoad() }
 

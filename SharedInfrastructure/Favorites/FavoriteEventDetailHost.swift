@@ -35,6 +35,7 @@ public struct FavoriteEventDetailHost: View {
                             detail.makeEventActionHandler(),
                             detail.upcomingOccurrences,
                             detail.detailDisplayOptions,
+                            heroTransitionSourceID: nil,
                             onSelectUpcomingOccurrence: detail.onSelectUpcomingOccurrence
                         )
                     )

@@ -19,6 +19,7 @@ public enum UIUnit {
         EventActionHandler,
         [EventDetailUpcomingOccurrence]?,
         EventDetailDisplayOptions,
+        heroTransitionSourceID: String?,
         onSelectUpcomingOccurrence: ((String) -> Void)?
     )
     case musician(MusicianViewModel, MusicianActionHandler)
@@ -57,12 +58,13 @@ public final class SharedUIFactory: UIFactory {
         switch unit {
         case .event(let viewModel):
             EventView(viewModel: viewModel)
-        case .eventDetails(let viewModel, let actionHandler, let upcomingOccurrences, let displayOptions, onSelectUpcomingOccurrence: let onSelectUpcoming):
+        case .eventDetails(let viewModel, let actionHandler, let upcomingOccurrences, let displayOptions, let heroTransitionSourceID, onSelectUpcomingOccurrence: let onSelectUpcoming):
             EventDetailView(
                 viewModel: viewModel,
                 actionHandler: actionHandler,
                 upcomingOccurrences: upcomingOccurrences,
                 displayOptions: displayOptions,
+                heroTransitionSourceID: heroTransitionSourceID,
                 onSelectUpcomingOccurrence: onSelectUpcoming
             )
         case .favoriteConcertRow(let row):

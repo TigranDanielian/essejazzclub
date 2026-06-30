@@ -13,16 +13,17 @@ private struct TitleOffsetPreference: PreferenceKey {
     static var defaultValue: CGFloat = 0
     
     static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
-        print(value)
         value = nextValue()
     }
 }
 
 public struct EventDetailView: View {
     @ObservedObject var viewModel: EventViewModel
+    @Environment(\.dismiss) private var dismiss
     private var actionHandler: EventActionHandler
     private let upcomingOccurrences: [EventDetailUpcomingOccurrence]?
     private let displayOptions: EventDetailDisplayOptions
+    private let heroTransitionSourceID: String?
     private let onSelectUpcomingOccurrence: ((String) -> Void)?
     @State private var attributedText: AttributedString = .init()
     @State private var bookingPresentation: BookingPresentation?
@@ -35,12 +36,14 @@ public struct EventDetailView: View {
         actionHandler: @escaping EventActionHandler,
         upcomingOccurrences: [EventDetailUpcomingOccurrence]? = nil,
         displayOptions: EventDetailDisplayOptions = .default,
+        heroTransitionSourceID: String? = nil,
         onSelectUpcomingOccurrence: ((String) -> Void)? = nil
     ) {
         self.viewModel = viewModel
         self.actionHandler = actionHandler
         self.upcomingOccurrences = upcomingOccurrences
         self.displayOptions = displayOptions
+        self.heroTransitionSourceID = heroTransitionSourceID
         self.onSelectUpcomingOccurrence = onSelectUpcomingOccurrence
     }
     
@@ -127,6 +130,7 @@ public struct EventDetailView: View {
                                             .preference(key: TitleOffsetPreference.self, value: geo.frame(in: .scrollView).minY)
                                         }
                                         .onPreferenceChange(TitleOffsetPreference.self) { value in
+//                                            guard !usesHeroNavigationTransition else { return }
                                             withAnimation(.easeInOut(duration: 0.3)) {
                                                 bottomBookButtonHidden = value > -80
                                             }
@@ -161,6 +165,7 @@ public struct EventDetailView: View {
                             .preference(key: TitleOffsetPreference.self, value: geo.frame(in: .scrollView).minY)
                     }
                     .onPreferenceChange(TitleOffsetPreference.self) { value in
+                        guard !usesHeroNavigationTransition else { return }
                         withAnimation(.easeInOut(duration: 0.3)) {
                             navTitleHidden = value > 44
                         }
@@ -221,8 +226,19 @@ public struct EventDetailView: View {
             .padding(.bottom, 12)
             .opacity(bottomBookButtonHidden ? 0 : 1)
         }
-        .navigationTitle(navTitleHidden ? "" : viewModel.title)
-        .navigationBarTitleDisplayMode(.automatic)
+        .overlay(alignment: .top) {
+            if usesHeroNavigationTransition {
+                HStack {
+                    heroBackButton
+                    Spacer()
+                }
+                .padding(.horizontal, 12)
+                .padding(.top, 8)
+            }
+        }
+        .eventHeroNavigationTransition(sourceID: heroTransitionSourceID)
+        .navigationTitle(usesHeroNavigationTransition ? "" : (navTitleHidden ? "" : viewModel.title))
+        .navigationBarTitleDisplayMode(usesHeroNavigationTransition ? .inline : .automatic)
         .appScrollContentBackgroundHidden()
         .background(Color(uiColor: Colors.mainBackground))
         .task(id: viewModel.occurrenceIdentifier) {
@@ -247,6 +263,24 @@ public struct EventDetailView: View {
         .sheet(item: $bookingPresentation) { presentation in
             TicketBookingSheet(url: presentation.url, title: presentation.title)
         }
+    }
+
+    private var usesHeroNavigationTransition: Bool {
+        heroTransitionSourceID != nil
+    }
+
+    private var heroBackButton: some View {
+        Button {
+            dismiss()
+        } label: {
+            Image(systemName: "chevron.backward")
+                .font(.system(size: 17, weight: .semibold))
+                .foregroundStyle(Color(uiColor: Colors.text))
+                .frame(width: 36, height: 36)
+                .background(.ultraThinMaterial, in: Circle())
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel("Назад")
     }
 
     private func presentBooking(for viewModel: EventViewModel) {

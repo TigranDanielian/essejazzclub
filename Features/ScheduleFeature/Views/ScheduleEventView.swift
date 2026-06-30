@@ -46,7 +46,12 @@ struct ScheduleEventView: View {
 
     private func openEventDetails() {
         guard interaction.offsetX == 0 else { return }
-        onSelect(.navigation(.onEventDetails(viewModel)))
+        onSelect(.navigation(.onEventDetails(
+            viewModel,
+            heroTransitionSourceID: EventHeroTransitionSourceID.card(
+                occurrenceIdentifier: viewModel.occurrenceIdentifier
+            )
+        )))
     }
 
     private func toggleSwipeOffset() {

@@ -31,4 +31,6 @@ public enum HomeHeroSheetLayout {
 
     /// Длительность одного «сторис»-слайда в герой-баннере.
     public static let storyDuration: TimeInterval = 7
+    
+    public static let pullRefreshTriggerOffset: CGFloat = 44
 }

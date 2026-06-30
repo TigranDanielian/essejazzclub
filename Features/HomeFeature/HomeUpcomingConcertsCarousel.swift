@@ -25,7 +25,7 @@ struct HomeUpcomingConcertsCarousel: View {
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.horizontal, 16)
             } else {
-                HomeScreenSection(title: "Скоро") {
+                HomeScreenSection(title: "Ближайшие концерты") {
                     HomeDaySliderView(
                         sections: sections,
                         uiFactory: uiFactory,

@@ -8,7 +8,7 @@
 import Foundation
 
 public enum EventNavigationAction {
-    case onEventDetails(EventViewModel)
+    case onEventDetails(EventViewModel, heroTransitionSourceID: String?)
     case onMusicianDetails(MusicianViewModel)
     case dismiss
     case onBuy
@@ -34,7 +34,14 @@ public func applyEventActionParts(
         applyNavigation(nav)
     case .contextAction(let button):
         if case .details(let viewModel) = button {
-            applyNavigation(.onEventDetails(viewModel))
+            applyNavigation(
+                .onEventDetails(
+                    viewModel,
+                    heroTransitionSourceID: EventHeroTransitionSourceID.card(
+                        occurrenceIdentifier: viewModel.occurrenceIdentifier
+                    )
+                )
+            )
         }
         handleContextButton(button)
     }

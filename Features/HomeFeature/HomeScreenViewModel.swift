@@ -25,6 +25,8 @@ public final class HomeScreenViewModel: ObservableObject {
 
     private var cancellables: Set<AnyCancellable> = []
     private var musiciansCatalog: [Musician] = []
+    private let eventsService: EventsService
+    private let musiciansService: MusiciansService
     private let viewModelFactory: ViewModelFactory
     private let tabNavigation: HomeTabNavigating
     private let contextHandler: (EventContextButtonType) -> Void
@@ -37,6 +39,8 @@ public final class HomeScreenViewModel: ObservableObject {
         tabNavigation: HomeTabNavigating,
         contextHandler: @escaping (EventContextButtonType) -> Void
     ) {
+        self.eventsService = eventsService
+        self.musiciansService = musiciansService
         self.viewModelFactory = viewModelFactory
         self.tabNavigation = tabNavigation
         self.contextHandler = contextHandler
@@ -92,6 +96,7 @@ public final class HomeScreenViewModel: ObservableObject {
 
                 return (mainEvents, upcomingEventSections)
             }
+            .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] in
                 let (mainEvents, upcomingEventSections) = $0
                 self?.mainEvents = mainEvents
@@ -124,6 +129,7 @@ public final class HomeScreenViewModel: ObservableObject {
                 let sorted = rows.sorted { $0.sortDate < $1.sortDate }
                 return Array(sorted.prefix(Self.homeFavoritesCarouselLimit))
             }
+            .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] in
                 self?.favoriteConcertRows = $0
             })
@@ -161,6 +167,24 @@ public final class HomeScreenViewModel: ObservableObject {
             .store(in: &cancellables)
     }
     
+    public func refresh() async {
+        await withCheckedContinuation { (continuation: CheckedContinuation<Void, Never>) in
+            var cancellable: AnyCancellable?
+            cancellable = Publishers.CombineLatest(
+                eventsService.load(),
+                musiciansService.load()
+            )
+            .receive(on: DispatchQueue.main)
+            .sink(
+                receiveCompletion: { _ in
+                    continuation.resume()
+                    cancellable = nil
+                },
+                receiveValue: { _ in }
+            )
+        }
+    }
+
     public func handleAction(_ action: HomeScreenAction) {
         switch action {
         case .event(let eventAction):
@@ -175,7 +199,16 @@ public final class HomeScreenViewModel: ObservableObject {
     }
 
     public func onEventDetails(_ viewModel: EventViewModel) {
-        handleAction(.event(.navigation(.onEventDetails(viewModel))))
+        onEventDetails(
+            viewModel,
+            heroTransitionSourceID: EventHeroTransitionSourceID.card(
+                occurrenceIdentifier: viewModel.occurrenceIdentifier
+            )
+        )
+    }
+
+    public func onEventDetails(_ viewModel: EventViewModel, heroTransitionSourceID: String?) {
+        handleAction(.event(.navigation(.onEventDetails(viewModel, heroTransitionSourceID: heroTransitionSourceID))))
     }
 
     public func onFavoriteConcertTap(_ row: FavoriteConcertRow) {

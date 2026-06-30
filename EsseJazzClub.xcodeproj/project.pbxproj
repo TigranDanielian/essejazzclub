@@ -78,6 +78,7 @@
 		50FB945C63D159B2D7E87DD5 /* FavoriteMusicianRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 309013665F7D67A4E8D77483 /* FavoriteMusicianRowView.swift */; };
 		5312C0725DDD9CD2B258C92B /* AppAppearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62F90AAD676C9549448266D6 /* AppAppearance.swift */; };
 		537901BA3F43601951EBC25B /* DetailHeroImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E214287787249CD4C7554890 /* DetailHeroImageView.swift */; };
+		538C43187ACC6B9768F8E1EB /* HomeDaySliderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB59A9F54E370F95A54BC79A /* HomeDaySliderView.swift */; };
 		53A6E5B198B95056BD9BA921 /* SkeletonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75293FAF798CAF048BF32B44 /* SkeletonView.swift */; };
 		53AE6523205021AA2CB5CF9F /* ScheduleListEmptyState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89DE6D672E30A0FE0CED0090 /* ScheduleListEmptyState.swift */; };
 		55F2C9525305DE4BC9E152B4 /* ClubScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59B7DFC916EEA740D9B5249E /* ClubScreen.swift */; };
@@ -158,7 +159,9 @@
 		B21670614D2F37673E29F3AD /* SharedInfrastructure.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 309260A176D68C1D5FACFB49 /* SharedInfrastructure.framework */; };
 		B3037271F332F9D39A91816D /* ClubNavigationRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AEB26D2DE114D29BF5069B5 /* ClubNavigationRouter.swift */; };
 		B38DDEE495D3FCA9A69C6032 /* ClubScreenViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AB2D3E69C037ED8713A2261 /* ClubScreenViewModel.swift */; };
+		B4063C3F613D778D69906AFC /* HomeUpcomingConcertsCarousel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 563DEB75AAA3C49E52F924C8 /* HomeUpcomingConcertsCarousel.swift */; };
 		B8A0A9129C776F1578CA0251 /* ClubShopProductDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFDDF85A14F75DBFFC1AB2C7 /* ClubShopProductDetailView.swift */; };
+		BAD3A06E55F8E0EE68D2809A /* EventHeroTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED252503DAD3AD65A023031D /* EventHeroTransition.swift */; };
 		BC021BA76C5197017F4C1434 /* RemoteImageLoadable.swift in Sources */ = {isa = PBXBuildFile; fileRef = C282D64D03258CE38BA39FFD /* RemoteImageLoadable.swift */; };
 		BC258E4FE9C5373B6AF28F65 /* ScheduleEventFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BFA4F8E1147273EAC6ED1E2 /* ScheduleEventFilter.swift */; };
 		BD479C60C85B6E4BD8F0FF75 /* Core.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A1059EAB8C03AF412D52227E /* Core.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -542,6 +545,7 @@
 		5397B1B5EAC0109E659E2C92 /* ApiError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiError.swift; sourceTree = "<group>"; };
 		53B21EB1D0D1F94E1DC386FE /* EventAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventAction.swift; sourceTree = "<group>"; };
 		53F0D134ECFEC025103F9E15 /* EventInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventInfoView.swift; sourceTree = "<group>"; };
+		563DEB75AAA3C49E52F924C8 /* HomeUpcomingConcertsCarousel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeUpcomingConcertsCarousel.swift; sourceTree = "<group>"; };
 		57B318AABEB71846F00FD1EA /* HomeScreenViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeScreenViewModel.swift; sourceTree = "<group>"; };
 		585EE12BDB226435E286648E /* EventsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventsService.swift; sourceTree = "<group>"; };
 		59B7DFC916EEA740D9B5249E /* ClubScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClubScreen.swift; sourceTree = "<group>"; };
@@ -635,6 +639,7 @@
 		E87AC535492F7300A7A06DBA /* UIScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIScreen.swift; sourceTree = "<group>"; };
 		E9D67508301169A9F503B2CD /* ContentPageModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentPageModel.swift; sourceTree = "<group>"; };
 		EB96C7BE7EC52450BE0970EE /* ClubMusiciansViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClubMusiciansViewModel.swift; sourceTree = "<group>"; };
+		ED252503DAD3AD65A023031D /* EventHeroTransition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventHeroTransition.swift; sourceTree = "<group>"; };
 		EF1EB45E39312CEEE4C08BE5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		EFDDF85A14F75DBFFC1AB2C7 /* ClubShopProductDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClubShopProductDetailView.swift; sourceTree = "<group>"; };
 		F0BDA29A0121533AB0A40858 /* DayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayView.swift; sourceTree = "<group>"; };
@@ -646,6 +651,7 @@
 		F7F7B84849DC4A379AD6629A /* MusicianDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicianDetailsView.swift; sourceTree = "<group>"; };
 		F89B8DAA6AE037F2B5F7EF48 /* HTMLBioFormatting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTMLBioFormatting.swift; sourceTree = "<group>"; };
 		FB15ABC33A202502D0CC0570 /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
+		FB59A9F54E370F95A54BC79A /* HomeDaySliderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeDaySliderView.swift; sourceTree = "<group>"; };
 		FE37024CC085264822271032 /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
 		FF60DF007CC10B683D92EDEF /* EventView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -779,6 +785,7 @@
 		18B9B3A0C61EE09A1AC263DE /* HomeFeature */ = {
 			isa = PBXGroup;
 			children = (
+				FB59A9F54E370F95A54BC79A /* HomeDaySliderView.swift */,
 				87155370A455631D77766E51 /* HomeHeroBanner.swift */,
 				3AACF37ACFE89AE548B1007F /* HomeHeroSheetLayout.swift */,
 				F0BF39F58D4BE02064975FB8 /* HomeHeroStoryPager.swift */,
@@ -787,6 +794,7 @@
 				57B318AABEB71846F00FD1EA /* HomeScreenViewModel.swift */,
 				8FE413E445BA23D2525E1FEC /* HomeTabNavigating.swift */,
 				7554D20FDE3AD8DDE5806E92 /* HomeTopClampedScrollView.swift */,
+				563DEB75AAA3C49E52F924C8 /* HomeUpcomingConcertsCarousel.swift */,
 				EADBD6A23469E1E67D447228 /* Favorites */,
 			);
 			path = HomeFeature;
@@ -1184,6 +1192,7 @@
 				B5F8F6DDF13979100D5FE0B5 /* EventContextButtons.swift */,
 				336AE0F8E014FDFB4F2713C3 /* EventDetailHeroSlider.swift */,
 				A9DB296155A5ACB286240D62 /* EventDetailView.swift */,
+				ED252503DAD3AD65A023031D /* EventHeroTransition.swift */,
 				53F0D134ECFEC025103F9E15 /* EventInfoView.swift */,
 				D5D682C70966E606EAE16608 /* EventOptionsButton.swift */,
 				2B553FAD6D43E218FEB9B148 /* EventPriceView.swift */,
@@ -1561,6 +1570,7 @@
 				03776C4D34C49BE2D3F94CE2 /* EventDetailHeroSlider.swift in Sources */,
 				A73CBABF315FB4DFD3172820 /* EventDetailUpcomingOccurrence.swift in Sources */,
 				72EEB88064197A8FAD60DDFD /* EventDetailView.swift in Sources */,
+				BAD3A06E55F8E0EE68D2809A /* EventHeroTransition.swift in Sources */,
 				2EB34E03E73465CBAC895086 /* EventInfoView.swift in Sources */,
 				8C40D55FF806B4DD238E395A /* EventModel+Preview.swift in Sources */,
 				D647C5F19BBB54D43CFA51BC /* EventOptionsButton.swift in Sources */,
@@ -1711,6 +1721,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				538C43187ACC6B9768F8E1EB /* HomeDaySliderView.swift in Sources */,
 				7C40C4DD7C73BEA7AB8C904F /* HomeFavoriteEventDetailHost.swift in Sources */,
 				6BC8A14C56464A10C4524058 /* HomeHeroBanner.swift in Sources */,
 				6544F51DA0C3C7CF494EF4DB /* HomeHeroSheetLayout.swift in Sources */,
@@ -1720,6 +1731,7 @@
 				31B94E2FFC5ABFEF6691C03A /* HomeScreenViewModel.swift in Sources */,
 				3C8A4E85AFFD706C82DB8484 /* HomeTabNavigating.swift in Sources */,
 				B04CAE1EC8E40BA19C333F0D /* HomeTopClampedScrollView.swift in Sources */,
+				B4063C3F613D778D69906AFC /* HomeUpcomingConcertsCarousel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

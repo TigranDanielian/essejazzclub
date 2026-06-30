@@ -40,7 +40,8 @@ struct HomeHeroStoryPager: UIViewControllerRepresentable {
         controller.update(
             events: events,
             imageLoader: imageLoader,
-            onDetails: onDetails
+            onDetails: onDetails,
+            activeLoopIndex: loopIndex
         )
 
         if let request = scrollRequest, request.id != context.coordinator.lastHandledScrollRequestID {
@@ -90,6 +91,7 @@ final class HomeHeroStoryPagerViewController: UIViewController, UIScrollViewDele
     private var onDetails: ((EventViewModel) -> Void)?
     private var pageWidth: CGFloat = 0
     private var pageHeight: CGFloat = 0
+    private var activeLoopIndex: Int = 1
     private var pendingInitialLoopIndex = 1
     private var lastBuiltEventIDs: [String] = []
 
@@ -140,21 +142,26 @@ final class HomeHeroStoryPagerViewController: UIViewController, UIScrollViewDele
     func update(
         events: [EventViewModel],
         imageLoader: ImageLoader,
-        onDetails: @escaping (EventViewModel) -> Void
+        onDetails: @escaping (EventViewModel) -> Void,
+        activeLoopIndex: Int
     ) {
         let ids = events.map(\.occurrenceIdentifier)
         let contentChanged = ids != lastBuiltEventIDs
+        let activePageChanged = self.activeLoopIndex != activeLoopIndex
 
         self.events = events
         self.imageLoader = imageLoader
         self.onDetails = onDetails
+        self.activeLoopIndex = activeLoopIndex
 
         if contentChanged {
-            pendingInitialLoopIndex = 1
+            pendingInitialLoopIndex = activeLoopIndex
             if pageWidth > 0 {
                 rebuildContent()
-                scrollToLoopIndex(1, animated: false)
+                scrollToLoopIndex(activeLoopIndex, animated: false)
             }
+        } else if activePageChanged, pageWidth > 0 {
+            rebuildContent()
         }
     }
 
@@ -190,7 +197,8 @@ final class HomeHeroStoryPagerViewController: UIViewController, UIScrollViewDele
                 HomeHeroOverlaySlide(
                     event: event,
                     imageLoader: imageLoader,
-                    onDetails: { onDetails(event) }
+                    onDetails: { onDetails(event) },
+                    registersHeroTransitionSource: index == self.activeLoopIndex
                 )
                 .frame(width: width, height: height)
             }

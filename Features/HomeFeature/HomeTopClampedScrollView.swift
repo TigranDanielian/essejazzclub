@@ -5,6 +5,7 @@
 
 import SwiftUI
 import UIKit
+import Core
 
 /// Пропускает тапы в зону баннера, когда шит ещё не поднят; иначе отдаёт их контенту скролла.
 private final class HomeHeroPassthroughScrollView: UIScrollView {
@@ -23,8 +24,29 @@ private final class HomeHeroPassthroughScrollView: UIScrollView {
     }
 }
 
-/// Не забирает тапы сам — отдаёт баннеру под шитом, если скролл их не обработал.
+/// Контейнер: скролл + `UIRefreshControl` у верхнего края шторки.
 private final class HomeTopClampedScrollContainerView: UIView {
+    weak var sheetRefreshControl: UIActivityIndicatorView?
+    var sheetTopOffset: CGFloat = 0 {
+        didSet {
+            guard oldValue != sheetTopOffset else { return }
+            setNeedsLayout()
+        }
+    }
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+
+        guard let refreshControl = sheetRefreshControl else { return }
+        let height = max(refreshControl.sizeThatFits(bounds.size).height, 44)
+        refreshControl.frame = CGRect(
+            x: 0,
+            y: sheetTopOffset,
+            width: bounds.width,
+            height: height
+        )
+    }
+
     override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
         guard isUserInteractionEnabled, !isHidden, alpha >= 0.01 else { return nil }
 
@@ -39,25 +61,25 @@ private final class HomeTopClampedScrollContainerView: UIView {
     }
 }
 
-/// Вертикальный скролл без «резинки» вниз от начальной позиции — шит не уезжает ниже слайдера.
+/// Вертикальный скролл с `UIRefreshControl` у верхнего края шторки.
 struct HomeTopClampedScrollView<Content: View>: UIViewControllerRepresentable {
     let showsIndicators: Bool
     let scrollClipDisabled: Bool
     let bounces: Bool
-    @Binding var scrollOffset: CGFloat
+    let onRefresh: (() async -> Void)?
     @ViewBuilder let content: () -> Content
 
     init(
         showsIndicators: Bool = true,
         scrollClipDisabled: Bool = false,
         bounces: Bool = true,
-        scrollOffset: Binding<CGFloat> = .constant(0),
+        onRefresh: (() async -> Void)? = nil,
         @ViewBuilder content: @escaping () -> Content
     ) {
         self.showsIndicators = showsIndicators
         self.scrollClipDisabled = scrollClipDisabled
         self.bounces = bounces
-        _scrollOffset = scrollOffset
+        self.onRefresh = onRefresh
         self.content = content
     }
 
@@ -66,7 +88,7 @@ struct HomeTopClampedScrollView<Content: View>: UIViewControllerRepresentable {
         controller.showsIndicators = showsIndicators
         controller.scrollClipDisabled = scrollClipDisabled
         controller.bounces = bounces
-        controller.onScrollOffsetChange = { scrollOffset = $0 }
+        controller.onRefresh = onRefresh
         return controller
     }
 
@@ -74,7 +96,7 @@ struct HomeTopClampedScrollView<Content: View>: UIViewControllerRepresentable {
         controller.showsIndicators = showsIndicators
         controller.scrollClipDisabled = scrollClipDisabled
         controller.bounces = bounces
-        controller.onScrollOffsetChange = { scrollOffset = $0 }
+        controller.onRefresh = onRefresh
         controller.updateRootView(content())
     }
 }
@@ -82,6 +104,12 @@ struct HomeTopClampedScrollView<Content: View>: UIViewControllerRepresentable {
 final class HomeTopClampedScrollViewController<Content: View>: UIViewController, UIScrollViewDelegate {
     private let scrollView = HomeHeroPassthroughScrollView()
     private let hostingController: UIHostingController<Content>
+    private var isRefreshInFlight = false
+    private var refreshControl: UIActivityIndicatorView?
+
+    private var containerView: HomeTopClampedScrollContainerView {
+        view as! HomeTopClampedScrollContainerView
+    }
 
     var showsIndicators = true {
         didSet { scrollView.showsVerticalScrollIndicator = showsIndicators }
@@ -98,7 +126,9 @@ final class HomeTopClampedScrollViewController<Content: View>: UIViewController,
         }
     }
 
-    var onScrollOffsetChange: ((CGFloat) -> Void)?
+    var onRefresh: (() async -> Void)? {
+        didSet { updateRefreshControl() }
+    }
 
     init(rootView: Content) {
         hostingController = UIHostingController(rootView: rootView)
@@ -126,6 +156,7 @@ final class HomeTopClampedScrollViewController<Content: View>: UIViewController,
 
         scrollView.bannerPassthroughHeight = HomeHeroSheetLayout.scrollHitExtensionHeight
         scrollView.delegate = self
+        scrollView.contentInsetAdjustmentBehavior = .never
         scrollView.bounces = bounces
         scrollView.alwaysBounceVertical = bounces
         scrollView.delaysContentTouches = false
@@ -155,16 +186,82 @@ final class HomeTopClampedScrollViewController<Content: View>: UIViewController,
         ])
 
         hostingController.didMove(toParent: self)
+        updateRefreshControl()
+        applyFixedSheetRefreshPosition()
+    }
+
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        applyFixedSheetRefreshPosition()
     }
 
     func updateRootView(_ rootView: Content) {
         hostingController.rootView = rootView
     }
 
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        if scrollView.contentOffset.y < 0 {
-            scrollView.contentOffset.y = 0
+    private func updateRefreshControl() {
+        if onRefresh != nil {
+            guard refreshControl == nil else { return }
+
+            let control = UIActivityIndicatorView()
+            control.tintColor = Colors.accentSheet
+            control.isUserInteractionEnabled = false
+            control.isHidden = true
+            view.addSubview(control)
+            containerView.sheetRefreshControl = control
+            refreshControl = control
+            applyFixedSheetRefreshPosition()
+        } else if let refreshControl {
+            refreshControl.removeFromSuperview()
+            containerView.sheetRefreshControl = nil
+            self.refreshControl = nil
         }
-        onScrollOffsetChange?(scrollView.contentOffset.y)
+    }
+
+    private func applyFixedSheetRefreshPosition() {
+        containerView.sheetTopOffset = HomeHeroSheetLayout.scrollHitExtensionHeight
+    }
+
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        guard let refreshControl else { return }
+        let pullDistance = max(0, -scrollView.contentOffset.y)
+
+        if pullDistance > HomeHeroSheetLayout.pullRefreshTriggerOffset {
+            refreshControl.isHidden = false
+            view.bringSubviewToFront(refreshControl)
+            if !refreshControl.isAnimating, !isRefreshInFlight {
+                refreshControl.startAnimating()
+            }
+        } else {
+            refreshControl.stopAnimating()
+            refreshControl.isHidden = true
+        }
+    }
+
+    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        let pullDistance = max(0, -scrollView.contentOffset.y)
+        if pullDistance > HomeHeroSheetLayout.pullRefreshTriggerOffset {
+            triggerRefreshIfNeeded()
+        } else if !isRefreshInFlight {
+            refreshControl?.stopAnimating()
+            refreshControl?.isHidden = true
+        }
+    }
+
+    private func triggerRefreshIfNeeded() {
+        guard let refreshControl, let onRefresh, !isRefreshInFlight else { return }
+
+        isRefreshInFlight = true
+        refreshControl.isHidden = false
+        view.bringSubviewToFront(refreshControl)
+        refreshControl.startAnimating()
+
+        Task { @MainActor in
+            await onRefresh()
+            refreshControl.stopAnimating()
+            isRefreshInFlight = false
+            let pullDistance = max(0, -scrollView.contentOffset.y)
+            refreshControl.isHidden = pullDistance == 0
+        }
     }
 }

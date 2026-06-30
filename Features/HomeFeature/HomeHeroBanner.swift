@@ -45,7 +45,8 @@ public struct HomeHeroBanner: View {
                 HomeHeroOverlaySlide(
                     event: event,
                     imageLoader: imageLoader,
-                    onDetails: { onDetails(event) }
+                    onDetails: { onDetails(event) },
+                    registersHeroTransitionSource: true
                 )
             } else {
                 HomeHeroStoryPager(
@@ -244,6 +245,7 @@ struct HomeHeroOverlaySlide: View {
     let event: EventViewModel
     let imageLoader: ImageLoader
     let onDetails: () -> Void
+    var registersHeroTransitionSource: Bool = true
 
     @State private var image: UIImage?
     @State private var isLoadingImage = false
@@ -331,6 +333,12 @@ struct HomeHeroOverlaySlide: View {
                 SkeletonView()
             }
         }
+        .eventHeroTransitionSource(
+            sourceID: EventHeroTransitionSourceID.banner(
+                occurrenceIdentifier: event.occurrenceIdentifier
+            ),
+            isEnabled: registersHeroTransitionSource
+        )
     }
 
     private func loadPosterIfNeeded() async {

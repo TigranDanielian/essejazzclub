@@ -10,14 +10,14 @@ import SharedInfrastructure
 @MainActor
 public final class HomeNavigationRouter: StackNavigationRouter<HomeNavigationRouter.Route> {
     public enum Route: Hashable, Identifiable {
-        case eventDetail(EventViewModel)
+        case eventDetail(EventViewModel, heroTransitionSourceID: String?)
         case musicianDetail(MusicianViewModel)
         case bookmarkedEventDetail(occurrenceIdentifier: String, mode: FavoriteEventDetailMode)
 
         public var id: String {
             switch self {
-            case .eventDetail(let viewModel):
-                return "home-event-\(viewModel.occurrenceIdentifier)"
+            case .eventDetail(let viewModel, let sourceID):
+                return "home-event-\(viewModel.occurrenceIdentifier)-\(sourceID ?? "plain")"
             case .musicianDetail(let viewModel):
                 return "home-musician-\(viewModel.musicianId)"
             case .bookmarkedEventDetail(let oid, let mode):
@@ -32,8 +32,8 @@ public final class HomeNavigationRouter: StackNavigationRouter<HomeNavigationRou
 
     public func applyEventNavigation(_ action: EventNavigationAction) {
         switch action {
-        case .onEventDetails(let eventViewModel):
-            presentEventDetail(viewModel: eventViewModel)
+        case .onEventDetails(let eventViewModel, let heroTransitionSourceID):
+            presentEventDetail(viewModel: eventViewModel, heroTransitionSourceID: heroTransitionSourceID)
         case .onMusicianDetails(let musicianViewModel):
             presentMusicianDetail(viewModel: musicianViewModel)
         case .dismiss:
@@ -52,8 +52,12 @@ public final class HomeNavigationRouter: StackNavigationRouter<HomeNavigationRou
         }
     }
 
-    public func presentEventDetail(viewModel: EventViewModel, presentation: NavigationPresentationStyle = .push) {
-        present(route: .eventDetail(viewModel), presentation: presentation)
+    public func presentEventDetail(
+        viewModel: EventViewModel,
+        heroTransitionSourceID: String?,
+        presentation: NavigationPresentationStyle = .push
+    ) {
+        present(route: .eventDetail(viewModel, heroTransitionSourceID: heroTransitionSourceID), presentation: presentation)
     }
 
     public func presentMusicianDetail(viewModel: MusicianViewModel) {
