@@ -7,6 +7,8 @@ import SwiftUI
 import UIKit
 import Core
 
+//TODO: Кривое решение, найти способ сделать по SwiftUI
+
 /// Scroll поверх баннера: тапы по контенту — scroll, иначе — вью под ним в иерархии.
 private final class HomeBannerPassthroughScrollView: UIScrollView {
     weak var passthroughContentView: UIView?

@@ -33,6 +33,8 @@ public extension View {
 
     func eventHeroNavigationTransition(sourceID: String?) -> some View {
         modifier(EventHeroNavigationTransitionModifier(sourceID: sourceID))
+            .toolbar(.hidden, for: .navigationBar)
+            .toolbarBackground(.hidden, for: .navigationBar)
     }
 }
 
@@ -59,8 +61,6 @@ private struct EventHeroNavigationTransitionModifier: ViewModifier {
             content
                 .navigationTransition(.zoom(sourceID: sourceID, in: namespace))
                 // Системный bar анимируется отдельно от zoom — при pop выглядит рассинхроном.
-                .toolbar(.hidden, for: .navigationBar)
-                .toolbarBackground(.hidden, for: .navigationBar)
         } else {
             content
         }

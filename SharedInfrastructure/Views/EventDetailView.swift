@@ -227,14 +227,12 @@ public struct EventDetailView: View {
             .opacity(bottomBookButtonHidden ? 0 : 1)
         }
         .overlay(alignment: .top) {
-            if usesHeroNavigationTransition {
-                HStack {
-                    heroBackButton
-                    Spacer()
-                }
-                .padding(.horizontal, 12)
-                .padding(.top, 8)
+            HStack {
+                heroBackButton
+                Spacer()
             }
+            .padding(.horizontal, 12)
+            .padding(.top, 8)
         }
         .eventHeroNavigationTransition(sourceID: heroTransitionSourceID)
         .navigationTitle(usesHeroNavigationTransition ? "" : (navTitleHidden ? "" : viewModel.title))
