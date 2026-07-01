@@ -11,7 +11,6 @@ import SharedInfrastructure
 /// Каркас главного экрана: фон → баннер → scroll поверх.
 public struct HomeHeroShell<ScrollContent: View>: View {
     let hasBanner: Bool
-    let showsBanner: Bool
     let isBannerPlaybackActive: Bool
     let bannerEvents: [EventViewModel]
     let imageLoader: ImageLoader
@@ -20,7 +19,6 @@ public struct HomeHeroShell<ScrollContent: View>: View {
 
     public init(
         hasBanner: Bool,
-        showsBanner: Bool,
         isBannerPlaybackActive: Bool,
         bannerEvents: [EventViewModel],
         imageLoader: ImageLoader,
@@ -28,7 +26,6 @@ public struct HomeHeroShell<ScrollContent: View>: View {
         @ViewBuilder scrollContent: @escaping () -> ScrollContent
     ) {
         self.hasBanner = hasBanner
-        self.showsBanner = showsBanner
         self.isBannerPlaybackActive = isBannerPlaybackActive
         self.bannerEvents = bannerEvents
         self.imageLoader = imageLoader
@@ -49,10 +46,6 @@ public struct HomeHeroShell<ScrollContent: View>: View {
                     onDetails: onBannerEventDetails
                 )
                 .frame(height: HomeHeroSheetLayout.bannerHeight)
-                .opacity(showsBanner ? 1 : 0)
-                .animation(nil, value: showsBanner)
-                .allowsHitTesting(showsBanner)
-                .accessibilityHidden(!showsBanner)
             }
             
             Color(uiColor: Colors.mainBackground)

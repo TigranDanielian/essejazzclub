@@ -169,8 +169,6 @@ private struct HomeTabShell<RouteContent: View>: View {
 
     @StateObject private var viewModel: HomeScreenViewModel
     @State private var navPath: [HomeNavigationRouter.Route] = []
-    @State private var heroBannerHiddenForNavigation = false
-    @State private var heroBannerHideTask: Task<Void, Never>?
     @Namespace private var eventHeroNamespace
 
     init(
@@ -195,10 +193,6 @@ private struct HomeTabShell<RouteContent: View>: View {
         )
     }
 
-    private var showsHeroBanner: Bool {
-        viewModel.hasHeroBanner && !heroBannerHiddenForNavigation
-    }
-
     private var isHeroBannerPlaybackActive: Bool {
         viewModel.hasHeroBanner && navPath.isEmpty
     }
@@ -207,7 +201,6 @@ private struct HomeTabShell<RouteContent: View>: View {
         NavigationStack(path: $navPath) {
             HomeHeroShell(
                 hasBanner: viewModel.hasHeroBanner,
-                showsBanner: showsHeroBanner,
                 isBannerPlaybackActive: isHeroBannerPlaybackActive,
                 bannerEvents: viewModel.mainEvents,
                 imageLoader: container.imageLoader,
@@ -224,9 +217,9 @@ private struct HomeTabShell<RouteContent: View>: View {
                     viewModel: viewModel,
                     uiFactory: container.uiFactory
                 )
-                .navigationDestination(for: HomeNavigationRouter.Route.self) { route in
-                    routeView(route)
-                }
+            }
+            .navigationDestination(for: HomeNavigationRouter.Route.self) { route in
+                routeView(route)
             }
             .toolbar(.hidden, for: .navigationBar)
             .toolbarBackground(.hidden, for: .navigationBar)
@@ -239,21 +232,6 @@ private struct HomeTabShell<RouteContent: View>: View {
         .onChange(of: router.path) { _, newPath in
             guard newPath != navPath else { return }
             navPath = newPath
-        }
-        .onChange(of: navPath.isEmpty) { _, isEmpty in
-            heroBannerHideTask?.cancel()
-            heroBannerHideTask = nil
-
-            if isEmpty {
-                heroBannerHiddenForNavigation = false
-            } else {
-                heroBannerHideTask = Task { @MainActor in
-                    // Держим баннер видимым на время zoom-перехода (iOS 18), затем прячем под деталкой.
-                    try? await Task.sleep(for: .milliseconds(500))
-                    guard !Task.isCancelled, !navPath.isEmpty else { return }
-                    heroBannerHiddenForNavigation = true
-                }
-            }
         }
         .onChange(of: navPath) { _, newPath in
             guard newPath != router.path else { return }

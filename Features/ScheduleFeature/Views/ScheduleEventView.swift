@@ -9,7 +9,7 @@ import Core
 import SharedInfrastructure
 
 private enum EventSwipeMetrics {
-    static let revealWidth: CGFloat = 80
+    static let revealWidth: CGFloat = 92
 }
 
 struct ScheduleEventView: View {
