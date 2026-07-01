@@ -67,14 +67,11 @@ private final class HomeBannerPassthroughScrollView: UIScrollView {
         for index in stride(from: scrollIndex - 1, through: 0, by: -1) {
             let subview = container.subviews[index]
             let localPoint = subview.convert(pointInContainer, from: container)
-            if let hit = deepestHitView(
-                in: subview,
-                at: localPoint,
-                with: event,
-                excludingScrollBranchRoot: scrollBranchRoot
-            ) {
-                return hit
+            guard let hit = subview.hitTest(localPoint, with: event) else { continue }
+            if hit === scrollBranchRoot || hit.isDescendant(of: scrollBranchRoot) {
+                continue
             }
+            return hit
         }
 
         return nil
@@ -90,38 +87,6 @@ private final class HomeBannerPassthroughScrollView: UIScrollView {
             branchRoot = parent
         }
         return nil
-    }
-
-    /// Ручной hit-test без вызова `UIView.hitTest`, чтобы не уйти обратно в scroll.
-    private func deepestHitView(
-        in view: UIView,
-        at point: CGPoint,
-        with event: UIEvent?,
-        excludingScrollBranchRoot excludedRoot: UIView
-    ) -> UIView? {
-        if view === excludedRoot || view.isDescendant(of: excludedRoot) {
-            return nil
-        }
-        guard view.isUserInteractionEnabled, !view.isHidden, view.alpha >= 0.01 else {
-            return nil
-        }
-        guard view.point(inside: point, with: event) else {
-            return nil
-        }
-
-        for subview in view.subviews.reversed() {
-            let localPoint = subview.convert(point, from: view)
-            if let hit = deepestHitView(
-                in: subview,
-                at: localPoint,
-                with: event,
-                excludingScrollBranchRoot: excludedRoot
-            ) {
-                return hit
-            }
-        }
-
-        return view
     }
 }
 
@@ -171,6 +136,7 @@ struct HomeSheetScrollView<Content: View>: UIViewControllerRepresentable {
             scrollView.alwaysBounceVertical = true
             scrollView.bounces = true
             scrollView.clipsToBounds = false
+            scrollView.delaysContentTouches = false
             scrollView.showsVerticalScrollIndicator = false
             scrollView.backgroundColor = .clear
             scrollView.translatesAutoresizingMaskIntoConstraints = false

@@ -125,38 +125,28 @@ public struct HomeHeroBanner: View {
     private var storyInteractionOverlay: some View {
         VStack(spacing: 0) {
             HStack(spacing: 0) {
-                Color.clear
-                    .contentShape(Rectangle())
-                    .onTapGesture { goToPreviousStory() }
-
-                Color.clear
-                    .contentShape(Rectangle())
-                    .onTapGesture {
-                        guard events.indices.contains(selectedIndex) else { return }
-                        onDetails(events[selectedIndex])
-                    }
-
-                Color.clear
-                    .contentShape(Rectangle())
-                    .onTapGesture { goToNextStory() }
+                storyTapZone(action: goToPreviousStory)
+                storyTapZone {
+                    guard events.indices.contains(selectedIndex) else { return }
+                    onDetails(events[selectedIndex])
+                }
+                storyTapZone(action: goToNextStory)
             }
             .frame(height: HomeHeroSheetLayout.sliderHeight * 0.55)
 
             Spacer(minLength: 0)
         }
-        .simultaneousGesture(storyHoldToPauseGesture)
     }
 
-    private var storyHoldToPauseGesture: some Gesture {
-        DragGesture(minimumDistance: 0)
-            .onChanged { _ in
-                if !isPausedByInteraction {
-                    isPausedByInteraction = true
-                }
-            }
-            .onEnded { _ in
-                isPausedByInteraction = false
-            }
+    private func storyTapZone(action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            Color.clear
+                .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+        .onLongPressGesture(minimumDuration: 0.15, pressing: { pressing in
+            isPausedByInteraction = pressing
+        }, perform: {})
     }
 
     private var storyPlaybackToken: String {
@@ -251,56 +241,58 @@ struct HomeHeroOverlaySlide: View {
     @State private var isLoadingImage = false
 
     var body: some View {
-        ZStack(alignment: .topLeading) {
-            posterBackground
+        Button(action: onDetails) {
+            ZStack(alignment: .topLeading) {
+                posterBackground
 
-            LinearGradient(
-                colors: [
-                    Color.black.opacity(0.75),
-                    Color.black.opacity(0.35),
-                    Color.black.opacity(0.15)
-                ],
-                startPoint: .bottomLeading,
-                endPoint: .topTrailing
-            )
+                LinearGradient(
+                    colors: [
+                        Color.black.opacity(0.75),
+                        Color.black.opacity(0.35),
+                        Color.black.opacity(0.15)
+                    ],
+                    startPoint: .bottomLeading,
+                    endPoint: .topTrailing
+                )
 
-            VStack(alignment: .leading, spacing: 10) {
-                Spacer()
+                VStack(alignment: .leading, spacing: 10) {
+                    Spacer()
 
-                Text(event.title)
-                    .font(.title2.weight(.bold))
-                    .foregroundStyle(Color(uiColor: Colors.textInverted))
-                    .multilineTextAlignment(.leading)
-                    .lineLimit(3)
-
-                HStack(spacing: 8) {
-                    Text(event.dateString)
-                        .font(.caption.weight(.medium))
+                    Text(event.title)
+                        .font(.title2.weight(.bold))
                         .foregroundStyle(Color(uiColor: Colors.textInverted))
                         .multilineTextAlignment(.leading)
+                        .lineLimit(3)
 
-                    if !event.times.isEmpty {
-                        HStack(spacing: 6) {
-                            ForEach(event.times, id: \.self) { time in
-                                Text(time)
-                                    .font(.caption.weight(.medium))
-                                    .foregroundStyle(Color(uiColor: Colors.textInverted))
-                                    .padding(.horizontal, 8)
-                                    .padding(.vertical, 4)
-                                    .background(Color.white.opacity(0.18))
-                                    .cornerRadius(6)
+                    HStack(spacing: 8) {
+                        Text(event.dateString)
+                            .font(.caption.weight(.medium))
+                            .foregroundStyle(Color(uiColor: Colors.textInverted))
+                            .multilineTextAlignment(.leading)
+
+                        if !event.times.isEmpty {
+                            HStack(spacing: 6) {
+                                ForEach(event.times, id: \.self) { time in
+                                    Text(time)
+                                        .font(.caption.weight(.medium))
+                                        .foregroundStyle(Color(uiColor: Colors.textInverted))
+                                        .padding(.horizontal, 8)
+                                        .padding(.vertical, 4)
+                                        .background(Color.white.opacity(0.18))
+                                        .cornerRadius(6)
+                                }
                             }
                         }
                     }
                 }
+                .padding(.horizontal, 20)
+                .padding(.top, UIScreen.safeAreaTop + 12)
+                .padding(.bottom, 56)
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
             }
-            .padding(.horizontal, 20)
-            .padding(.top, UIScreen.safeAreaTop + 12)
-            .padding(.bottom, 56)
-            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+            .contentShape(Rectangle())
         }
-        .contentShape(Rectangle())
-        .onTapGesture(perform: onDetails)
+        .buttonStyle(.plain)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .ignoresSafeArea(edges: .top)
         .task(id: event.occurrenceIdentifier) {
