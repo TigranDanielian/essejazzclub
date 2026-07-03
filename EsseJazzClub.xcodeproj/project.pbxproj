@@ -191,6 +191,7 @@
 		DC5DA8863B693C7B2AF756AD /* PaginatedEventScheduleRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F20B24E8B2352607125709E /* PaginatedEventScheduleRequest.swift */; };
 		DCD659E00007B62C766D6DD3 /* Core.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A1059EAB8C03AF412D52227E /* Core.framework */; };
 		DD1970D3E3AA9E2971134AF4 /* DayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0BDA29A0121533AB0A40858 /* DayView.swift */; };
+		DD1C3BF01CD2E0FF07BBA25B /* ScheduleEventGrouper.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3E4015C642E16319B694D2E /* ScheduleEventGrouper.swift */; };
 		DDAAEC1EEC9F36291EE04B92 /* EventPresentation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AB775F6C167B6A3C1338653 /* EventPresentation.swift */; };
 		E0538588A78B819E3031FC27 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CDF1605888301165977862B5 /* Preview Assets.xcassets */; };
 		E157468CDA804C8772936C45 /* API.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 48BA7EEC6C75DEF58EE0D4B8 /* API.framework */; };
@@ -649,6 +650,7 @@
 		F0D09436A070004D68E99573 /* SearchTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchTextField.swift; sourceTree = "<group>"; };
 		F0E773FE5DD5822532DE470F /* ClubScreenDependencies.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClubScreenDependencies.swift; sourceTree = "<group>"; };
 		F2445E27F732D648536E39CD /* Tests_Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Tests_Info.plist; sourceTree = "<group>"; };
+		F3E4015C642E16319B694D2E /* ScheduleEventGrouper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleEventGrouper.swift; sourceTree = "<group>"; };
 		F56A6D1E312E18960E8BEE75 /* FavoriteEventDetailHost.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteEventDetailHost.swift; sourceTree = "<group>"; };
 		F7F7B84849DC4A379AD6629A /* MusicianDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicianDetailsView.swift; sourceTree = "<group>"; };
 		F89B8DAA6AE037F2B5F7EF48 /* HTMLBioFormatting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTMLBioFormatting.swift; sourceTree = "<group>"; };
@@ -1058,6 +1060,7 @@
 			children = (
 				165D5232E194C553D04DF3FB /* Media.xcassets */,
 				1BFA4F8E1147273EAC6ED1E2 /* ScheduleEventFilter.swift */,
+				F3E4015C642E16319B694D2E /* ScheduleEventGrouper.swift */,
 				E476248A6F139AFF3009DF78 /* ScheduleFilterScreen.swift */,
 				3374ABC07D16F06EC5F33058 /* ScheduleFilterViewModel.swift */,
 				89DE6D672E30A0FE0CED0090 /* ScheduleListEmptyState.swift */,
@@ -1693,6 +1696,7 @@
 				3C789594F1FC1EF39A2D2788 /* ScheduleDayView.swift in Sources */,
 				2BCA7FFA640045C8B1E5BC9E /* ScheduleEmptyStateView.swift in Sources */,
 				BC258E4FE9C5373B6AF28F65 /* ScheduleEventFilter.swift in Sources */,
+				DD1C3BF01CD2E0FF07BBA25B /* ScheduleEventGrouper.swift in Sources */,
 				CCE16C2FEDEDE72D1072B41D /* ScheduleEventRowInteraction.swift in Sources */,
 				7342EBDC2064817AF133524B /* ScheduleEventView.swift in Sources */,
 				D00E9A7FD8A6FF2EC3D3C8AB /* ScheduleFilterScreen.swift in Sources */,

@@ -14,7 +14,9 @@ import SharedInfrastructure
 
 @MainActor
 public final class ScheduleScreenViewModel: ObservableObject {
-    @Published var grouped: [GroupedEventsByDay] = []
+    // MARK: - Published
+
+    @Published private(set) var grouped: [GroupedEventsByDay] = []
     @Published var searchInputText: String = ""
     @Published public private(set) var filter = ScheduleEventFilter.empty
     @Published private(set) var isLoading = false
@@ -24,36 +26,51 @@ public final class ScheduleScreenViewModel: ObservableObject {
 
     @Published var selectedEvent: EventViewModel?
 
+    // MARK: - Derived UI
+
     public var isFilterActive: Bool { filter.isActive }
 
     var isSearchActive: Bool {
-        !searchInputText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+        !normalizedSearchQuery.isEmpty
+    }
+
+    var isQueryActive: Bool {
+        isFilterActive || isSearchActive
     }
 
     var listEmptyState: ScheduleListEmptyState? {
         guard !isLoading, grouped.isEmpty else { return nil }
-        if isSearchActive || isFilterActive {
+        if isQueryActive {
             return .noMatchingResults
         }
-        if loadedModels.isEmpty {
-            return .noEvents
-        }
-        return .noMatchingResults
+        return loadedModels.isEmpty ? .noEvents : .noMatchingResults
     }
 
     var showPaginationFooter: Bool {
-        hasMore && (!grouped.isEmpty || isFilterActive || isSearchActive)
+        hasMore && !isLoading
     }
 
-    private var loadedModels: [EventModel] = []
-    private var currentPage = 0
-    private var isFetchingPage = false
-    private var searchFetchTask: Task<Void, Never>?
+    // MARK: - Dependencies
 
     private let eventsService: EventsService
     private let viewModelFactory: ViewModelFactory
     private let tabNavigation: ScheduleTabNavigating
     private let contextHandler: (EventContextButtonType) -> Void
+
+    // MARK: - Schedule data
+
+    private var loadedModels: [EventModel] = []
+    private var eventViewModelCache: [String: EventViewModel] = [:]
+    private var currentPage = 0
+
+    private var prefetchTask: Task<Void, Never>?
+    private var searchDebounceTask: Task<Void, Never>?
+
+    private var normalizedSearchQuery: String {
+        searchInputText.trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+
+    // MARK: - Init
 
     public init(
         eventsService: EventsService,
@@ -67,43 +84,25 @@ public final class ScheduleScreenViewModel: ObservableObject {
         self.contextHandler = contextHandler
     }
 
+    // MARK: - Public API
+
     func setSearchInput(_ text: String) {
         guard searchInputText != text else { return }
         searchInputText = text
-        applyFilterAndGroup()
-        scheduleFilteredResultsFetch()
+        rebuildGrouped()
+        scheduleSearchPrefetch()
     }
 
     func clearSearchInput() {
         searchInputText = ""
-        searchFetchTask?.cancel()
-        applyFilterAndGroup()
+        searchDebounceTask?.cancel()
+        rebuildGrouped()
+        schedulePrefetchIfNeeded()
     }
 
     func loadInitialIfNeeded() async {
-        guard loadedModels.isEmpty, !isFetchingPage else { return }
+        guard loadedModels.isEmpty, !isLoading else { return }
         await reload()
-    }
-
-    func reload() async {
-        guard !isFetchingPage else { return }
-        isFetchingPage = true
-        isLoading = true
-        loadGeneration += 1
-        currentPage = 0
-        hasMore = false
-        loadedModels = []
-        grouped = []
-
-        do {
-            try await appendPage(1)
-        } catch {
-            grouped = []
-        }
-
-        isLoading = false
-        isFetchingPage = false
-        await fetchMorePagesIfFilteredResultsEmpty()
     }
 
     func refresh() async {
@@ -111,35 +110,85 @@ public final class ScheduleScreenViewModel: ObservableObject {
     }
 
     func loadMore() async {
-        guard hasMore, !isFetchingPage, !isLoading else { return }
-        isFetchingPage = true
-        isLoadingMore = true
-        defer {
-            isLoadingMore = false
-            isFetchingPage = false
+        await appendNextPage()
+    }
+
+    public func openFilter() {
+        tabNavigation.presentFilter(presentation: .sheet)
+    }
+
+    public func updateFilter(_ filter: ScheduleEventFilter) {
+        self.filter = filter
+        rebuildGrouped()
+        schedulePrefetchIfNeeded()
+    }
+
+    public func handleAction(_ action: ScheduleScreenAction) {
+        switch action {
+        case .event(let eventAction):
+            applyEventActionParts(
+                eventAction,
+                applyNavigation: { tabNavigation.applyEventNavigation($0) },
+                handleContextButton: contextHandler
+            )
+        case .musician(let musicianAction):
+            tabNavigation.applyMusicianNavigation(musicianAction)
+        case .filter:
+            tabNavigation.presentFilter(presentation: .sheet)
         }
+    }
+
+    // MARK: - Reload
+
+    private func reload() async {
+        cancelPrefetch()
+        isLoading = true
+        loadGeneration += 1
+        currentPage = 0
+        hasMore = false
+        loadedModels = []
+        eventViewModelCache.removeAll()
+        grouped = []
 
         do {
-            try await appendPage(currentPage + 1)
+            try await fetchPage(1, replacesCache: true)
+        } catch {
+            grouped = []
+        }
+
+        isLoading = false
+        schedulePrefetchIfNeeded()
+    }
+
+    // MARK: - Pagination
+
+    private func appendNextPage() async {
+        guard hasMore, !isLoading, !isLoadingMore else { return }
+
+        isLoadingMore = true
+        defer { isLoadingMore = false }
+
+        do {
+            try await fetchPage(currentPage + 1, replacesCache: false)
         } catch {
             // сохраняем уже загруженный список
         }
     }
 
-    private func appendPage(_ page: Int) async throws {
+    private func fetchPage(_ page: Int, replacesCache: Bool) async throws {
         let response = try await fetchSchedule(
             page: page,
             per: PaginatedEventScheduleRequest.schedulePageSize
         )
 
         let pageModels = EventModel.mergedFromScheduleItems(response.items)
-        loadedModels = page == 1
+        loadedModels = replacesCache
             ? pageModels
             : EventModel.mergedCombined(loadedModels + pageModels)
 
         currentPage = response.page
         hasMore = response.hasMore
-        applyFilterAndGroup()
+        rebuildGrouped()
     }
 
     private func fetchSchedule(page: Int, per: Int) async throws -> PaginatedEventSchedule {
@@ -166,87 +215,72 @@ public final class ScheduleScreenViewModel: ObservableObject {
         }
     }
 
-    private func scheduleFilteredResultsFetch() {
-        searchFetchTask?.cancel()
-        searchFetchTask = Task {
+    // MARK: - Prefetch for filter / search
+
+    private func scheduleSearchPrefetch() {
+        searchDebounceTask?.cancel()
+        searchDebounceTask = Task {
             try? await Task.sleep(nanoseconds: 350_000_000)
             guard !Task.isCancelled else { return }
-            await fetchMorePagesIfFilteredResultsEmpty()
+            schedulePrefetchIfNeeded()
         }
     }
 
-    private func fetchMorePagesIfFilteredResultsEmpty() async {
-        guard isFilterActive || isSearchActive else { return }
+    private func schedulePrefetchIfNeeded() {
+        cancelPrefetch()
+        guard isQueryActive, hasMore else { return }
 
-        var attempts = 0
-        while grouped.isEmpty, hasMore, attempts < 10 {
-            attempts += 1
-            await loadMore()
+        prefetchTask = Task {
+            await prefetchRemainingPagesForActiveQuery()
         }
     }
 
-    private func applyFilterAndGroup() {
-        let query = searchInputText.trimmingCharacters(in: .whitespacesAndNewlines)
+    /// При активном фильтре/поиске отбор идёт на клиенте поверх постраничного API —
+    /// догружаем все оставшиеся страницы, а не только пока список пустой.
+    private func prefetchRemainingPagesForActiveQuery() async {
+        var pagesFetched = 0
+        let maxPages = 30
 
-        let viewModels = loadedModels.map { model in
-            viewModelFactory.produce(
-                unit: .event(hasContextMenu: true, hasDate: false, model)
-            ) as! EventViewModel
-        }
-
-        let filtered = viewModels.filter { viewModel in
-            if !query.isEmpty,
-               !viewModel.title.lowercased().contains(query.lowercased()) {
-                return false
-            }
-            return filter.matches(viewModel)
-        }
-        groupEvents(filtered)
-    }
-
-    private func groupEvents(_ viewModels: [EventViewModel]) {
-        let groupedByDate = Dictionary(grouping: viewModels) { $0.date }
-
-        grouped = groupedByDate.map { (date, events) in
-            let main = events.filter { !$0.isJazzLab }
-            let jazzLab = events.filter { $0.isJazzLab }
-
-            var sections: [GroupedEventSection] = []
-
-            if !main.isEmpty {
-                sections.append(GroupedEventSection(type: .mainStage, events: main))
-            }
-            if !jazzLab.isEmpty {
-                sections.append(GroupedEventSection(type: .jazzLab, events: jazzLab))
-            }
-
-            return GroupedEventsByDay(date: date, sections: sections)
-        }
-        .sorted { $0.date < $1.date }
-    }
-
-    public func handleAction(_ action: ScheduleScreenAction) {
-        switch action {
-        case .event(let eventAction):
-            applyEventActionParts(
-                eventAction,
-                applyNavigation: { tabNavigation.applyEventNavigation($0) },
-                handleContextButton: contextHandler
-            )
-        case .musician(let musicianAction):
-            tabNavigation.applyMusicianNavigation(musicianAction)
-        case .filter:
-            tabNavigation.presentFilter(presentation: .sheet)
+        while !Task.isCancelled, hasMore, pagesFetched < maxPages {
+            pagesFetched += 1
+            await appendNextPage()
         }
     }
 
-    public func openFilter() {
-        tabNavigation.presentFilter(presentation: .sheet)
+    private func cancelPrefetch() {
+        prefetchTask?.cancel()
+        prefetchTask = nil
+        searchDebounceTask?.cancel()
+        searchDebounceTask = nil
     }
 
-    public func updateFilter(_ filter: ScheduleEventFilter) {
-        self.filter = filter
-        applyFilterAndGroup()
-        Task { await fetchMorePagesIfFilteredResultsEmpty() }
+    // MARK: - Presentation
+
+    private func rebuildGrouped() {
+        let matchingModels = loadedModels.filter(matchesQuery)
+        let viewModels = matchingModels.map(viewModel(for:))
+        grouped = ScheduleEventGrouper.group(viewModels)
+    }
+
+    private func matchesQuery(_ model: EventModel) -> Bool {
+        let query = normalizedSearchQuery
+        if !query.isEmpty,
+           !model.title.lowercased().contains(query.lowercased()) {
+            return false
+        }
+        return filter.matches(model)
+    }
+
+    private func viewModel(for model: EventModel) -> EventViewModel {
+        let key = eventOccurrenceIdentifier(for: model)
+        if let cached = eventViewModelCache[key] {
+            return cached
+        }
+
+        let viewModel = viewModelFactory.produce(
+            unit: .event(hasContextMenu: true, hasDate: false, model)
+        ) as! EventViewModel
+        eventViewModelCache[key] = viewModel
+        return viewModel
     }
 }

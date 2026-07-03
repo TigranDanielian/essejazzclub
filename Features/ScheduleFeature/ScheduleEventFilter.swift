@@ -5,6 +5,7 @@
 
 import Foundation
 import SharedInfrastructure
+import Services
 
 public enum ScheduleStageFilterOption: String, CaseIterable, Identifiable, Hashable {
     case mainStage
@@ -78,8 +79,33 @@ public struct ScheduleEventFilter: Equatable {
             if !matchesPrice { return false }
         }
 
+        return matchesDate(event.date)
+    }
+
+    public func matches(_ model: EventModel) -> Bool {
+        if !stageTypes.isEmpty {
+            let isJazzLab = model.type == .jazzLab
+            let matchesStage =
+                (stageTypes.contains(.mainStage) && !isJazzLab)
+                || (stageTypes.contains(.jazzLab) && isJazzLab)
+            if !matchesStage { return false }
+        }
+
+        if !priceTypes.isEmpty {
+            let minPrice = model.prices?.map(\.price).min()
+            let isFree = minPrice == 0
+            let matchesPrice =
+                (priceTypes.contains(.free) && isFree)
+                || (priceTypes.contains(.paid) && !isFree)
+            if !matchesPrice { return false }
+        }
+
+        return matchesDate(model.dateWithTimes.date)
+    }
+
+    private func matchesDate(_ date: Date) -> Bool {
         let calendar = Calendar.current
-        let eventDay = calendar.startOfDay(for: event.date)
+        let eventDay = calendar.startOfDay(for: date)
 
         if let dateFrom {
             if eventDay < calendar.startOfDay(for: dateFrom) { return false }

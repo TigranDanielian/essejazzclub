@@ -236,9 +236,9 @@
             filePath = "Features/ScheduleFeature/ScheduleScreenViewModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "35"
-            endingLineNumber = "35"
-            landmarkName = "listEmptyState"
+            startingLineNumber = "37"
+            endingLineNumber = "37"
+            landmarkName = "isQueryActive"
             landmarkType = "24">
          </BreakpointContent>
       </BreakpointProxy>
@@ -252,8 +252,8 @@
             filePath = "Features/ScheduleFeature/ScheduleScreenViewModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "40"
-            endingLineNumber = "40"
+            startingLineNumber = "42"
+            endingLineNumber = "42"
             landmarkName = "listEmptyState"
             landmarkType = "24">
          </BreakpointContent>
@@ -268,9 +268,9 @@
             filePath = "Features/ScheduleFeature/ScheduleScreenViewModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "36"
-            endingLineNumber = "36"
-            landmarkName = "listEmptyState"
+            startingLineNumber = "38"
+            endingLineNumber = "38"
+            landmarkName = "isQueryActive"
             landmarkType = "24">
          </BreakpointContent>
       </BreakpointProxy>
@@ -284,10 +284,10 @@
             filePath = "Features/ScheduleFeature/ScheduleScreenViewModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "29"
-            endingLineNumber = "29"
-            landmarkName = "isSearchActive"
-            landmarkType = "24">
+            startingLineNumber = "31"
+            endingLineNumber = "31"
+            landmarkName = "ScheduleScreenViewModel"
+            landmarkType = "3">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -490,7 +490,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "109"
             endingLineNumber = "109"
-            landmarkName = "searchHeader"
+            landmarkName = "body"
             landmarkType = "24">
          </BreakpointContent>
       </BreakpointProxy>

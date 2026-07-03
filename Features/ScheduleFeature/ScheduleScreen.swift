@@ -68,7 +68,7 @@ public struct ScheduleScreen: View {
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 48)
                 } else if let emptyState = viewModel.listEmptyState {
-                    if viewModel.isLoadingMore, viewModel.hasMore, viewModel.isFilterActive || viewModel.isSearchActive {
+                    if viewModel.isLoadingMore, viewModel.hasMore, viewModel.isQueryActive {
                         ProgressView()
                             .frame(maxWidth: .infinity)
                             .padding(.vertical, 48)
@@ -95,7 +95,7 @@ public struct ScheduleScreen: View {
                 }
             }
             .padding(.top, 20)
-            .frame(minHeight: UIScreen.screenHeight - 120)
+            .frame(minHeight: UIScreen.screenHeight - 120, alignment: .top)
         }
         .appScrollContentBackgroundHidden()
         .scrollDismissesKeyboard(.immediately)
