@@ -23,7 +23,13 @@ struct ScheduleDayView: View {
             .fill(DayBlockBackground.gradient, style: FillStyle(eoFill: true))
             .cornerRadius(12)
             
-            DayView(title: eventsDay.dateString, sections: eventsDay.sections, textWidth: $textWidth) { eventViewModel in
+            DayView(
+                title: eventsDay.dateString,
+                sections: eventsDay.sections,
+                eventsLayout: .nativeSwipeActions(),
+                onEventAction: actionHandler,
+                textWidth: $textWidth
+            ) { eventViewModel in
                 ScheduleEventView(
                     viewModel: eventViewModel,
                     onSelect: actionHandler

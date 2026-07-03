@@ -55,6 +55,7 @@
 		31B94E2FFC5ABFEF6691C03A /* HomeScreenViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57B318AABEB71846F00FD1EA /* HomeScreenViewModel.swift */; };
 		321E248E922003E4F83AB70C /* ClubFavoriteEventDetailHost.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BAAF16278B722A1E66544B3 /* ClubFavoriteEventDetailHost.swift */; };
 		33FC870053A2664DE5EB8412 /* PathImageLoading.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67A33BF062F1F3FC41692C58 /* PathImageLoading.swift */; };
+		37E516C12C01D11F94F53050 /* EventCardInteractions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18B6660BFC6668B5ACC3D869 /* EventCardInteractions.swift */; };
 		390606F6D35F239226A695F0 /* ClubContactsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77E4E30544255861A2D3CDB0 /* ClubContactsScreen.swift */; };
 		3BA0DA788C9CAD53DEF1F53D /* ClubFeature.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 099848F1843F299280385ED3 /* ClubFeature.framework */; };
 		3BD070A3FF2A85CEC9FA352C /* DefaultApiClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 359495A8DB0881767FE49207 /* DefaultApiClient.swift */; };
@@ -82,6 +83,7 @@
 		538C43187ACC6B9768F8E1EB /* HomeDaySliderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB59A9F54E370F95A54BC79A /* HomeDaySliderView.swift */; };
 		53A6E5B198B95056BD9BA921 /* SkeletonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75293FAF798CAF048BF32B44 /* SkeletonView.swift */; };
 		53AE6523205021AA2CB5CF9F /* ScheduleListEmptyState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89DE6D672E30A0FE0CED0090 /* ScheduleListEmptyState.swift */; };
+		55382DB846B1ED9374446BFE /* EventActionHandlerEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6042099F140FE5509365C09 /* EventActionHandlerEnvironment.swift */; };
 		55F2C9525305DE4BC9E152B4 /* ClubScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59B7DFC916EEA740D9B5249E /* ClubScreen.swift */; };
 		56F2DC0FC39B5F24EC662DC8 /* ScheduleScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = A765291C7B33841FA000DBE9 /* ScheduleScreen.swift */; };
 		58441607B6D39095966BB4AA /* MusicianRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A8E6002DA4D3620A18E915E /* MusicianRowView.swift */; };
@@ -175,14 +177,12 @@
 		C6AFD3F6CE67D194FBCF6D52 /* API.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 48BA7EEC6C75DEF58EE0D4B8 /* API.framework */; };
 		C76046E16C687A320888C537 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 26F5315A47E44DA78FEF345D /* Assets.xcassets */; };
 		C82EDFF1473D275196F48631 /* EventSchedulePage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660252E35D53B912350A71D6 /* EventSchedulePage.swift */; };
-		CCE16C2FEDEDE72D1072B41D /* ScheduleEventRowInteraction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E1B71D77B03E2C7F03A9372 /* ScheduleEventRowInteraction.swift */; };
 		CE0AC84FEE60A47AC8A7E927 /* YouTubeVideoID.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FD03E66C6EECA44F6091637 /* YouTubeVideoID.swift */; };
 		CED6FAE3A109A6D00FAF0F58 /* Core.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A1059EAB8C03AF412D52227E /* Core.framework */; };
 		D00E9A7FD8A6FF2EC3D3C8AB /* ScheduleFilterScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = E476248A6F139AFF3009DF78 /* ScheduleFilterScreen.swift */; };
 		D15F15E7B45AF3B6611F8517 /* EventDateFormatting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50D826275EBCDAB1FEA6E6E9 /* EventDateFormatting.swift */; };
 		D1E508D2E724CDB753D3C92A /* EventBookingTimePickerSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = AED7D24D33B0F2F36DEB2DD0 /* EventBookingTimePickerSheet.swift */; };
 		D27D21DD11F54816B1723CA0 /* ClubMenuItemDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FB8EFB24DC8CCF5CCEFBD93 /* ClubMenuItemDetailView.swift */; };
-		D647C5F19BBB54D43CFA51BC /* EventOptionsButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5D682C70966E606EAE16608 /* EventOptionsButton.swift */; };
 		D7642B4E65598FA2F2E62337 /* FavoriteContextAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8E49B1A77D614F7C62ECC1 /* FavoriteContextAction.swift */; };
 		D987A5A9FAA81B99D78ADBB8 /* Core.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A1059EAB8C03AF412D52227E /* Core.framework */; };
 		DA698EA86FD8CF199C273996 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 633682FC446C691876A451F9 /* String.swift */; };
@@ -507,6 +507,7 @@
 		15ADB869BD9A95F238B43E12 /* EventDetailUpcomingOccurrence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventDetailUpcomingOccurrence.swift; sourceTree = "<group>"; };
 		163DA58A5A60AFBC280DC906 /* AppTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppTheme.swift; sourceTree = "<group>"; };
 		165D5232E194C553D04DF3FB /* Media.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Media.xcassets; sourceTree = "<group>"; };
+		18B6660BFC6668B5ACC3D869 /* EventCardInteractions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventCardInteractions.swift; sourceTree = "<group>"; };
 		1BFA4F8E1147273EAC6ED1E2 /* ScheduleEventFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleEventFilter.swift; sourceTree = "<group>"; };
 		1C530DD5F05AE5BDB6CE6DB3 /* ClubFeaturesSlider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClubFeaturesSlider.swift; sourceTree = "<group>"; };
 		246C0095DAE977ABEDBFDA76 /* HomeScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeScreen.swift; sourceTree = "<group>"; };
@@ -539,7 +540,6 @@
 		48BA7EEC6C75DEF58EE0D4B8 /* API.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = API.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		48EE0305DCA70A8826CA0B87 /* SharedUIFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedUIFactory.swift; sourceTree = "<group>"; };
 		4A8E6002DA4D3620A18E915E /* MusicianRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicianRowView.swift; sourceTree = "<group>"; };
-		4E1B71D77B03E2C7F03A9372 /* ScheduleEventRowInteraction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleEventRowInteraction.swift; sourceTree = "<group>"; };
 		4E853C928D7E304D046C6D94 /* Services_Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Services_Info.plist; sourceTree = "<group>"; };
 		50D826275EBCDAB1FEA6E6E9 /* EventDateFormatting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventDateFormatting.swift; sourceTree = "<group>"; };
 		50E3808E844F3658238D3CBB /* Develop.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Develop.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -616,6 +616,7 @@
 		C20D9937BADCFC4FF29A8597 /* ClubMusiciansScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClubMusiciansScreen.swift; sourceTree = "<group>"; };
 		C282D64D03258CE38BA39FFD /* RemoteImageLoadable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteImageLoadable.swift; sourceTree = "<group>"; };
 		C597C5D176F36E4A579BD016 /* Endpoints.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Endpoints.swift; sourceTree = "<group>"; };
+		C6042099F140FE5509365C09 /* EventActionHandlerEnvironment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventActionHandlerEnvironment.swift; sourceTree = "<group>"; };
 		CBBF91BF10D874B1AA7F36FB /* ClubFeature_Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = ClubFeature_Info.plist; sourceTree = "<group>"; };
 		CBF8EFDCD1779D4F5B700785 /* Appstore.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Appstore.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CDF1605888301165977862B5 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
@@ -626,7 +627,6 @@
 		D14C7D551FB04D8BF0A3A906 /* SharedViewModelFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedViewModelFactory.swift; sourceTree = "<group>"; };
 		D397A0558C66AD13E449C3E8 /* ExpandableText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpandableText.swift; sourceTree = "<group>"; };
 		D4750CE12D045D580436876C /* FavoriteEventDetailMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteEventDetailMode.swift; sourceTree = "<group>"; };
-		D5D682C70966E606EAE16608 /* EventOptionsButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventOptionsButton.swift; sourceTree = "<group>"; };
 		D654FE3C47B75657D3393ADD /* EventWebsiteLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventWebsiteLink.swift; sourceTree = "<group>"; };
 		DB17BDC17CB2F2CFAB6D6052 /* EventsGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventsGroup.swift; sourceTree = "<group>"; };
 		DCD6A7C69ACB61E5619CFB7E /* AppConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppConfiguration.swift; sourceTree = "<group>"; };
@@ -1040,6 +1040,7 @@
 			isa = PBXGroup;
 			children = (
 				53B21EB1D0D1F94E1DC386FE /* EventAction.swift */,
+				C6042099F140FE5509365C09 /* EventActionHandlerEnvironment.swift */,
 				29489B556C9F386C78044A27 /* EventBookingSlot.swift */,
 				59F3AB6285FBE98672B0E513 /* EventCalendarCoordinator.swift */,
 				2B8B8850F480D49392C0F8AC /* EventContextActionHandler.swift */,
@@ -1185,7 +1186,6 @@
 			children = (
 				E5CCBC924798254BD20D8931 /* ScheduleDayView.swift */,
 				252C53A318413AD1A6751FE4 /* ScheduleEmptyStateView.swift */,
-				4E1B71D77B03E2C7F03A9372 /* ScheduleEventRowInteraction.swift */,
 				4739388B2A7F6E49661ED603 /* ScheduleEventView.swift */,
 			);
 			path = Views;
@@ -1195,12 +1195,12 @@
 			isa = PBXGroup;
 			children = (
 				F0BDA29A0121533AB0A40858 /* DayView.swift */,
+				18B6660BFC6668B5ACC3D869 /* EventCardInteractions.swift */,
 				B5F8F6DDF13979100D5FE0B5 /* EventContextButtons.swift */,
 				336AE0F8E014FDFB4F2713C3 /* EventDetailHeroSlider.swift */,
 				A9DB296155A5ACB286240D62 /* EventDetailView.swift */,
 				ED252503DAD3AD65A023031D /* EventHeroTransition.swift */,
 				53F0D134ECFEC025103F9E15 /* EventInfoView.swift */,
-				D5D682C70966E606EAE16608 /* EventOptionsButton.swift */,
 				2B553FAD6D43E218FEB9B148 /* EventPriceView.swift */,
 				E027C5B97FC5F033283EF1D1 /* EventTimeView.swift */,
 				FF60DF007CC10B683D92EDEF /* EventView.swift */,
@@ -1566,9 +1566,11 @@
 				DD1970D3E3AA9E2971134AF4 /* DayView.swift in Sources */,
 				537901BA3F43601951EBC25B /* DetailHeroImageView.swift in Sources */,
 				675F5F5A928F354F52A6115B /* EventAction.swift in Sources */,
+				55382DB846B1ED9374446BFE /* EventActionHandlerEnvironment.swift in Sources */,
 				109934129778AB6656C9805E /* EventBookingSlot.swift in Sources */,
 				D1E508D2E724CDB753D3C92A /* EventBookingTimePickerSheet.swift in Sources */,
 				316348CDAA48DCF9E2A940A4 /* EventCalendarCoordinator.swift in Sources */,
+				37E516C12C01D11F94F53050 /* EventCardInteractions.swift in Sources */,
 				863539FCF1770238385A8EF5 /* EventContextActionHandler.swift in Sources */,
 				98CAC7067A16CF83F1BF0DEC /* EventContextButtons.swift in Sources */,
 				D15F15E7B45AF3B6611F8517 /* EventDateFormatting.swift in Sources */,
@@ -1579,7 +1581,6 @@
 				BAD3A06E55F8E0EE68D2809A /* EventHeroTransition.swift in Sources */,
 				2EB34E03E73465CBAC895086 /* EventInfoView.swift in Sources */,
 				8C40D55FF806B4DD238E395A /* EventModel+Preview.swift in Sources */,
-				D647C5F19BBB54D43CFA51BC /* EventOptionsButton.swift in Sources */,
 				DDAAEC1EEC9F36291EE04B92 /* EventPresentation.swift in Sources */,
 				75698FA45FBBA06149AF71E1 /* EventPriceView.swift in Sources */,
 				2D43331BD409F721469E59C5 /* EventShareCoordinator.swift in Sources */,
@@ -1697,7 +1698,6 @@
 				2BCA7FFA640045C8B1E5BC9E /* ScheduleEmptyStateView.swift in Sources */,
 				BC258E4FE9C5373B6AF28F65 /* ScheduleEventFilter.swift in Sources */,
 				DD1C3BF01CD2E0FF07BBA25B /* ScheduleEventGrouper.swift in Sources */,
-				CCE16C2FEDEDE72D1072B41D /* ScheduleEventRowInteraction.swift in Sources */,
 				7342EBDC2064817AF133524B /* ScheduleEventView.swift in Sources */,
 				D00E9A7FD8A6FF2EC3D3C8AB /* ScheduleFilterScreen.swift in Sources */,
 				BE3A8589BFE12A76BEC733DC /* ScheduleFilterViewModel.swift in Sources */,

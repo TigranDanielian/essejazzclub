@@ -84,6 +84,13 @@ public final class EventViewModel: ObservableObject {
         )
     )
 
+    public lazy var calendarToggleViewModel: EventCalendarToggleViewModel = EventCalendarToggleViewModel(
+        manager: calendarEventsManager,
+        url: websiteURL,
+        startDates: calendarStartDates,
+        occurrenceIdentifier: occurrenceIdentifier
+    )
+
     public lazy var detailsButtonViewModel: EventContextButtonViewModel = EventContextButtonViewModel(
         imagePublisher: EventContextButtonPublishers.staticIcon(named: EventContextButtonType.details(self).imageName)
     )

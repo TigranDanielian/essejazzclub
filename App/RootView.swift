@@ -225,6 +225,9 @@ private struct HomeTabShell<RouteContent: View>: View {
             .toolbarBackground(.hidden, for: .navigationBar)
         }
         .environment(\.eventHeroNamespace, eventHeroNamespace)
+        .environment(\.eventActionHandler) { action in
+            viewModel.handleAction(.event(action))
+        }
         .onAppear {
             navPath = router.path
             container.calendarEventsManager.requestAccessIfNeeded()
@@ -309,6 +312,9 @@ private struct ScheduleTabShell<RouteContent: View>: View {
                 }
         }
         .environment(\.eventHeroNamespace, eventHeroNamespace)
+        .environment(\.eventActionHandler) { action in
+            viewModel.handleAction(.event(action))
+        }
         .sheet(item: $router.sheetDestination) { route in
             switch route {
             case .filter:

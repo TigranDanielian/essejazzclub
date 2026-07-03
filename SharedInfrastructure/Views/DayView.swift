@@ -11,17 +11,23 @@ import Core
 public struct DayView<EventRow: View>: View {
     let title: String?
     let sections: [GroupedEventSection]
+    let eventsLayout: DayViewEventsLayout
+    let onEventAction: EventActionHandler?
     @Binding var textWidth: CGFloat
     let eventViewProvider: (EventViewModel) -> EventRow
 
     public init(
         title: String? = nil,
         sections: [GroupedEventSection],
+        eventsLayout: DayViewEventsLayout = .stack,
+        onEventAction: EventActionHandler? = nil,
         textWidth: Binding<CGFloat>? = nil,
         @ViewBuilder eventViewProvider: @escaping (EventViewModel) -> EventRow
     ) {
         self.title = title
         self.sections = sections
+        self.eventsLayout = eventsLayout
+        self.onEventAction = onEventAction
         self.eventViewProvider = eventViewProvider
         _textWidth = textWidth ?? .constant(0)
     }
@@ -34,7 +40,7 @@ public struct DayView<EventRow: View>: View {
                     .padding(.vertical, 2)
                     .padding(.horizontal, 8)
                     .font(.title2)
-                    .foregroundColor(Color(uiColor: Colors.text))
+                    .foregroundColor(Color(uiColor: Colors.textSecondary))
                     .background(
                         GeometryReader { geo in
                             Color.clear.preference(
@@ -56,17 +62,43 @@ public struct DayView<EventRow: View>: View {
                             .foregroundColor(.init(uiColor: Colors.accentSheet))
 
                         VStack(spacing: 12) {
-                            ForEach(section.events) { event in
-                                eventViewProvider(event)
-                                    .id(event.id)
-                                    .frame(maxWidth: .infinity)
-                            }
+                            eventsList(for: section.events)
                         }
                     }
                 }
             }
             .padding(.vertical, title == nil ? 0 : 12)
             .padding(.horizontal, 8)
+        }
+    }
+
+    @ViewBuilder
+    private func eventsList(for events: [EventViewModel]) -> some View {
+        switch eventsLayout {
+        case .stack:
+            ForEach(events) { event in
+                eventViewProvider(event)
+                    .id(event.id)
+                    .frame(maxWidth: .infinity)
+            }
+        case .nativeSwipeActions(let rowHeight):
+            if let onEventAction {
+                EventSwipeableRowsList(
+                    events: events,
+                    rowHeight: rowHeight,
+                    onAction: onEventAction
+                ) { event in
+                    eventViewProvider(event)
+                        .id(event.id)
+                        .frame(maxWidth: .infinity)
+                }
+            } else {
+                ForEach(events) { event in
+                    eventViewProvider(event)
+                        .id(event.id)
+                        .frame(maxWidth: .infinity)
+                }
+            }
         }
     }
 }

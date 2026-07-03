@@ -8,6 +8,7 @@
 import SwiftUI
 import Combine
 import Core
+import EventKit
 import UIKit
 
 enum EventContextButtonPublishers {
@@ -54,6 +55,33 @@ public final class FavoriteHeartButtonViewModel: ObservableObject {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] isFavorite in
                 self?.isFavorite = isFavorite
+            }
+    }
+}
+
+@MainActor
+public final class EventCalendarToggleViewModel: ObservableObject {
+    @Published private(set) var isInCalendar = false
+
+    private var cancellable: AnyCancellable?
+
+    public init(
+        manager: CalendarEventsManager,
+        url: URL,
+        startDates: [Date],
+        occurrenceIdentifier: String
+    ) {
+        let storeChanges = NotificationCenter.default.publisher(for: .EKEventStoreChanged).map { _ in () }
+        let appChanges = NotificationCenter.default.publisher(for: .esseEventCalendarStateDidChange)
+            .compactMap { $0.object as? String }
+            .filter { $0 == occurrenceIdentifier }
+            .map { _ in () }
+
+        cancellable = Publishers.Merge(storeChanges, appChanges)
+            .prepend(())
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] in
+                self?.isInCalendar = manager.isOccurrenceInCalendar(url: url, startDates: startDates)
             }
     }
 }
