@@ -38,4 +38,25 @@ public final class ClubNavigationRouter: StackNavigationRouter<ClubNavigationRou
     public override init() {
         super.init()
     }
+
+    public override func deduplicationKey(for route: Route) -> String {
+        switch route {
+        case .favoriteEventDetail(let occurrenceIdentifier, _):
+            return "event-\(occurrenceIdentifier)"
+        case .musicianDetail(let musician):
+            return "musician-\(musician.musicianId)"
+        case .about:
+            return "club-about"
+        case .menu:
+            return "club-menu"
+        case .contacts:
+            return "club-contacts"
+        case .musicians:
+            return "club-musicians"
+        case .favorites:
+            return "club-favorites"
+        case .giftShop:
+            return "club-gift-shop"
+        }
+    }
 }

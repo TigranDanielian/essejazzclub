@@ -30,6 +30,17 @@ public final class HomeNavigationRouter: StackNavigationRouter<HomeNavigationRou
         super.init()
     }
 
+    public override func deduplicationKey(for route: Route) -> String {
+        switch route {
+        case .eventDetail(let viewModel, _):
+            return "event-\(viewModel.occurrenceIdentifier)"
+        case .musicianDetail(let viewModel):
+            return "musician-\(viewModel.musicianId)"
+        case .bookmarkedEventDetail(let occurrenceIdentifier, _):
+            return "event-\(occurrenceIdentifier)"
+        }
+    }
+
     public func presentEventDetail(
         viewModel: EventViewModel,
         heroTransitionSourceID: String?,

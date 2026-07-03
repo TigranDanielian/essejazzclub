@@ -34,6 +34,7 @@ private enum MusicianGridItemLayout {
 
 public struct ClubMusiciansScreenDependencies {
     public let musiciansService: MusiciansService
+    public let eventsService: EventsService
     public let favoritesStorage: FavoritesStorage<String>
     public let imageLoader: ImageLoader
     public let viewModelFactory: ViewModelFactory
@@ -41,12 +42,14 @@ public struct ClubMusiciansScreenDependencies {
 
     public init(
         musiciansService: MusiciansService,
+        eventsService: EventsService,
         favoritesStorage: FavoritesStorage<String>,
         imageLoader: ImageLoader,
         viewModelFactory: ViewModelFactory,
         uiFactory: any UIFactory
     ) {
         self.musiciansService = musiciansService
+        self.eventsService = eventsService
         self.favoritesStorage = favoritesStorage
         self.imageLoader = imageLoader
         self.viewModelFactory = viewModelFactory

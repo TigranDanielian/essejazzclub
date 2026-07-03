@@ -34,14 +34,27 @@ public final class ClubMusiciansScreenViewModel: ObservableObject {
         self.dependencies = dependencies
         self.router = router
 
-        dependencies.musiciansService.state
-            .receive(on: DispatchQueue.main)
-            .map { [weak self] state -> [MusicianViewModel] in
-                guard let self else { return [] }
-                return state.musicians.map(self.makeMusicianViewModel)
-            }
-            .sink { [weak self] in self?.allMusicians = $0 }
-            .store(in: &cancellables)
+        Publishers.CombineLatest(
+            dependencies.musiciansService.state,
+            dependencies.eventsService.state
+        )
+        .flatMap { [dependencies] musicState, eventsState -> AnyPublisher<([Musician], [Int: Date]), Never> in
+            dependencies.musiciansService
+                .nearestUpcomingConcertDates(
+                    in: eventsState.events,
+                    maxUniqueEventsToCheck: 30
+                )
+                .map { (musicState.musicians, $0) }
+                .eraseToAnyPublisher()
+        }
+        .receive(on: DispatchQueue.main)
+        .map { [weak self] musicians, upcomingDates in
+            guard let self else { return [] }
+            return Self.sortedMusicians(musicians, upcomingDates: upcomingDates)
+                .map(self.makeMusicianViewModel)
+        }
+        .sink { [weak self] in self?.allMusicians = $0 }
+        .store(in: &cancellables)
     }
 
     func openMusicianDetail(_ musician: MusicianViewModel) {
@@ -59,6 +72,27 @@ public final class ClubMusiciansScreenViewModel: ObservableObject {
             )
         }
         return viewModel
+    }
+
+    private static func sortedMusicians(
+        _ musicians: [Musician],
+        upcomingDates: [Int: Date]
+    ) -> [Musician] {
+        musicians.sorted { lhs, rhs in
+            let lhsDate = upcomingDates[lhs.id]
+            let rhsDate = upcomingDates[rhs.id]
+
+            switch (lhsDate, rhsDate) {
+            case let (left?, right?) where left != right:
+                return left < right
+            case (_?, nil):
+                return true
+            case (nil, _?):
+                return false
+            default:
+                return lhs.name.localizedCaseInsensitiveCompare(rhs.name) == .orderedAscending
+            }
+        }
     }
 
     /// Поиск по подстроке в полном имени или по любому из слов (имя / фамилия).

@@ -31,6 +31,12 @@ public protocol MusiciansService {
         maxResults: Int
     ) -> AnyPublisher<[EventModel], Never>
 
+    /// Дата ближайшего концерта в афише для каждого `musicianId` (только предстоящие).
+    func nearestUpcomingConcertDates(
+        in events: [EventModel],
+        maxUniqueEventsToCheck: Int
+    ) -> AnyPublisher<[Int: Date], Never>
+
     var state: AnyPublisher<MusiciansState, Never> { get }
 }
 
@@ -112,6 +118,87 @@ public final class MusiciansServiceImpl: MusiciansService {
         maxUniqueEventsToCheck: Int = 30,
         maxResults: Int = 10
     ) -> AnyPublisher<[EventModel], Never> {
+        let prepared = Self.prepareUpcomingEventCandidates(
+            from: events,
+            maxUniqueEventsToCheck: maxUniqueEventsToCheck
+        )
+
+        guard !prepared.candidateEventKeys.isEmpty else {
+            return Just([]).eraseToAnyPublisher()
+        }
+
+        let lineupChecks = prepared.candidateEventKeys.map { eventKey in
+            forEvent(id: eventKey)
+                .first()
+                .map { musicians in
+                    (eventKey, musicians.contains { $0.id == musicianId })
+                }
+        }
+
+        return Publishers.MergeMany(lineupChecks)
+            .collect()
+            .map { pairs in
+                let matchingKeys = Set(pairs.filter(\.1).map(\.0))
+                return Array(
+                    prepared.upcoming
+                        .filter { matchingKeys.contains($0.id) }
+                        .prefix(maxResults)
+                )
+            }
+            .eraseToAnyPublisher()
+    }
+
+    public func nearestUpcomingConcertDates(
+        in events: [EventModel],
+        maxUniqueEventsToCheck: Int = 30
+    ) -> AnyPublisher<[Int: Date], Never> {
+        let prepared = Self.prepareUpcomingEventCandidates(
+            from: events,
+            maxUniqueEventsToCheck: maxUniqueEventsToCheck
+        )
+
+        guard !prepared.candidateEventKeys.isEmpty else {
+            return Just([:]).eraseToAnyPublisher()
+        }
+
+        let lineupChecks = prepared.candidateEventKeys.map { eventKey in
+            musicianIds(inEventId: eventKey).map { ids in
+                (eventKey, ids)
+            }
+        }
+
+        return Publishers.MergeMany(lineupChecks)
+            .collect()
+            .map { pairs in
+                var datesByMusician: [Int: Date] = [:]
+                for (eventKey, musicianIds) in pairs {
+                    guard let eventDate = prepared.earliestDateByEventKey[eventKey] else { continue }
+                    for musicianId in musicianIds {
+                        if let existing = datesByMusician[musicianId] {
+                            if eventDate < existing {
+                                datesByMusician[musicianId] = eventDate
+                            }
+                        } else {
+                            datesByMusician[musicianId] = eventDate
+                        }
+                    }
+                }
+                return datesByMusician
+            }
+            .eraseToAnyPublisher()
+    }
+
+    private func musicianIds(inEventId eventId: String) -> AnyPublisher<Set<Int>, Never> {
+        eventLineup(for: eventId)
+            .map { Set($0.map(\.musicianId)) }
+            .first()
+            .eraseToAnyPublisher()
+    }
+
+    private static func prepareUpcomingEventCandidates(
+        from events: [EventModel],
+        maxUniqueEventsToCheck: Int
+    ) -> (upcoming: [EventModel], candidateEventKeys: [String], earliestDateByEventKey: [String: Date]) {
         let calendar = Calendar.current
         let today = calendar.startOfDay(for: Date())
 
@@ -131,7 +218,18 @@ public final class MusiciansServiceImpl: MusiciansService {
 
         var seenEventIds = Set<Int>()
         var candidateEventKeys: [String] = []
+        var earliestDateByEventKey: [String: Date] = [:]
+
         for model in upcoming {
+            let eventDay = calendar.startOfDay(for: model.dateWithTimes.date)
+            if let existing = earliestDateByEventKey[model.id] {
+                if eventDay < existing {
+                    earliestDateByEventKey[model.id] = eventDay
+                }
+            } else {
+                earliestDateByEventKey[model.id] = eventDay
+            }
+
             if seenEventIds.insert(model.eventId).inserted {
                 candidateEventKeys.append(model.id)
                 if candidateEventKeys.count >= maxUniqueEventsToCheck {
@@ -140,30 +238,7 @@ public final class MusiciansServiceImpl: MusiciansService {
             }
         }
 
-        guard !candidateEventKeys.isEmpty else {
-            return Just([]).eraseToAnyPublisher()
-        }
-
-        // `forEvent` строится на CombineLatest со `state` и не завершается — берём только первое значение.
-        let lineupChecks = candidateEventKeys.map { eventKey in
-            forEvent(id: eventKey)
-                .first()
-                .map { musicians in
-                    (eventKey, musicians.contains { $0.id == musicianId })
-                }
-        }
-
-        return Publishers.MergeMany(lineupChecks)
-            .collect()
-            .map { pairs in
-                let matchingKeys = Set(pairs.filter(\.1).map(\.0))
-                return Array(
-                    upcoming
-                        .filter { matchingKeys.contains($0.id) }
-                        .prefix(maxResults)
-                )
-            }
-            .eraseToAnyPublisher()
+        return (upcoming, candidateEventKeys, earliestDateByEventKey)
     }
     
     public func load() -> AnyPublisher<Void, Error> {

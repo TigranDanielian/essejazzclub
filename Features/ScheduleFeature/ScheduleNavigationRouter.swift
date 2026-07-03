@@ -26,6 +26,17 @@ public final class ScheduleNavigationRouter: StackNavigationRouter<ScheduleNavig
         }
     }
 
+    public override func deduplicationKey(for route: Route) -> String {
+        switch route {
+        case .eventDetail(let viewModel, _):
+            return "event-\(viewModel.occurrenceIdentifier)"
+        case .musicianDetail(let viewModel):
+            return "musician-\(viewModel.musicianId)"
+        case .filter:
+            return "schedule-filter"
+        }
+    }
+
     public func presentEventDetail(
         viewModel: EventViewModel,
         heroTransitionSourceID: String?,

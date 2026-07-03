@@ -27,12 +27,20 @@ open class StackNavigationRouter<Route: Hashable & Identifiable>: Router {
 
     public init() {}
 
+    /// Ключ для дедупликации push: при совпадении стек обрезается до существующего экрана.
+    open func deduplicationKey(for route: Route) -> String {
+        "\(route.id)"
+    }
+
     public func present(route: Route, presentation: NavigationPresentationStyle) {
         switch presentation {
         case .push:
-            // Присваивание, не append: NavigationStack(path:) реагирует на setter binding,
-            // in-place мутация @Published-массива стек не обновляет.
-            path = path + [route]
+            let key = deduplicationKey(for: route)
+            if let existingIndex = path.firstIndex(where: { deduplicationKey(for: $0) == key }) {
+                path = Array(path.prefix(through: existingIndex))
+            } else {
+                path = path + [route]
+            }
         case .sheet:
             sheetDestination = route
         case .fullScreenCover:

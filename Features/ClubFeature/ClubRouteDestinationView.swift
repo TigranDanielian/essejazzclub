@@ -60,6 +60,7 @@ struct ClubRouteDestinationView: View {
                 ClubMusiciansScreen(
                     dependencies: ClubMusiciansScreenDependencies(
                         musiciansService: dependencies.musiciansService,
+                        eventsService: dependencies.eventsService,
                         favoritesStorage: dependencies.favoritesStorage,
                         imageLoader: dependencies.imageLoader,
                         viewModelFactory: dependencies.viewModelFactory,
