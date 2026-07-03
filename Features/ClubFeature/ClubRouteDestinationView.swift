@@ -30,7 +30,13 @@ struct ClubRouteDestinationView: View {
         case .musicianDetail(let musicianVM):
             AnyView(
                 dependencies.uiFactory.produce(
-                    unit: .musician(musicianVM, clubViewModel.makeMusicianDetailActionHandler())
+                    unit: .musician(
+                        musicianVM,
+                        clubViewModel.tabNavigation.makeMusicianDetailActionHandler(
+                            favoritesStorage: dependencies.favoritesStorage,
+                            toastPresenter: dependencies.toastPresenter
+                        )
+                    )
                 )
             )
         case .about:

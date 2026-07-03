@@ -20,6 +20,8 @@ public final class ClubScreenViewModel: ObservableObject {
     public let dependencies: ClubScreenDependencies
     public var router: ClubNavigationRouter
 
+    public var tabNavigation: ClubTabNavigating { router }
+
     @Published private(set) public var concertRows: [ConcertRow] = []
     @Published private(set) public var musicianRows: [MusicianRow] = []
     /// Каталог музыкантов с сервера для полной деталки.
@@ -38,27 +40,15 @@ public final class ClubScreenViewModel: ObservableObject {
     }
 
     public func openHubRoute(_ route: ClubNavigationRouter.Route) {
-        router.present(route: route, presentation: .push)
+        tabNavigation.openHubRoute(route)
     }
 
     public func presentRoute(_ route: ClubNavigationRouter.Route, presentation: NavigationPresentationStyle = .push) {
-        router.present(route: route, presentation: presentation)
+        tabNavigation.presentClubRoute(route, presentation: presentation)
     }
 
     public func popNavigation() {
-        router.pop()
-    }
-
-    public func makeMusicianDetailActionHandler() -> MusicianActionHandler {
-        { [weak self] action in
-            guard let self else { return }
-            switch action {
-            case .dismiss:
-                self.popNavigation()
-            case .favorite(let id):
-                self.dependencies.favoritesStorage.applyFavoriteContext(.musician(musicianId: id))
-            }
-        }
+        tabNavigation.dismissPresentedOrPop()
     }
 
     private func bindFavorites() {

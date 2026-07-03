@@ -19,6 +19,7 @@ public struct ClubScreenDependencies {
     public let viewModelFactory: ViewModelFactory
     public let uiFactory: any UIFactory
     public let calendarCoordinator: EventCalendarCoordinator
+    public let toastPresenter: ToastPresenter
 
     public init(
         eventsService: EventsService,
@@ -29,7 +30,8 @@ public struct ClubScreenDependencies {
         imageLoader: ImageLoader,
         viewModelFactory: ViewModelFactory,
         uiFactory: any UIFactory,
-        calendarCoordinator: EventCalendarCoordinator
+        calendarCoordinator: EventCalendarCoordinator,
+        toastPresenter: ToastPresenter
     ) {
         self.eventsService = eventsService
         self.musiciansService = musiciansService
@@ -40,5 +42,6 @@ public struct ClubScreenDependencies {
         self.viewModelFactory = viewModelFactory
         self.uiFactory = uiFactory
         self.calendarCoordinator = calendarCoordinator
+        self.toastPresenter = toastPresenter
     }
 }

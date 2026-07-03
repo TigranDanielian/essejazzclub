@@ -11,7 +11,8 @@ extension RootView {
         EventContextActionHandler.handle(
             type,
             favoritesStorage: container.favoritesStorage,
-            calendarCoordinator: container.calendarCoordinator
+            calendarCoordinator: container.calendarCoordinator,
+            toastPresenter: container.toastPresenter
         )
     }
 }

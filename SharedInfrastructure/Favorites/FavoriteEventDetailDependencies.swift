@@ -12,19 +12,22 @@ public struct FavoriteEventDetailDependencies {
     public let viewModelFactory: ViewModelFactory
     public let uiFactory: any UIFactory
     public let calendarCoordinator: EventCalendarCoordinator
+    public let toastPresenter: ToastPresenter
 
     public init(
         eventsService: EventsService,
         favoritesStorage: FavoritesStorage<String>,
         viewModelFactory: ViewModelFactory,
         uiFactory: any UIFactory,
-        calendarCoordinator: EventCalendarCoordinator
+        calendarCoordinator: EventCalendarCoordinator,
+        toastPresenter: ToastPresenter
     ) {
         self.eventsService = eventsService
         self.favoritesStorage = favoritesStorage
         self.viewModelFactory = viewModelFactory
         self.uiFactory = uiFactory
         self.calendarCoordinator = calendarCoordinator
+        self.toastPresenter = toastPresenter
     }
 }
 

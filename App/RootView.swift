@@ -52,13 +52,17 @@ struct RootView: View {
                     imageLoader: container.imageLoader,
                     viewModelFactory: container.viewModelFactory,
                     uiFactory: container.uiFactory,
-                    calendarCoordinator: container.calendarCoordinator
+                    calendarCoordinator: container.calendarCoordinator,
+                    toastPresenter: container.toastPresenter
                 )
             )
             .tabItem {
                 Label("Клуб", systemImage: "music.note.house")
             }
             .tag(AppTab.club)
+        }
+        .overlay(alignment: .top) {
+            ToastOverlay(presenter: container.toastPresenter)
         }
         .environmentObject(container)
     }
@@ -76,7 +80,8 @@ struct RootView: View {
             musicianDetailView(
                 viewModel: viewModel,
                 actionHandler: homeTabNavigation.makeMusicianDetailActionHandler(
-                    favoritesStorage: container.favoritesStorage
+                    favoritesStorage: container.favoritesStorage,
+                    toastPresenter: container.toastPresenter
                 )
             )
         case .bookmarkedEventDetail(let occurrenceIdentifier, let mode):
@@ -88,7 +93,8 @@ struct RootView: View {
                     favoritesStorage: container.favoritesStorage,
                     viewModelFactory: container.viewModelFactory,
                     uiFactory: container.uiFactory,
-                    calendarCoordinator: container.calendarCoordinator
+                    calendarCoordinator: container.calendarCoordinator,
+                    toastPresenter: container.toastPresenter
                 ),
                 router: homeNavigationRouter
             )
@@ -108,7 +114,8 @@ struct RootView: View {
             musicianDetailView(
                 viewModel: viewModel,
                 actionHandler: scheduleTabNavigation.makeMusicianDetailActionHandler(
-                    favoritesStorage: container.favoritesStorage
+                    favoritesStorage: container.favoritesStorage,
+                    toastPresenter: container.toastPresenter
                 )
             )
         case .filter:

@@ -14,9 +14,11 @@ public final class EventCalendarCoordinator {
     private static let eventDuration: TimeInterval = 2 * 60 * 60
 
     private let calendarManager: CalendarEventsManager
+    private let toastPresenter: ToastPresenter
 
-    public nonisolated init(calendarManager: CalendarEventsManager) {
+    public nonisolated init(calendarManager: CalendarEventsManager, toastPresenter: ToastPresenter) {
         self.calendarManager = calendarManager
+        self.toastPresenter = toastPresenter
     }
 
     public func handleAction(with viewModel: EventViewModel) {
@@ -42,13 +44,9 @@ public final class EventCalendarCoordinator {
                     name: .esseEventCalendarStateDidChange,
                     object: event.occurrenceIdentifier
                 )
-                if added {
-                    Self.presentSuccessAlert(title: "Добавлено в календарь")
-                } else {
-                    Self.presentSuccessAlert(title: "Удалено из календаря")
-                }
+                toastPresenter.show(added ? "Добавлено в календарь" : "Удалено из календаря")
             } catch {
-                Self.presentErrorAlert(message: error.localizedDescription)
+                toastPresenter.show("Не удалось обновить календарь")
             }
         }
     }
@@ -67,20 +65,6 @@ public final class EventCalendarCoordinator {
         }
         alert.addAction(UIAlertAction(title: "Отмена", style: .cancel))
         TopPresenter.configurePopover(for: alert, presenter: presenter)
-        presenter.present(alert, animated: true)
-    }
-
-    private static func presentSuccessAlert(title: String) {
-        guard let presenter = TopPresenter.topViewController() else { return }
-        let alert = UIAlertController(title: title, message: nil, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "OK", style: .default))
-        presenter.present(alert, animated: true)
-    }
-
-    private static func presentErrorAlert(message: String) {
-        guard let presenter = TopPresenter.topViewController() else { return }
-        let alert = UIAlertController(title: "Ошибка", message: message, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "OK", style: .default))
         presenter.present(alert, animated: true)
     }
 }

@@ -23,7 +23,7 @@ struct ClubFavoriteEventDetailHost: View {
             occurrenceIdentifier: occurrenceIdentifier,
             mode: mode,
             dependencies: clubScreen.dependencies.favoriteEventDetailDependencies,
-            navigation: clubScreen
+            navigation: clubScreen.router
         )
     }
 }
@@ -35,24 +35,8 @@ extension ClubScreenDependencies {
             favoritesStorage: favoritesStorage,
             viewModelFactory: viewModelFactory,
             uiFactory: uiFactory,
-            calendarCoordinator: calendarCoordinator
-        )
-    }
-}
-
-extension ClubScreenViewModel: FavoriteEventDetailNavigating {
-    public func dismissFavoriteEventDetail() {
-        popNavigation()
-    }
-
-    public func presentMusicianDetail(_ musician: MusicianViewModel) {
-        presentRoute(.musicianDetail(musician), presentation: .push)
-    }
-
-    public func presentFavoriteEventSlotDetail(occurrenceIdentifier: String) {
-        presentRoute(
-            .favoriteEventDetail(occurrenceIdentifier: occurrenceIdentifier, mode: .slot),
-            presentation: .push
+            calendarCoordinator: calendarCoordinator,
+            toastPresenter: toastPresenter
         )
     }
 }

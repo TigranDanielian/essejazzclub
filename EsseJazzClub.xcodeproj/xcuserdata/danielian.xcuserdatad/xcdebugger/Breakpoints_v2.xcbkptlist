@@ -1122,8 +1122,8 @@
             filePath = "App/RootView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "208"
-            endingLineNumber = "208"
+            startingLineNumber = "210"
+            endingLineNumber = "210"
             landmarkName = "body"
             landmarkType = "24">
          </BreakpointContent>
@@ -1173,6 +1173,22 @@
             startingLineNumber = "59"
             endingLineNumber = "59"
             landmarkName = "forwardHitToViewsBelowScroll(at:with:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "A01F48D9-5715-4B78-B5E7-F0636BE239B2"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Features/ScheduleFeature/ScheduleTabNavigating.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "37"
+            endingLineNumber = "37"
+            landmarkName = "makeMusicianDetailActionHandler(favoritesStorage:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

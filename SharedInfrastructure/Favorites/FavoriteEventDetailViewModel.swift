@@ -101,7 +101,8 @@ public final class FavoriteEventDetailViewModel: ObservableObject {
         EventContextActionHandler.handle(
             type,
             favoritesStorage: dependencies.favoritesStorage,
-            calendarCoordinator: dependencies.calendarCoordinator
+            calendarCoordinator: dependencies.calendarCoordinator,
+            toastPresenter: dependencies.toastPresenter
         )
     }
 }

@@ -30,28 +30,6 @@ public final class HomeNavigationRouter: StackNavigationRouter<HomeNavigationRou
         super.init()
     }
 
-    public func applyEventNavigation(_ action: EventNavigationAction) {
-        switch action {
-        case .onEventDetails(let eventViewModel, let heroTransitionSourceID):
-            presentEventDetail(viewModel: eventViewModel, heroTransitionSourceID: heroTransitionSourceID)
-        case .onMusicianDetails(let musicianViewModel):
-            presentMusicianDetail(viewModel: musicianViewModel)
-        case .dismiss:
-            dismissPresentedOrPop()
-        case .onBuy:
-            break
-        }
-    }
-
-    public func applyMusicianNavigation(_ action: MusicianAction) {
-        switch action {
-        case .dismiss:
-            dismissPresentedOrPop()
-        case .favorite:
-            break
-        }
-    }
-
     public func presentEventDetail(
         viewModel: EventViewModel,
         heroTransitionSourceID: String?,

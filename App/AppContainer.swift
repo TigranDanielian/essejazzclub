@@ -20,6 +20,7 @@ public final class AppContainer: ObservableObject {
     public let shopService: ShopService
     public let favoritesStorage: FavoritesStorage<String> = .init()
     public let calendarEventsManager: CalendarEventsManager = CalendarEventsManager()
+    public let toastPresenter = ToastPresenter()
     public let viewModelFactory: ViewModelFactory
     public let uiFactory: any UIFactory
     public var calendarCoordinator: EventCalendarCoordinator
@@ -41,7 +42,17 @@ public final class AppContainer: ObservableObject {
         
         self.uiFactory = SharedUIFactory(imageLoader: imageLoader)
 
-        self.calendarCoordinator = EventCalendarCoordinator(calendarManager: calendarEventsManager)
+        self.calendarCoordinator = EventCalendarCoordinator(
+            calendarManager: calendarEventsManager,
+            toastPresenter: toastPresenter
+        )
+
+        toastPresenter.objectWillChange
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                self?.objectWillChange.send()
+            }
+            .store(in: &cancellables)
     }
     
     public func loadEssentialData(onComplete: @escaping (Result<Void, Error>) -> Void) {
