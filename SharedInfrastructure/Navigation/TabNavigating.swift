@@ -33,17 +33,24 @@ public extension EventTabNavigating {
 
     func makeMusicianDetailActionHandler(
         favoritesStorage: FavoritesStorage<String>,
-        toastPresenter: ToastPresenter
+        toastPresenter: ToastPresenter,
+        contextHandler: @escaping (EventContextButtonType) -> Void
     ) -> MusicianActionHandler {
         { action in
             switch action {
             case .dismiss:
                 self.dismissPresentedOrPop()
             case .favorite(let id):
-                let wasFavorite = favoritesStorage.isFavorite(id, forKey: .events)
+                let wasFavorite = favoritesStorage.isFavorite(id, forKey: .musicians)
                 favoritesStorage.applyFavoriteContext(.musician(musicianId: id))
                 toastPresenter.show(
                     wasFavorite ? "Удалено из избранного" : "Добавлено в избранное"
+                )
+            case .event(let eventAction):
+                applyEventActionParts(
+                    eventAction,
+                    applyNavigation: { self.applyEventNavigation($0) },
+                    handleContextButton: contextHandler
                 )
             }
         }
@@ -101,7 +108,7 @@ public extension EventDetailRoutePresenting {
         switch action {
         case .dismiss:
             dismissPresentedOrPop()
-        case .favorite:
+        case .favorite, .event:
             break
         }
     }

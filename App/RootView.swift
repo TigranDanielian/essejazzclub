@@ -81,7 +81,8 @@ struct RootView: View {
                 viewModel: viewModel,
                 actionHandler: homeTabNavigation.makeMusicianDetailActionHandler(
                     favoritesStorage: container.favoritesStorage,
-                    toastPresenter: container.toastPresenter
+                    toastPresenter: container.toastPresenter,
+                    contextHandler: handleContextAction
                 )
             )
         case .bookmarkedEventDetail(let occurrenceIdentifier, let mode):
@@ -115,7 +116,8 @@ struct RootView: View {
                 viewModel: viewModel,
                 actionHandler: scheduleTabNavigation.makeMusicianDetailActionHandler(
                     favoritesStorage: container.favoritesStorage,
-                    toastPresenter: container.toastPresenter
+                    toastPresenter: container.toastPresenter,
+                    contextHandler: handleContextAction
                 )
             )
         case .filter:

@@ -35,6 +35,7 @@ public final class AppContainer: ObservableObject {
         
         self.viewModelFactory = SharedViewModelFactory(
             musiciansService: musiciansService,
+            eventsService: eventsService,
             favoritesStorage: favoritesStorage,
             calendarEventsManager: calendarEventsManager,
             imageLoader: imageLoader.loadImage(path:)

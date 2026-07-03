@@ -22,7 +22,15 @@ public protocol MusiciansService {
     func load() -> AnyPublisher<Void, Error>
     
     func forEvent(id: String) -> AnyPublisher<[Musician], Never>
-    
+
+    /// Ближайшие слоты афиши, в составе которых участвует музыкант.
+    func upcomingEvents(
+        forMusicianId musicianId: Int,
+        in events: [EventModel],
+        maxUniqueEventsToCheck: Int,
+        maxResults: Int
+    ) -> AnyPublisher<[EventModel], Never>
+
     var state: AnyPublisher<MusiciansState, Never> { get }
 }
 
@@ -96,6 +104,66 @@ public final class MusiciansServiceImpl: MusiciansService {
         cacheLock.lock()
         lineupInflight.removeValue(forKey: eventId)
         cacheLock.unlock()
+    }
+
+    public func upcomingEvents(
+        forMusicianId musicianId: Int,
+        in events: [EventModel],
+        maxUniqueEventsToCheck: Int = 30,
+        maxResults: Int = 10
+    ) -> AnyPublisher<[EventModel], Never> {
+        let calendar = Calendar.current
+        let today = calendar.startOfDay(for: Date())
+
+        let upcoming = events
+            .filter { calendar.startOfDay(for: $0.dateWithTimes.date) >= today }
+            .sorted { lhs, rhs in
+                if lhs.dateWithTimes.date != rhs.dateWithTimes.date {
+                    return lhs.dateWithTimes.date < rhs.dateWithTimes.date
+                }
+                let lhsTime = lhs.dateWithTimes.times.map(\.time).min() ?? lhs.dateWithTimes.date
+                let rhsTime = rhs.dateWithTimes.times.map(\.time).min() ?? rhs.dateWithTimes.date
+                if lhsTime != rhsTime {
+                    return lhsTime < rhsTime
+                }
+                return lhs.title.localizedCaseInsensitiveCompare(rhs.title) == .orderedAscending
+            }
+
+        var seenEventIds = Set<Int>()
+        var candidateEventKeys: [String] = []
+        for model in upcoming {
+            if seenEventIds.insert(model.eventId).inserted {
+                candidateEventKeys.append(model.id)
+                if candidateEventKeys.count >= maxUniqueEventsToCheck {
+                    break
+                }
+            }
+        }
+
+        guard !candidateEventKeys.isEmpty else {
+            return Just([]).eraseToAnyPublisher()
+        }
+
+        // `forEvent` строится на CombineLatest со `state` и не завершается — берём только первое значение.
+        let lineupChecks = candidateEventKeys.map { eventKey in
+            forEvent(id: eventKey)
+                .first()
+                .map { musicians in
+                    (eventKey, musicians.contains { $0.id == musicianId })
+                }
+        }
+
+        return Publishers.MergeMany(lineupChecks)
+            .collect()
+            .map { pairs in
+                let matchingKeys = Set(pairs.filter(\.1).map(\.0))
+                return Array(
+                    upcoming
+                        .filter { matchingKeys.contains($0.id) }
+                        .prefix(maxResults)
+                )
+            }
+            .eraseToAnyPublisher()
     }
     
     public func load() -> AnyPublisher<Void, Error> {

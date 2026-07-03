@@ -48,6 +48,8 @@ public struct MusicianDetailsView: View {
                         .padding(.horizontal, Layout.textHorizontalPadding)
                         .font(.title3)
                         .foregroundColor(Color(uiColor: Colors.text))
+
+                    upcomingEventsSection
                     
                     GeometryReader { geo in
                         SeparatorView()
@@ -81,7 +83,11 @@ public struct MusicianDetailsView: View {
         .background(Color(uiColor: Colors.mainBackground))
         .task(id: viewModel.id) {
             viewModel.loadImageIfNeeded()
+            viewModel.loadUpcomingEventsIfNeeded()
             await loadAttributedBio()
+        }
+        .onDisappear {
+            viewModel.cancelUpcomingEventsLoad()
         }
         .navigationTitle(navTitleHidden ? "" : viewModel.name)
         .navigationBarTitleDisplayMode(.automatic)
@@ -91,6 +97,39 @@ public struct MusicianDetailsView: View {
         guard let parsed = await HTMLBioFormatting.attributedString(from: viewModel.text) else { return }
         guard !Task.isCancelled else { return }
         attributedText = parsed
+    }
+
+    @ViewBuilder
+    private var upcomingEventsSection: some View {
+        if viewModel.isLoadingUpcomingEvents {
+            ProgressView()
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 16)
+        } else if !viewModel.upcomingEvents.isEmpty {
+            VStack(alignment: .leading, spacing: 12) {
+                Text("Ближайшие концерты")
+                    .bold()
+                    .font(.title2)
+                    .foregroundColor(Color(uiColor: Colors.text))
+                    .padding(.horizontal, Layout.textHorizontalPadding)
+
+                VStack(spacing: 12) {
+                    ForEach(viewModel.upcomingEvents) { event in
+                        EventView(viewModel: event)
+                            .environment(\.eventCardTap) {
+                                actionHandler(.event(.navigation(.onEventDetails(
+                                    event,
+                                    heroTransitionSourceID: EventHeroTransitionSourceID.card(
+                                        occurrenceIdentifier: event.occurrenceIdentifier
+                                    )
+                                ))))
+                            }
+                    }
+                }
+                .padding(.horizontal, Layout.textHorizontalPadding)
+            }
+            .padding(.top, 8)
+        }
     }
 }
 

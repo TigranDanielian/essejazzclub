@@ -34,7 +34,15 @@ struct ClubRouteDestinationView: View {
                         musicianVM,
                         clubViewModel.tabNavigation.makeMusicianDetailActionHandler(
                             favoritesStorage: dependencies.favoritesStorage,
-                            toastPresenter: dependencies.toastPresenter
+                            toastPresenter: dependencies.toastPresenter,
+                            contextHandler: { type in
+                                EventContextActionHandler.handle(
+                                    type,
+                                    favoritesStorage: dependencies.favoritesStorage,
+                                    calendarCoordinator: dependencies.calendarCoordinator,
+                                    toastPresenter: dependencies.toastPresenter
+                                )
+                            }
                         )
                     )
                 )
