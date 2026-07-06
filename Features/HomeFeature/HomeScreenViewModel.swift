@@ -15,9 +15,15 @@ import SharedInfrastructure
 public final class HomeScreenViewModel: ObservableObject {
     /// Максимум элементов в каждом горизонтальном слайдере «Избранное» на главной.
     public static let homeFavoritesCarouselLimit = 3
+    /// Максимум музыкантов в блоке «Артисты месяца».
+    public static let homeUpcomingMusiciansCarouselLimit = 15
+    /// Окно афиши для блока музыкантов на главной (~месяц).
+    public static let homeUpcomingMusiciansWindowDays = 30
+    public static let homeUpcomingMusiciansSectionTitle = "Артисты месяца"
 
     @Published public var mainEvents: [EventViewModel] = []
     @Published var upcomingEventSections: [GroupedEventSection] = []
+    @Published var upcomingMusicians: [MusicianViewModel] = []
     @Published var favoriteConcertRows: [FavoriteConcertRow] = []
     @Published var favoriteMusicianRows: [FavoriteMusicianRow] = []
 
@@ -103,6 +109,36 @@ public final class HomeScreenViewModel: ObservableObject {
                 self?.upcomingEventSections = upcomingEventSections
             })
             .store(in: &cancellables)
+
+        Publishers.CombineLatest(
+            musiciansService.state,
+            eventsService.state
+        )
+        .flatMap { [musiciansService] musicState, eventsState -> AnyPublisher<([Musician], [Int: Date]), Never> in
+            musiciansService.nearestUpcomingConcertDates(
+                in: eventsState.events,
+                maxUniqueEventsToCheck: 30
+            )
+            .map { (musicState.musicians, $0) }
+            .eraseToAnyPublisher()
+        }
+        .map { [weak self] musicians, upcomingDates -> [MusicianViewModel] in
+            guard let self else { return [] }
+            let sorted = Self.musiciansWithUpcomingPerformances(
+                musicians,
+                upcomingDates: upcomingDates,
+                withinDays: Self.homeUpcomingMusiciansWindowDays
+            )
+            return Array(sorted.prefix(Self.homeUpcomingMusiciansCarouselLimit))
+                .compactMap { musician in
+                    self.viewModelFactory.produce(unit: .musician(musician)) as? MusicianViewModel
+                }
+        }
+        .receive(on: DispatchQueue.main)
+        .sink { [weak self] in
+            self?.upcomingMusicians = $0
+        }
+        .store(in: &cancellables)
 
         favoritesStorage.allFavorites(forKey: .events)
             .combineLatest(eventsService.state)
@@ -227,5 +263,32 @@ public final class HomeScreenViewModel: ObservableObject {
             )
         guard let viewModel = viewModelFactory.produce(unit: .musician(musician)) as? MusicianViewModel else { return }
         tabNavigation.presentMusicianDetail(viewModel: viewModel)
+    }
+
+    public func onUpcomingMusicianTap(_ viewModel: MusicianViewModel) {
+        tabNavigation.presentMusicianDetail(viewModel: viewModel)
+    }
+
+    private static func musiciansWithUpcomingPerformances(
+        _ musicians: [Musician],
+        upcomingDates: [Int: Date],
+        withinDays: Int
+    ) -> [Musician] {
+        let calendar = Calendar.current
+        let todayStart = calendar.startOfDay(for: Date())
+        let upcomingEnd = calendar.date(byAdding: .day, value: withinDays, to: todayStart) ?? todayStart
+
+        return musicians
+            .compactMap { musician -> (Musician, Date)? in
+                guard let date = upcomingDates[musician.id] else { return nil }
+                let day = calendar.startOfDay(for: date)
+                guard day >= todayStart && day < upcomingEnd else { return nil }
+                return (musician, date)
+            }
+            .sorted { lhs, rhs in
+                if lhs.1 != rhs.1 { return lhs.1 < rhs.1 }
+                return lhs.0.name.localizedCaseInsensitiveCompare(rhs.0.name) == .orderedAscending
+            }
+            .map(\.0)
     }
 }

@@ -6,11 +6,19 @@
 import SwiftUI
 import Core
 
-struct MusicianRowView: View {
+public struct MusicianRowView: View {
     @ObservedObject var musician: MusicianViewModel
-    var onSelect: () -> Void = { }
+    var onSelect: () -> Void
 
-    var body: some View {
+    public init(
+        musician: MusicianViewModel,
+        onSelect: @escaping () -> Void = {}
+    ) {
+        self.musician = musician
+        self.onSelect = onSelect
+    }
+
+    public var body: some View {
         VStack {
             ZStack {
                 Image(uiImage: musician.image ?? UIImage())

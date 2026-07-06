@@ -50,6 +50,11 @@ public struct HomeScreen: View {
                 onEventDetails: { viewModel.onEventDetails($0) }
             )
 
+            HomeUpcomingMusiciansCarousel(
+                musicians: viewModel.upcomingMusicians,
+                onMusicianDetails: { viewModel.onUpcomingMusicianTap($0) }
+            )
+
             if !viewModel.favoriteConcertRows.isEmpty || !viewModel.favoriteMusicianRows.isEmpty {
                 HomeScreenSection(title: "Избранное") {
                     VStack(alignment: .leading, spacing: 12) {

@@ -53,6 +53,7 @@ public struct MusicianDetailsView: View {
                     
                     GeometryReader { geo in
                         SeparatorView()
+                            .padding(.top, 12)
                             .preference(key: TitleOffsetPreference.self, value: geo.frame(in: .scrollView).minY)
                     }
                     .onPreferenceChange(TitleOffsetPreference.self) { value in
@@ -107,6 +108,7 @@ public struct MusicianDetailsView: View {
                 .padding(.vertical, 16)
         } else if !viewModel.upcomingEvents.isEmpty {
             VStack(alignment: .leading, spacing: 12) {
+                SeparatorView()
                 Text("Ближайшие концерты")
                     .bold()
                     .font(.title2)

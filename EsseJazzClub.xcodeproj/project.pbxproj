@@ -100,6 +100,7 @@
 		5E8C0D38BDD74428520FE423 /* FavoriteConcertRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45D16F58FE0F642A4DAEB8E5 /* FavoriteConcertRowView.swift */; };
 		5EADE3296AE7B83D692AE369 /* MusicianUpcomingEventsProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 560B80244687E6623EBE6FF0 /* MusicianUpcomingEventsProvider.swift */; };
 		5EC8DB2BC64ABED4D78A472F /* SharedInfrastructure.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 309260A176D68C1D5FACFB49 /* SharedInfrastructure.framework */; };
+		5FDCD409DA49B91FA077E0D1 /* HomeUpcomingMusiciansCarousel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07F05060C93E6105236C6AD3 /* HomeUpcomingMusiciansCarousel.swift */; };
 		61EA244C3234668E0D22FCF2 /* SearchTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0D09436A070004D68E99573 /* SearchTextField.swift */; };
 		64CF8A5379AF4C00EA363918 /* ClubCatalogViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3183827EA9FF48AC3D543E73 /* ClubCatalogViews.swift */; };
 		6544F51DA0C3C7CF494EF4DB /* HomeHeroSheetLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AACF37ACFE89AE548B1007F /* HomeHeroSheetLayout.swift */; };
@@ -500,6 +501,7 @@
 /* Begin PBXFileReference section */
 		0697B7CD4CD2E65342FBCB25 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		070DC98C43051591D79C77EA /* EventModel+Preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "EventModel+Preview.swift"; sourceTree = "<group>"; };
+		07F05060C93E6105236C6AD3 /* HomeUpcomingMusiciansCarousel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeUpcomingMusiciansCarousel.swift; sourceTree = "<group>"; };
 		099848F1843F299280385ED3 /* ClubFeature.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ClubFeature.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		0A043DFA8E4E549BE980A2B6 /* MusicianPresentation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicianPresentation.swift; sourceTree = "<group>"; };
 		0A3EDDBC5529E406701C8DF5 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
@@ -819,6 +821,7 @@
 				64D8C3CFBB83EB125F8E7A78 /* HomeSheetScrollView.swift */,
 				8FE413E445BA23D2525E1FEC /* HomeTabNavigating.swift */,
 				563DEB75AAA3C49E52F924C8 /* HomeUpcomingConcertsCarousel.swift */,
+				07F05060C93E6105236C6AD3 /* HomeUpcomingMusiciansCarousel.swift */,
 				EADBD6A23469E1E67D447228 /* Favorites */,
 			);
 			path = HomeFeature;
@@ -1776,6 +1779,7 @@
 				F43A802E1BF3ED2FFEEADD8C /* HomeSheetScrollView.swift in Sources */,
 				3C8A4E85AFFD706C82DB8484 /* HomeTabNavigating.swift in Sources */,
 				B4063C3F613D778D69906AFC /* HomeUpcomingConcertsCarousel.swift in Sources */,
+				5FDCD409DA49B91FA077E0D1 /* HomeUpcomingMusiciansCarousel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
