@@ -41,8 +41,14 @@ extension HomeNavigationRouter: FavoriteEventDetailNavigating {
         dismissPresentedOrPop()
     }
 
-    public func presentMusicianDetail(_ musician: MusicianViewModel) {
-        present(route: .musicianDetail(musician), presentation: .push)
+    public func presentMusicianDetail(
+        _ musician: MusicianViewModel,
+        heroTransitionSourceID: String?
+    ) {
+        present(
+            route: .musicianDetail(musician, heroTransitionSourceID: heroTransitionSourceID),
+            presentation: .push
+        )
     }
 
     public func presentFavoriteEventSlotDetail(occurrenceIdentifier: String) {

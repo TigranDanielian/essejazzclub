@@ -22,7 +22,7 @@ public enum UIUnit {
         heroTransitionSourceID: String?,
         onSelectUpcomingOccurrence: ((String) -> Void)?
     )
-    case musician(MusicianViewModel, MusicianActionHandler)
+    case musician(MusicianViewModel, MusicianActionHandler, heroTransitionSourceID: String?)
     case favoriteConcertRow(FavoriteConcertRow)
     case favoriteMusicianRow(FavoriteMusicianRow)
     case searchTextField(Binding<String>, prompt: String, onClear: (() -> Void)? = nil)
@@ -73,8 +73,12 @@ public final class SharedUIFactory: UIFactory {
             FavoriteMusicianRowView(row: row, imageLoader: imageLoader)
         case .searchTextField(let binding, let prompt, let onClear):
             SearchTextField(textInput: binding, prompt: prompt, onClear: onClear)
-        case .musician(let viewModel, let actionHandler):
-            MusicianDetailsView(viewModel: viewModel, actionHandler: actionHandler)
+        case .musician(let viewModel, let actionHandler, let heroTransitionSourceID):
+            MusicianDetailsView(
+                viewModel: viewModel,
+                actionHandler: actionHandler,
+                heroTransitionSourceID: heroTransitionSourceID
+            )
         case .empty:
             EmptyView()
         }

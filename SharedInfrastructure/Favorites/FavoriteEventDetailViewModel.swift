@@ -72,8 +72,11 @@ public final class FavoriteEventDetailViewModel: ObservableObject {
                     switch nav {
                     case .dismiss:
                         self.navigation?.dismissFavoriteEventDetail()
-                    case .onMusicianDetails(let musician):
-                        self.navigation?.presentMusicianDetail(musician)
+                    case .onMusicianDetails(let musician, let heroTransitionSourceID):
+                        self.navigation?.presentMusicianDetail(
+                            musician,
+                            heroTransitionSourceID: heroTransitionSourceID
+                        )
                     case .onEventDetails(let viewModel, _):
                         self.navigation?.presentFavoriteEventSlotDetail(
                             occurrenceIdentifier: viewModel.occurrenceIdentifier

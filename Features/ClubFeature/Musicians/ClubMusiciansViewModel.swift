@@ -58,7 +58,13 @@ public final class ClubMusiciansScreenViewModel: ObservableObject {
     }
 
     func openMusicianDetail(_ musician: MusicianViewModel) {
-        router.present(route: .musicianDetail(musician), presentation: .push)
+        router.present(
+            route: .musicianDetail(
+                musician,
+                heroTransitionSourceID: MusicianHeroTransitionSourceID.grid(musicianId: musician.musicianId)
+            ),
+            presentation: .push
+        )
     }
 
     private func makeMusicianViewModel(_ musician: Musician) -> MusicianViewModel {

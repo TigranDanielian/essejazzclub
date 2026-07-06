@@ -262,11 +262,17 @@ public final class HomeScreenViewModel: ObservableObject {
                 imageUrl: row.imageUrl
             )
         guard let viewModel = viewModelFactory.produce(unit: .musician(musician)) as? MusicianViewModel else { return }
-        tabNavigation.presentMusicianDetail(viewModel: viewModel)
+        tabNavigation.presentMusicianDetail(
+            viewModel: viewModel,
+            heroTransitionSourceID: MusicianHeroTransitionSourceID.card(musicianId: row.musicianId)
+        )
     }
 
     public func onUpcomingMusicianTap(_ viewModel: MusicianViewModel) {
-        tabNavigation.presentMusicianDetail(viewModel: viewModel)
+        tabNavigation.presentMusicianDetail(
+            viewModel: viewModel,
+            heroTransitionSourceID: MusicianHeroTransitionSourceID.card(musicianId: viewModel.musicianId)
+        )
     }
 
     private static func musiciansWithUpcomingPerformances(

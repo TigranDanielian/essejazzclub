@@ -34,6 +34,12 @@ public struct FavoriteEventDetailDependencies {
 @MainActor
 public protocol FavoriteEventDetailNavigating: AnyObject {
     func dismissFavoriteEventDetail()
-    func presentMusicianDetail(_ musician: MusicianViewModel)
+    func presentMusicianDetail(_ musician: MusicianViewModel, heroTransitionSourceID: String?)
     func presentFavoriteEventSlotDetail(occurrenceIdentifier: String)
+}
+
+public extension FavoriteEventDetailNavigating {
+    func presentMusicianDetail(_ musician: MusicianViewModel) {
+        presentMusicianDetail(musician, heroTransitionSourceID: nil)
+    }
 }

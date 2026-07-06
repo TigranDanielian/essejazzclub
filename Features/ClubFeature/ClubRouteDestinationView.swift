@@ -27,7 +27,7 @@ struct ClubRouteDestinationView: View {
                     clubScreen: clubViewModel
                 )
             )
-        case .musicianDetail(let musicianVM):
+        case .musicianDetail(let musicianVM, let heroTransitionSourceID):
             AnyView(
                 dependencies.uiFactory.produce(
                     unit: .musician(
@@ -43,7 +43,8 @@ struct ClubRouteDestinationView: View {
                                     toastPresenter: dependencies.toastPresenter
                                 )
                             }
-                        )
+                        ),
+                        heroTransitionSourceID: heroTransitionSourceID
                     )
                 )
             )

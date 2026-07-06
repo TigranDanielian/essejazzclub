@@ -36,7 +36,7 @@ public struct ToastOverlay: View {
                             .stroke(Color.white.opacity(0.14), lineWidth: 1)
                     )
                     .shadow(color: .black.opacity(0.18), radius: 12, y: 4)
-                    .padding(.horizontal, 16)
+                    .padding(.horizontal, 56)
                     .padding(.top, 8)
                     .transition(.move(edge: .top).combined(with: .opacity))
             }

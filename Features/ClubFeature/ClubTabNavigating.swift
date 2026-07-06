@@ -40,9 +40,13 @@ extension ClubNavigationRouter: ClubTabNavigating {
 
     public func presentMusicianDetail(
         viewModel: MusicianViewModel,
+        heroTransitionSourceID: String?,
         presentation: NavigationPresentationStyle = .push
     ) {
-        present(route: .musicianDetail(viewModel), presentation: presentation)
+        present(
+            route: .musicianDetail(viewModel, heroTransitionSourceID: heroTransitionSourceID),
+            presentation: presentation
+        )
     }
 }
 
@@ -52,7 +56,18 @@ extension ClubNavigationRouter: FavoriteEventDetailNavigating {
     }
 
     public func presentMusicianDetail(_ musician: MusicianViewModel) {
-        presentMusicianDetail(viewModel: musician, presentation: .push)
+        presentMusicianDetail(musician, heroTransitionSourceID: nil)
+    }
+
+    public func presentMusicianDetail(
+        _ musician: MusicianViewModel,
+        heroTransitionSourceID: String?
+    ) {
+        presentMusicianDetail(
+            viewModel: musician,
+            heroTransitionSourceID: heroTransitionSourceID,
+            presentation: .push
+        )
     }
 
     public func presentFavoriteEventSlotDetail(occurrenceIdentifier: String) {

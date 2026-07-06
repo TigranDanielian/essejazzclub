@@ -142,7 +142,13 @@ struct ClubFavoritesScreen: View {
                 imageUrl: row.imageUrl
             )
         guard let vm = dependencies.viewModelFactory.produce(unit: .musician(musician)) as? MusicianViewModel else { return }
-        viewModel.presentRoute(.musicianDetail(vm), presentation: .push)
+        viewModel.presentRoute(
+            .musicianDetail(
+                vm,
+                heroTransitionSourceID: MusicianHeroTransitionSourceID.card(musicianId: row.musicianId)
+            ),
+            presentation: .push
+        )
     }
 
     private var emptyState: some View {

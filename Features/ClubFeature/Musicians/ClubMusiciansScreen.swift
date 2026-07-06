@@ -126,6 +126,9 @@ private struct MusicianGridItemView: View {
             photoSlot
                 .frame(width: imageSlotSize.width, height: imageSlotSize.height)
                 .clipped()
+                .eventHeroTransitionSource(
+                    sourceID: MusicianHeroTransitionSourceID.grid(musicianId: musician.musicianId)
+                )
 
             infoBar
                 .frame(width: cellWidth, height: MusicianGridItemLayout.infoBarHeight)

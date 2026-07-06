@@ -17,7 +17,7 @@ public final class ClubNavigationRouter: StackNavigationRouter<ClubNavigationRou
         case favorites
         case giftShop
         case favoriteEventDetail(occurrenceIdentifier: String, mode: FavoriteEventDetailMode)
-        case musicianDetail(MusicianViewModel)
+        case musicianDetail(MusicianViewModel, heroTransitionSourceID: String?)
 
         public var id: String {
             switch self {
@@ -29,8 +29,8 @@ public final class ClubNavigationRouter: StackNavigationRouter<ClubNavigationRou
             case .giftShop: return "club-gift-shop"
             case .favoriteEventDetail(let oid, let mode):
                 return "club-fav-detail-\(oid)-\(mode.rawValue)"
-            case .musicianDetail(let m):
-                return "club-musician-\(m.musicianId)"
+            case .musicianDetail(let musician, let sourceID):
+                return "club-musician-\(musician.musicianId)-\(sourceID ?? "plain")"
             }
         }
     }
@@ -43,7 +43,7 @@ public final class ClubNavigationRouter: StackNavigationRouter<ClubNavigationRou
         switch route {
         case .favoriteEventDetail(let occurrenceIdentifier, _):
             return "event-\(occurrenceIdentifier)"
-        case .musicianDetail(let musician):
+        case .musicianDetail(let musician, _):
             return "musician-\(musician.musicianId)"
         case .about:
             return "club-about"

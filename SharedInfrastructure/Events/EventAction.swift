@@ -9,7 +9,7 @@ import Foundation
 
 public enum EventNavigationAction {
     case onEventDetails(EventViewModel, heroTransitionSourceID: String?)
-    case onMusicianDetails(MusicianViewModel)
+    case onMusicianDetails(MusicianViewModel, heroTransitionSourceID: String?)
     case dismiss
     case onBuy
 }

@@ -11,15 +11,15 @@ import SharedInfrastructure
 public final class HomeNavigationRouter: StackNavigationRouter<HomeNavigationRouter.Route> {
     public enum Route: Hashable, Identifiable {
         case eventDetail(EventViewModel, heroTransitionSourceID: String?)
-        case musicianDetail(MusicianViewModel)
+        case musicianDetail(MusicianViewModel, heroTransitionSourceID: String?)
         case bookmarkedEventDetail(occurrenceIdentifier: String, mode: FavoriteEventDetailMode)
 
         public var id: String {
             switch self {
             case .eventDetail(let viewModel, let sourceID):
                 return "home-event-\(viewModel.occurrenceIdentifier)-\(sourceID ?? "plain")"
-            case .musicianDetail(let viewModel):
-                return "home-musician-\(viewModel.musicianId)"
+            case .musicianDetail(let viewModel, let sourceID):
+                return "home-musician-\(viewModel.musicianId)-\(sourceID ?? "plain")"
             case .bookmarkedEventDetail(let oid, let mode):
                 return "home-bookmark-detail-\(oid)-\(mode.rawValue)"
             }
@@ -34,7 +34,7 @@ public final class HomeNavigationRouter: StackNavigationRouter<HomeNavigationRou
         switch route {
         case .eventDetail(let viewModel, _):
             return "event-\(viewModel.occurrenceIdentifier)"
-        case .musicianDetail(let viewModel):
+        case .musicianDetail(let viewModel, _):
             return "musician-\(viewModel.musicianId)"
         case .bookmarkedEventDetail(let occurrenceIdentifier, _):
             return "event-\(occurrenceIdentifier)"
@@ -49,12 +49,23 @@ public final class HomeNavigationRouter: StackNavigationRouter<HomeNavigationRou
         present(route: .eventDetail(viewModel, heroTransitionSourceID: heroTransitionSourceID), presentation: presentation)
     }
 
+    public func presentMusicianDetail(
+        viewModel: MusicianViewModel,
+        heroTransitionSourceID: String?,
+        presentation: NavigationPresentationStyle = .push
+    ) {
+        present(
+            route: .musicianDetail(viewModel, heroTransitionSourceID: heroTransitionSourceID),
+            presentation: presentation
+        )
+    }
+
     public func presentMusicianDetail(viewModel: MusicianViewModel) {
-        present(route: .musicianDetail(viewModel), presentation: .push)
+        presentMusicianDetail(viewModel: viewModel, heroTransitionSourceID: nil, presentation: .push)
     }
 
     public func presentMusicianDetail(viewModel: MusicianViewModel, presentation: NavigationPresentationStyle) {
-        present(route: .musicianDetail(viewModel), presentation: presentation)
+        presentMusicianDetail(viewModel: viewModel, heroTransitionSourceID: nil, presentation: presentation)
     }
 
     public func presentBookmarkedEventOverview(occurrenceIdentifier: String) {

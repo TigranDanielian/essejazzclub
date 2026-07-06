@@ -5,6 +5,7 @@
 
 import SwiftUI
 import Core
+import SharedInfrastructure
 
 public struct ClubScreen: View {
     @StateObject private var viewModel: ClubScreenViewModel
@@ -38,6 +39,7 @@ private struct ClubNavigationShell: View {
     @ObservedObject var viewModel: ClubScreenViewModel
     @ObservedObject var router: ClubNavigationRouter
     let bannerItems: [ClubBannerItem]
+    @Namespace private var heroNamespace
 
     init(viewModel: ClubScreenViewModel, bannerItems: [ClubBannerItem]) {
         _viewModel = ObservedObject(wrappedValue: viewModel)
@@ -65,6 +67,7 @@ private struct ClubNavigationShell: View {
                 ClubRouteDestinationView(route: route, clubViewModel: viewModel)
             }
         }
+        .environment(\.eventHeroNamespace, heroNamespace)
     }
 
     private var clubIdentityHeader: some View {
@@ -188,7 +191,7 @@ private extension ClubNavigationRouter.Route {
         case .musicians: return "Музыканты"
         case .favorites: return "Избранное"
         case .giftShop: return "Гифт-шоп"
-        case .favoriteEventDetail(_, _), .musicianDetail:
+        case .favoriteEventDetail(_, _), .musicianDetail(_, _):
             return ""
         }
     }
@@ -201,7 +204,7 @@ private extension ClubNavigationRouter.Route {
         case .musicians: return "Кто выступает в клубе"
         case .favorites: return "Концерты и музыканты"
         case .giftShop: return "Мерч и подарки"
-        case .favoriteEventDetail(_, _), .musicianDetail:
+        case .favoriteEventDetail(_, _), .musicianDetail(_, _):
             return ""
         }
     }
@@ -214,7 +217,7 @@ private extension ClubNavigationRouter.Route {
         case .musicians: return "music.mic"
         case .favorites: return "heart.fill"
         case .giftShop: return "gift.fill"
-        case .favoriteEventDetail(_, _), .musicianDetail:
+        case .favoriteEventDetail(_, _), .musicianDetail(_, _):
             return "circle"
         }
     }

@@ -50,6 +50,9 @@ public struct FavoriteMusicianRowView: View {
                 }
             }
             .frame(width: 72, height: 72)
+            .eventHeroTransitionSource(
+                sourceID: MusicianHeroTransitionSourceID.card(musicianId: row.musicianId)
+            )
 
             VStack(alignment: .leading, spacing: 6) {
                 Text(row.name)

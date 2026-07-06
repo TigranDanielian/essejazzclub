@@ -33,6 +33,10 @@ public struct MusicianRowView: View {
                         .cornerRadius(36)
                 }
             }
+            .frame(width: 72, height: 72)
+            .eventHeroTransitionSource(
+                sourceID: MusicianHeroTransitionSourceID.card(musicianId: musician.musicianId)
+            )
             .onAppear { musician.loadImageIfNeeded() }
             .onDisappear { musician.cancelImageLoad() }
             .onTapGesture {

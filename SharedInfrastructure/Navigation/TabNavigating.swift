@@ -67,6 +67,7 @@ public protocol EventDetailRoutePresenting: EventTabNavigating {
     )
     func presentMusicianDetail(
         viewModel: MusicianViewModel,
+        heroTransitionSourceID: String?,
         presentation: NavigationPresentationStyle
     )
 }
@@ -84,7 +85,22 @@ public extension EventDetailRoutePresenting {
     }
 
     func presentMusicianDetail(viewModel: MusicianViewModel) {
-        presentMusicianDetail(viewModel: viewModel, presentation: .push)
+        presentMusicianDetail(
+            viewModel: viewModel,
+            heroTransitionSourceID: nil,
+            presentation: .push
+        )
+    }
+
+    func presentMusicianDetail(
+        viewModel: MusicianViewModel,
+        heroTransitionSourceID: String?
+    ) {
+        presentMusicianDetail(
+            viewModel: viewModel,
+            heroTransitionSourceID: heroTransitionSourceID,
+            presentation: .push
+        )
     }
 
     func applyEventNavigation(_ action: EventNavigationAction) {
@@ -95,8 +111,12 @@ public extension EventDetailRoutePresenting {
                 heroTransitionSourceID: heroTransitionSourceID,
                 presentation: .push
             )
-        case .onMusicianDetails(let musicianViewModel):
-            presentMusicianDetail(viewModel: musicianViewModel, presentation: .push)
+        case .onMusicianDetails(let musicianViewModel, let heroTransitionSourceID):
+            presentMusicianDetail(
+                viewModel: musicianViewModel,
+                heroTransitionSourceID: heroTransitionSourceID,
+                presentation: .push
+            )
         case .dismiss:
             dismissPresentedOrPop()
         case .onBuy:

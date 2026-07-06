@@ -76,9 +76,10 @@ struct RootView: View {
                 heroTransitionSourceID: heroTransitionSourceID,
                 actionHandler: homeTabNavigation.makeEventDetailActionHandler(contextHandler: handleContextAction)
             )
-        case .musicianDetail(let viewModel):
+        case .musicianDetail(let viewModel, let heroTransitionSourceID):
             musicianDetailView(
                 viewModel: viewModel,
+                heroTransitionSourceID: heroTransitionSourceID,
                 actionHandler: homeTabNavigation.makeMusicianDetailActionHandler(
                     favoritesStorage: container.favoritesStorage,
                     toastPresenter: container.toastPresenter,
@@ -111,9 +112,10 @@ struct RootView: View {
                 heroTransitionSourceID: heroTransitionSourceID,
                 actionHandler: scheduleTabNavigation.makeEventDetailActionHandler(contextHandler: handleContextAction)
             )
-        case .musicianDetail(let viewModel):
+        case .musicianDetail(let viewModel, let heroTransitionSourceID):
             musicianDetailView(
                 viewModel: viewModel,
+                heroTransitionSourceID: heroTransitionSourceID,
                 actionHandler: scheduleTabNavigation.makeMusicianDetailActionHandler(
                     favoritesStorage: container.favoritesStorage,
                     toastPresenter: container.toastPresenter,
@@ -137,8 +139,16 @@ struct RootView: View {
     }
 
     @ViewBuilder
-    private func musicianDetailView(viewModel: MusicianViewModel, actionHandler: @escaping MusicianActionHandler) -> some View {
-        MusicianDetailsView(viewModel: viewModel, actionHandler: actionHandler)
+    private func musicianDetailView(
+        viewModel: MusicianViewModel,
+        heroTransitionSourceID: String?,
+        actionHandler: @escaping MusicianActionHandler
+    ) -> some View {
+        MusicianDetailsView(
+            viewModel: viewModel,
+            actionHandler: actionHandler,
+            heroTransitionSourceID: heroTransitionSourceID
+        )
     }
 }
 

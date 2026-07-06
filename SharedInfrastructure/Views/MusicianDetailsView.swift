@@ -13,6 +13,7 @@ public struct MusicianDetailsView: View {
     @ObservedObject var viewModel: MusicianViewModel
     @Environment(\.dismiss) private var dismiss
     private var actionHandler: MusicianActionHandler
+    private let heroTransitionSourceID: String?
     @State private var attributedText: AttributedString = .init()
 
     private enum Layout {
@@ -23,10 +24,12 @@ public struct MusicianDetailsView: View {
     
     public init(
         viewModel: MusicianViewModel,
-        actionHandler: @escaping MusicianActionHandler
+        actionHandler: @escaping MusicianActionHandler,
+        heroTransitionSourceID: String? = nil
     ) {
         self.viewModel = viewModel
         self.actionHandler = actionHandler
+        self.heroTransitionSourceID = heroTransitionSourceID
     }
     
     public var body: some View {
@@ -87,9 +90,7 @@ public struct MusicianDetailsView: View {
         }
         .appScrollContentBackgroundHidden()
         .background(Color(uiColor: Colors.mainBackground))
-        .toolbar(.hidden, for: .navigationBar)
-        .toolbarBackground(.hidden, for: .navigationBar)
-        .navigationTitle("")
+        .eventHeroNavigationTransition(sourceID: heroTransitionSourceID)
         .task(id: viewModel.id) {
             viewModel.loadImageIfNeeded()
             viewModel.loadUpcomingEventsIfNeeded()
@@ -129,6 +130,8 @@ public struct MusicianDetailsView: View {
                 .padding(.vertical, 16)
         } else if !viewModel.upcomingEvents.isEmpty {
             VStack(alignment: .leading, spacing: 12) {
+                SeparatorView()
+                
                 Text("Ближайшие концерты")
                     .bold()
                     .font(.title2)

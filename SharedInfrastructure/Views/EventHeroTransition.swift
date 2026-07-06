@@ -15,6 +15,16 @@ public enum EventHeroTransitionSourceID {
     }
 }
 
+public enum MusicianHeroTransitionSourceID {
+    public static func card(musicianId: Int) -> String {
+        "musician-card-\(musicianId)"
+    }
+
+    public static func grid(musicianId: Int) -> String {
+        "musician-grid-\(musicianId)"
+    }
+}
+
 public struct EventHeroNamespaceKey: EnvironmentKey {
     public static let defaultValue: Namespace.ID? = nil
 }

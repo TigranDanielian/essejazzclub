@@ -193,7 +193,12 @@ public struct EventDetailView: View {
                             LazyHStack(spacing: 12) {
                                 ForEach(viewModel.musicians) { musician in
                                     MusicianRowView(musician: musician, onSelect: {
-                                        actionHandler(.navigation(.onMusicianDetails(musician)))
+                                        actionHandler(.navigation(.onMusicianDetails(
+                                            musician,
+                                            heroTransitionSourceID: MusicianHeroTransitionSourceID.card(
+                                                musicianId: musician.musicianId
+                                            )
+                                        )))
                                     })
                                 }
                             }

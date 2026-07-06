@@ -11,15 +11,15 @@ import SharedInfrastructure
 public final class ScheduleNavigationRouter: StackNavigationRouter<ScheduleNavigationRouter.Route> {
     public enum Route: Hashable, Identifiable {
         case eventDetail(EventViewModel, heroTransitionSourceID: String?)
-        case musicianDetail(MusicianViewModel)
+        case musicianDetail(MusicianViewModel, heroTransitionSourceID: String?)
         case filter
 
         public var id: String {
             switch self {
             case .eventDetail(let viewModel, let sourceID):
                 return "schedule-event-\(viewModel.occurrenceIdentifier)-\(sourceID ?? "plain")"
-            case .musicianDetail(let viewModel):
-                return "schedule-musician-\(viewModel.musicianId)"
+            case .musicianDetail(let viewModel, let sourceID):
+                return "schedule-musician-\(viewModel.musicianId)-\(sourceID ?? "plain")"
             case .filter:
                 return "schedule-filter"
             }
@@ -30,7 +30,7 @@ public final class ScheduleNavigationRouter: StackNavigationRouter<ScheduleNavig
         switch route {
         case .eventDetail(let viewModel, _):
             return "event-\(viewModel.occurrenceIdentifier)"
-        case .musicianDetail(let viewModel):
+        case .musicianDetail(let viewModel, _):
             return "musician-\(viewModel.musicianId)"
         case .filter:
             return "schedule-filter"
@@ -45,8 +45,15 @@ public final class ScheduleNavigationRouter: StackNavigationRouter<ScheduleNavig
         present(route: .eventDetail(viewModel, heroTransitionSourceID: heroTransitionSourceID), presentation: presentation)
     }
 
-    public func presentMusicianDetail(viewModel: MusicianViewModel, presentation: NavigationPresentationStyle = .push) {
-        present(route: .musicianDetail(viewModel), presentation: presentation)
+    public func presentMusicianDetail(
+        viewModel: MusicianViewModel,
+        heroTransitionSourceID: String?,
+        presentation: NavigationPresentationStyle = .push
+    ) {
+        present(
+            route: .musicianDetail(viewModel, heroTransitionSourceID: heroTransitionSourceID),
+            presentation: presentation
+        )
     }
 
     public func presentFilter(presentation: NavigationPresentationStyle = .sheet) {
