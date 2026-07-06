@@ -11,12 +11,14 @@ import Services
 
 public struct MusicianDetailsView: View {
     @ObservedObject var viewModel: MusicianViewModel
+    @Environment(\.dismiss) private var dismiss
     private var actionHandler: MusicianActionHandler
     @State private var attributedText: AttributedString = .init()
-    @State private var navTitleHidden: Bool = true
 
     private enum Layout {
         static let textHorizontalPadding: CGFloat = 12
+        static let favoriteTopPadding: CGFloat = 8
+        static let favoriteTrailingPadding: CGFloat = 16
     }
     
     public init(
@@ -28,70 +30,89 @@ public struct MusicianDetailsView: View {
     }
     
     public var body: some View {
-        ZStack(alignment: .topTrailing) {
-            ScrollView {
-                VStack(alignment: .leading, spacing: 8) {
-                    DetailHeroImageView(
-                        image: viewModel.image,
-                        isLoading: viewModel.isLoadingImage,
-                        placeholderSystemName: "person.crop.circle"
-                    )
+        ScrollView {
+            VStack(alignment: .leading, spacing: 8) {
+                DetailHeroImageView(
+                    image: viewModel.image,
+                    isLoading: viewModel.isLoadingImage,
+                    placeholderSystemName: "person.crop.circle",
+                    layout: .edgeToTop
+                )
 
-                    Text(viewModel.name)
-                        .bold()
-                        .padding(.horizontal, Layout.textHorizontalPadding)
-                        .padding(.top, 12)
-                        .font(.system(size: 28, weight: .bold))
-                        .foregroundColor(Color(uiColor: Colors.text))
-                    
-                    Text(viewModel.description)
-                        .padding(.horizontal, Layout.textHorizontalPadding)
-                        .font(.title3)
-                        .foregroundColor(Color(uiColor: Colors.text))
+                Text(viewModel.name)
+                    .bold()
+                    .padding(.horizontal, Layout.textHorizontalPadding)
+                    .padding(.top, 12)
+                    .font(.system(size: 26, weight: .bold))
+                    .foregroundColor(Color(uiColor: Colors.text))
+                
+                Text(viewModel.description)
+                    .padding(.horizontal, Layout.textHorizontalPadding)
+                    .font(.title3)
+                    .foregroundColor(Color(uiColor: Colors.text))
 
-                    upcomingEventsSection
-                    
-                    GeometryReader { geo in
-                        SeparatorView()
-                            .padding(.top, 12)
-                            .preference(key: TitleOffsetPreference.self, value: geo.frame(in: .scrollView).minY)
-                    }
-                    .onPreferenceChange(TitleOffsetPreference.self) { value in
-                        withAnimation(.easeInOut(duration: 0.3)) {
-                            navTitleHidden = value > 44
-                        }
-                    }
-                                        
-                    ExpandableText(text: $attributedText, limit: 100)
-                        .padding(12)
-                        .font(.caption2)
-                        .foregroundStyle(Color(uiColor: Colors.text))
-                 
-                    Spacer()
-                }
+                upcomingEventsSection
+                
+                SeparatorView()
+                    .padding(.top, 12)
+                                    
+                ExpandableText(text: $attributedText, limit: 100)
+                    .padding(12)
+                    .padding(.trailing, 24)
+                    .font(.system(size: 16, weight: .regular, design: .default))
+                    .foregroundStyle(Color(uiColor: Colors.text))
+                    .lineSpacing(2.2)
+             
+                Spacer()
             }
-            .appScrollContentBackgroundHidden()
+        }
+        .scrollIndicators(.hidden)
+        .ignoresSafeArea(edges: .top)
+        .overlay(alignment: .top) {
+            HStack(alignment: .top) {
+                backButton
+                    .padding(.leading, 12)
+                    .padding(.top, 8)
 
-            HStack(spacing: 10) {
+                Spacer()
+
                 FavoriteContextButton(
                     viewModel: viewModel.favoriteHeartButtonViewModel,
-                    onTap: { actionHandler(.favorite(viewModel.favoriteStorageId)) }
+                    onTap: { actionHandler(.favorite(viewModel.favoriteStorageId)) },
+                    backgroundStyle: .material
                 )
+                .padding(.top, Layout.favoriteTopPadding)
+                .padding(.trailing, Layout.favoriteTrailingPadding)
             }
-            .padding(.top, 8)
-            .padding(.trailing, 12)
         }
+        .appScrollContentBackgroundHidden()
         .background(Color(uiColor: Colors.mainBackground))
+        .toolbar(.hidden, for: .navigationBar)
+        .toolbarBackground(.hidden, for: .navigationBar)
+        .navigationTitle("")
         .task(id: viewModel.id) {
             viewModel.loadImageIfNeeded()
             viewModel.loadUpcomingEventsIfNeeded()
             await loadAttributedBio()
         }
         .onDisappear {
+            viewModel.cancelImageLoad()
             viewModel.cancelUpcomingEventsLoad()
         }
-        .navigationTitle(navTitleHidden ? "" : viewModel.name)
-        .navigationBarTitleDisplayMode(.automatic)
+    }
+
+    private var backButton: some View {
+        Button {
+            dismiss()
+        } label: {
+            Image(systemName: "chevron.backward")
+                .font(.system(size: 17, weight: .semibold))
+                .foregroundStyle(Color(uiColor: Colors.text))
+                .frame(width: 36, height: 36)
+                .background(.ultraThinMaterial, in: Circle())
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel("Назад")
     }
 
     private func loadAttributedBio() async {
@@ -108,7 +129,6 @@ public struct MusicianDetailsView: View {
                 .padding(.vertical, 16)
         } else if !viewModel.upcomingEvents.isEmpty {
             VStack(alignment: .leading, spacing: 12) {
-                SeparatorView()
                 Text("Ближайшие концерты")
                     .bold()
                     .font(.title2)
@@ -132,13 +152,5 @@ public struct MusicianDetailsView: View {
             }
             .padding(.top, 8)
         }
-    }
-}
-
-private struct TitleOffsetPreference: PreferenceKey {
-    static var defaultValue: CGFloat = 0
-    
-    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
-        value = nextValue()
     }
 }

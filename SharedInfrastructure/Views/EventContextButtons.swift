@@ -144,9 +144,43 @@ public enum EventContextButtonType {
     }
 }
 
+public enum FavoriteContextButtonBackgroundStyle {
+    /// `.ultraThinMaterial` с закруглением 8 pt.
+    case material
+    case none
+    /// Как у `EventContextButton`.
+    case card
+}
+
 struct FavoriteContextButton: View {
     @ObservedObject var viewModel: FavoriteHeartButtonViewModel
     var onTap: () -> Void
+    private let backgroundKind: BackgroundKind
+
+    private enum BackgroundKind {
+        case style(FavoriteContextButtonBackgroundStyle)
+        case custom(AnyView)
+    }
+
+    init(
+        viewModel: FavoriteHeartButtonViewModel,
+        onTap: @escaping () -> Void,
+        backgroundStyle: FavoriteContextButtonBackgroundStyle = .card
+    ) {
+        self.viewModel = viewModel
+        self.onTap = onTap
+        self.backgroundKind = .style(backgroundStyle)
+    }
+
+    init<Background: View>(
+        viewModel: FavoriteHeartButtonViewModel,
+        onTap: @escaping () -> Void,
+        @ViewBuilder background: () -> Background
+    ) {
+        self.viewModel = viewModel
+        self.onTap = onTap
+        self.backgroundKind = .custom(AnyView(background()))
+    }
 
     private var heartColor: Color {
         viewModel.isFavorite ? .appFavorite : .white
@@ -159,12 +193,35 @@ struct FavoriteContextButton: View {
             .foregroundStyle(heartColor)
             .frame(width: 20, height: 20)
             .padding(8)
-            .background(Color(uiColor: Colors.cardBackground).opacity(0.92))
-            .cornerRadius(8)
+            .background { buttonBackground }
             .contentShape(Rectangle())
             .onTapGesture(perform: onTap)
             .accessibilityAddTraits(.isButton)
             .accessibilityLabel(viewModel.isFavorite ? "Убрать из избранного" : "Добавить в избранное")
+    }
+
+    @ViewBuilder
+    private var buttonBackground: some View {
+        switch backgroundKind {
+        case .style(let style):
+            styledBackground(style)
+        case .custom(let view):
+            view
+        }
+    }
+
+    @ViewBuilder
+    private func styledBackground(_ style: FavoriteContextButtonBackgroundStyle) -> some View {
+        switch style {
+        case .material:
+            RoundedRectangle(cornerRadius: 8, style: .continuous)
+                .fill(.ultraThinMaterial)
+        case .none:
+            Color.clear
+        case .card:
+            RoundedRectangle(cornerRadius: 8, style: .continuous)
+                .fill(Color(uiColor: Colors.cardBackground).opacity(0.92))
+        }
     }
 }
 

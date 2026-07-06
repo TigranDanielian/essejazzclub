@@ -6,20 +6,30 @@
 import SwiftUI
 import Core
 
+public enum DetailHeroImageLayout: Sendable {
+    /// Карточка с закруглением (меню, шоп).
+    case insetCard
+    /// На всю ширину до верхнего края (деталка музыканта).
+    case edgeToTop
+}
+
 /// Фото в шапке детальных экранов (меню, шоп, музыкант): пропорции по картинке, без crop.
 public struct DetailHeroImageView: View {
     let image: UIImage?
     let isLoading: Bool
     let placeholderSystemName: String
+    let layout: DetailHeroImageLayout
 
     public init(
         image: UIImage?,
         isLoading: Bool,
-        placeholderSystemName: String = "photo"
+        placeholderSystemName: String = "photo",
+        layout: DetailHeroImageLayout = .insetCard
     ) {
         self.image = image
         self.isLoading = isLoading
         self.placeholderSystemName = placeholderSystemName
+        self.layout = layout
     }
 
     private enum Layout {
@@ -34,7 +44,7 @@ public struct DetailHeroImageView: View {
     }
 
     public var body: some View {
-        ZStack {
+        let content = ZStack {
             Group {
                 if let image {
                     Image(uiImage: image)
@@ -53,14 +63,23 @@ public struct DetailHeroImageView: View {
 
             if isLoading {
                 SkeletonView()
-                    .cornerRadius(12)
+                    .cornerRadius(layout == .insetCard ? 12 : 0)
             }
         }
-        .shadow(radius: 12)
         .frame(maxWidth: .infinity)
         .frame(height: photoHeight)
-        .cornerRadius(12)
-        .clipped()
-        .ignoresSafeArea(.container, edges: .horizontal)
+
+        switch layout {
+        case .insetCard:
+            content
+                .shadow(radius: 12)
+                .cornerRadius(12)
+                .clipped()
+                .ignoresSafeArea(.container, edges: .horizontal)
+        case .edgeToTop:
+            content
+                .clipped()
+                .ignoresSafeArea(.container, edges: [.horizontal, .top])
+        }
     }
 }
