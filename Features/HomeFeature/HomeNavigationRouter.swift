@@ -36,8 +36,8 @@ public final class HomeNavigationRouter: StackNavigationRouter<HomeNavigationRou
             return "event-\(viewModel.occurrenceIdentifier)"
         case .musicianDetail(let viewModel, _):
             return "musician-\(viewModel.musicianId)"
-        case .bookmarkedEventDetail(let occurrenceIdentifier, _):
-            return "event-\(occurrenceIdentifier)"
+        case .bookmarkedEventDetail(let occurrenceIdentifier, let mode):
+            return "event-\(occurrenceIdentifier)-\(mode.rawValue)"
         }
     }
 

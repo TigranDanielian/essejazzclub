@@ -41,8 +41,8 @@ public final class ClubNavigationRouter: StackNavigationRouter<ClubNavigationRou
 
     public override func deduplicationKey(for route: Route) -> String {
         switch route {
-        case .favoriteEventDetail(let occurrenceIdentifier, _):
-            return "event-\(occurrenceIdentifier)"
+        case .favoriteEventDetail(let occurrenceIdentifier, let mode):
+            return "event-\(occurrenceIdentifier)-\(mode.rawValue)"
         case .musicianDetail(let musician, _):
             return "musician-\(musician.musicianId)"
         case .about:
